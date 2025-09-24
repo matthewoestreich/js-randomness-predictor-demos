@@ -37,7 +37,7 @@ function callMathRandomNTimes(n) {
 		output.push(MATH_RANDOM());
 	}
 	return output;
-} 
+}
 
 export default function App() {
 	const [browser] = useState(getCurrentBrowser());
@@ -96,15 +96,17 @@ export default function App() {
 
 	return (
 		<div>
-			<p><small>Browser: {browser === "" ? "UNRECOGNIZED" : browser}</small></p>
-			<p><small>Sequence: {JSON.stringify(sequence)}</small></p>
+			<p>
+				<small>Browser: {browser === "" ? "UNRECOGNIZED" : browser}</small>
+			</p>
+			<p>
+				<small>Sequence: {JSON.stringify(sequence)}</small>
+			</p>
 			{predictor === null ? (
 				<h1>Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
 			) : (
 				<h3>
-					<b>
-						You can either call <code>Math.random()</code> by clicking "Call Math.random()" or by opening your browser console and manually calling <code>Math.random()</code>
-					</b>
+					You can either call <code>Math.random()</code> by clicking "Call Math.random()" or by opening your browser console and manually calling <code>Math.random()</code>
 				</h3>
 			)}
 			<button onClick={() => handlePrediction()} disabled={predictor === null || status !== ""} style={{ marginRight: "5px" }}>
