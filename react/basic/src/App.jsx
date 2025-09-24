@@ -102,6 +102,7 @@ export default function App() {
 			<p>
 				<small>Sequence: {JSON.stringify(sequence)}</small>
 			</p>
+			<h2>Demo for supported browsers only!</h2>
 			{predictor === null ? (
 				<h1>Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
 			) : (
