@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import JSRandomnessPredictor from "js-randomness-predictor";
 
 // Store original Math.random as a global variable.
@@ -40,6 +40,8 @@ function callMathRandomNTimes(n) {
 }
 
 export default function App() {
+	const tableContainerRef = useRef(null);
+	const tableRowRefs = useRef([]);
 	const [browser] = useState(getCurrentBrowser());
 	const [sequence] = useState(() => callMathRandomNTimes(4));
 	const [predictor] = useState(() => {
@@ -53,6 +55,7 @@ export default function App() {
 	const [predictions, setPredictions] = useState([]);
 	const [predictionIndex, setPredictionIndex] = useState(0);
 	const [randomIndex, setRandomIndex] = useState(0);
+	const [scrollToIndex, setScrollToIndex] = useState(null);
 	const [status, setStatus] = useState("");
 
 	// We hook Math.random so we can keep our predictor in sync with Math.random.
@@ -61,6 +64,18 @@ export default function App() {
 		handleMathRandom(random);
 		return random;
 	};
+
+	useEffect(() => {
+		if (scrollToIndex === null) return;
+		const container = tableContainerRef.current;
+		const row = tableRowRefs.current[scrollToIndex];
+		if (container && row) {
+			container.scrollTop = row.offsetTop;
+			// smooth scroll if you want:
+			// container.scrollTo({ top: row.offsetTop, behavior: 'smooth' });
+		}
+		setScrollToIndex(null);
+	}, [predictions, scrollToIndex]);
 
 	async function handlePrediction() {
 		setStatus("Working...");
@@ -76,6 +91,7 @@ export default function App() {
 			return [...prev];
 		});
 		setPredictionIndex((prev) => prev + 1);
+		setScrollToIndex(() => predictionIndex);
 		setStatus("");
 	}
 
@@ -92,6 +108,11 @@ export default function App() {
 			return [...prev];
 		});
 		setRandomIndex((prev) => prev + 1);
+		setScrollToIndex(() => randomIndex);
+	}
+
+	function createKeyFromPrediction(prediction, index) {
+		return prediction.random ? prediction.random : prediction.prediction ? prediction.prediction : Date.now() + index;
 	}
 
 	return (
@@ -119,7 +140,7 @@ export default function App() {
 			<br />
 			<p>{status !== "" ? "STATUS: " + status : ""}</p>
 			<br />
-			<div className="table-container" style={{ display: predictor !== null && predictions.length > 0 ? "flex" : "none" }}>
+			<div ref={tableContainerRef} className="table-container" style={{ display: predictor !== null && predictions.length > 0 ? "flex" : "none" }}>
 				<table style={{ borderCollapse: "separate", borderSpacing: 0 }}>
 					<thead>
 						<tr>
@@ -132,7 +153,7 @@ export default function App() {
 					<tbody>
 						{predictions.map((prediction, index) => {
 							return (
-								<tr>
+								<tr ref={(el) => (tableRowRefs.current[index] = el)} key={JSON.stringify(prediction)}>
 									<td className="table-data-cell">{index + 1}</td>
 									<td className="table-data-cell">{prediction.prediction ?? ""}</td>
 									<td className="table-data-cell">{prediction.random ?? ""}</td>

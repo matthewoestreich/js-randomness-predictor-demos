@@ -24,15 +24,11 @@ small {
 	justify-content: center;
 	max-height: 500px;
 	overflow-y: auto;
-	position: relative;
 }
 
 .table-header-cell {
 	border: 1px solid black;
 	padding: 6px;
-	position: sticky;
-	top: 0;
-	z-index: 10;
 	background-color: white;
 }
 
