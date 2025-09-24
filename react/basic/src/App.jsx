@@ -1,6 +1,10 @@
 import { useState } from "react";
 import JSRandomnessPredictor from "js-randomness-predictor";
 
+// Store original Math.random as a global variable.
+// We hook Math.random so we can keep our predictor in sync with Math.random.
+const MATH_RANDOM = Math.random;
+
 function getCurrentBrowser() {
 	const userAgent = navigator.userAgent;
 	if (userAgent.indexOf("Chrome") > -1) {
@@ -27,15 +31,20 @@ function isCurrentBrowserSupported(currentBrowser = "") {
 	return supportedBrowsers.includes(currentBrowser);
 }
 
-// Store original Math.random as a global variable.
-// We hook Math.random so we can keep our predictor in sync with Math.random.
-const MATH_RANDOM = Math.random;
+function callMathRandomNTimes(n) {
+	const output = [];
+	for (let i = 0; i < n; i++) {
+		output.push(MATH_RANDOM());
+	}
+	return output;
+} 
 
 export default function App() {
 	const [browser] = useState(getCurrentBrowser());
+	const [sequence] = useState(() => callMathRandomNTimes(4));
 	const [predictor] = useState(() => {
 		if (isCurrentBrowserSupported(browser)) {
-			return JSRandomnessPredictor[browser](Array.from({ length: 4 }, Math.random));
+			return JSRandomnessPredictor[browser](sequence);
 		}
 		return null;
 	});
@@ -88,14 +97,15 @@ export default function App() {
 	return (
 		<div>
 			<p><small>Browser: {browser === "" ? "UNRECOGNIZED" : browser}</small></p>
+			<p><small>Sequence: {JSON.stringify(sequence)}</small></p>
 			{predictor === null ? (
 				<h1>Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
 			) : (
-				<p style={{ fontSize: "24px", maxWidth: "600px" }}>
+				<h3>
 					<b>
 						You can either call <code>Math.random()</code> by clicking "Call Math.random()" or by opening your browser console and manually calling <code>Math.random()</code>
 					</b>
-				</p>
+				</h3>
 			)}
 			<button onClick={() => handlePrediction()} disabled={predictor === null || status !== ""} style={{ marginRight: "5px" }}>
 				Make Prediction
@@ -106,24 +116,24 @@ export default function App() {
 			<br />
 			<p>{status !== "" ? "STATUS: " + status : ""}</p>
 			<br />
-			<div style={{ maxHeight: "400px", maxWidth: "600px", overflowY: "auto", position: "relative", display: predictor !== null && predictions.length > 0 ? "block" : "none" }}>
+			<div className="table-container" style={{ display: predictor !== null && predictions.length > 0 ? "flex" : "none" }}>
 				<table style={{ borderCollapse: "separate", borderSpacing: 0 }}>
 					<thead>
 						<tr>
-							<th style={{ border: "1px solid black", padding: "6px", position: "sticky", top: 0, zIndex: 10, backgroundColor: "white" }}></th>
-							<th style={{ border: "1px solid black", padding: "6px", position: "sticky", top: 0, zIndex: 10, backgroundColor: "white" }}>Prediction</th>
-							<th style={{ border: "1px solid black", padding: "6px", position: "sticky", top: 0, zIndex: 10, backgroundColor: "white" }}>Math.random()</th>
-							<th style={{ border: "1px solid black", padding: "6px", position: "sticky", top: 0, zIndex: 10, backgroundColor: "white" }}>Correct?</th>
+							<th className="table-header-cell"></th>
+							<th className="table-header-cell">Prediction</th>
+							<th className="table-header-cell">Math.random()</th>
+							<th className="table-header-cell">Correct?</th>
 						</tr>
 					</thead>
 					<tbody>
 						{predictions.map((prediction, index) => {
 							return (
 								<tr>
-									<td style={{ border: "1px solid black", padding: "6px" }}>{index + 1}</td>
-									<td style={{ border: "1px solid black", padding: "6px" }}>{prediction.prediction ?? ""}</td>
-									<td style={{ border: "1px solid black", padding: "6px" }}>{prediction.random ?? ""}</td>
-									<td style={{ border: "1px solid black", padding: "6px" }}>{prediction.correct === null ? "" : prediction.correct.toString()}</td>
+									<td className="table-data-cell">{index + 1}</td>
+									<td className="table-data-cell">{prediction.prediction ?? ""}</td>
+									<td className="table-data-cell">{prediction.random ?? ""}</td>
+									<td className="table-data-cell">{prediction.correct === null ? "" : prediction.correct.toString()}</td>
 								</tr>
 							);
 						})}
