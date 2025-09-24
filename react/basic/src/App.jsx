@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import JSRandomnessPredictor from "js-randomness-predictor";
 
 // Store original Math.random as a global variable.
-// We hook Math.random so we can keep our predictor in sync with Math.random.
+// We hook Math.random so we can keep the UI updated for every Math.random call. 
 const MATH_RANDOM = Math.random;
 
 function getCurrentBrowser() {
@@ -58,7 +58,7 @@ export default function App() {
 	const [scrollToIndex, setScrollToIndex] = useState(null);
 	const [status, setStatus] = useState("");
 
-	// We hook Math.random so we can keep our predictor in sync with Math.random.
+	// We hook Math.random so we can keep the UI updated for every Math.random call. 
 	Math.random = () => {
 		const random = MATH_RANDOM();
 		handleMathRandom(random);
@@ -117,13 +117,14 @@ export default function App() {
 
 	return (
 		<div>
-			<p>
+			<p style={{ marginBottom: 0 }}>
 				<small>Browser: {browser === "" ? "UNRECOGNIZED" : browser}</small>
 			</p>
-			<p>
+			<p style={{ marginTop: 0 }}>
 				<small>Sequence: {JSON.stringify(sequence)}</small>
 			</p>
-			<h2>Demo for supported browsers only!</h2>
+			<h2 style={{ marginBottom: 0 }}>Demo for supported browsers only!</h2>
+			<a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/react/basic">Source Code</a>
 			{predictor === null ? (
 				<h1>Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
 			) : (
