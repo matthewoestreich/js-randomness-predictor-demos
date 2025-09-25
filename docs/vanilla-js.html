@@ -34,6 +34,8 @@
     <script src="z3-built.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-randomness-predictor@2.4.3/dist/umd/js-randomness-predictor.min.js"></script>
     <script>
+      let PREDICTOR = null;
+
       const elStatus = document.getElementById("status");
       const elPredictorSection = document.getElementById("predictor-section");
       const elMakePrediction = document.getElementById("make-prediction");
@@ -47,15 +49,15 @@
         const rand = MATH_RANDOM();
         elActualRandoms.innerText += rand + "\n";
         return rand;
-      }
+      };
 
       const CURRENT_BROWSER = getCurrentBrowser();
       const IS_SUPPORTED_BROWSER = isCurrentBrowserSupported(CURRENT_BROWSER);
 
-      let PREDICTOR = null;
-
-      document.getElementById("your-current-browser").innerText = CURRENT_BROWSER === "" ? "UNRECOGNIZED BROWSER" : CURRENT_BROWSER;
-      document.getElementById("is-your-current-browser-supported").innerText = IS_SUPPORTED_BROWSER ? "Yes" : "No";
+      document.getElementById("your-current-browser").innerText =
+        CURRENT_BROWSER === "" ? "UNRECOGNIZED BROWSER" : CURRENT_BROWSER;
+      document.getElementById("is-your-current-browser-supported").innerText =
+        IS_SUPPORTED_BROWSER ? "Yes" : "No";
 
       if (IS_SUPPORTED_BROWSER) {
         elPredictorSection.style.display = "block";
@@ -63,7 +65,7 @@
 
         elMakePrediction.addEventListener("click", async (e) => {
           elMakePrediction.disabled = true;
-          elStatus.innerText = "STATUS: Working..."
+          elStatus.innerText = "STATUS: Working...";
           const p = await PREDICTOR.predictNext();
           elPredictions.innerText += p + "\n";
           elMakePrediction.disabled = false;
@@ -93,9 +95,15 @@
           return "safari";
         } else if (userAgent.indexOf("Edge") > -1) {
           return "edge";
-        } else if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
+        } else if (
+          userAgent.indexOf("Opera") > -1 ||
+          userAgent.indexOf("OPR") > -1
+        ) {
           return "opera";
-        } else if (userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident/") > -1) {
+        } else if (
+          userAgent.indexOf("MSIE") > -1 ||
+          userAgent.indexOf("Trident/") > -1
+        ) {
           return "internetExplorer";
         }
         return "";
@@ -103,34 +111,10 @@
 
       function isCurrentBrowserSupported(currentBrowser = "") {
         const supportedBrowsers = ["chrome", "firefox", "safari"];
-        return !(currentBrowser === "" || !currentBrowser) && supportedBrowsers.includes(currentBrowser);
-      }
-
-      /**
-       * Main function
-       */
-      async function Main() {
-        try {
-          const ffp = JSRandomnessPredictor[CURRENT_BROWSER](Array.from({ length: 4 }, Math.random));
-          console.log({ status: "created firefox pred.." });
-
-          const predictions = [];
-          console.log("Making first prediction");
-          const first = await ffp.predictNext();
-          predictions.push(first);
-          console.log("made first prediction");
-
-          for (let i = 0; i < 9; i++) {
-            predictions.push(await ffp.predictNext());
-            console.log(`${i + 1}. Prediction Made`);
-          }
-
-          const actuals = Array.from({ length: 10 }, Math.random);
-
-          console.log({ predictions, actuals, isAccurate: predictions.every((v, i) => actuals[i] === v) });
-        } catch (e) {
-          console.log("ERROR IN PREDICTOR", e);
-        }
+        return (
+          !(currentBrowser === "" || !currentBrowser) &&
+          supportedBrowsers.includes(currentBrowser)
+        );
       }
     </script>
   </body>
