@@ -52,8 +52,10 @@
         PREDICTOR = JSRandomnessPredictor[CURRENT_BROWSER](Array.from({ length: 4 }, Math.random));
 
         elMakePrediction.addEventListener("click", async (e) => {
+          elMakePrediction.disabled = true;
           const p = await PREDICTOR.predictNext();
           elPredictions.innerText += p + "\n";
+          elMakePrediction.disabled = false;
         });
 
         elCallMathRandom.addEventListener("click", (e) => {
