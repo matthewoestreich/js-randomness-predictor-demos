@@ -22,8 +22,8 @@
     </table>
     <br />
     <div id="predictor-section" style="display: none">
-      <button id="make-prediction">Make Prediction</button>
-      <button id="call-math-random">Call Math.random()</button>
+      <button id="make-prediction" disabled>Make Prediction</button>
+      <button id="call-math-random" disabled>Call Math.random()</button>
       <p id="status"></p>
       <h1>Predictions</h1>
       <div id="predictions"></div>
@@ -60,6 +60,8 @@
         IS_SUPPORTED_BROWSER ? "Yes" : "No";
 
       if (IS_SUPPORTED_BROWSER) {
+        elCallMathRandom.disabled = false;
+        elMakePrediction.disabled = false;
         elPredictorSection.style.display = "block";
         PREDICTOR = JSRandomnessPredictor[CURRENT_BROWSER](callMathRandom(4));
 
