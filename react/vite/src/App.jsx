@@ -71,8 +71,6 @@ export default function App() {
     const row = tableRowRefs.current[scrollToIndex];
     if (container && row) {
       container.scrollTop = row.offsetTop;
-      // smooth scroll if you want:
-      // container.scrollTo({ top: row.offsetTop, behavior: 'smooth' });
     }
     setScrollToIndex(null);
   }, [predictions, scrollToIndex]);
