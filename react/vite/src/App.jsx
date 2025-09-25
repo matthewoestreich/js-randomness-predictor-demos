@@ -111,10 +111,6 @@ export default function App() {
     setScrollToIndex(() => randomIndex);
   }
 
-  function createKeyFromPrediction(prediction, index) {
-    return prediction.random ? prediction.random : prediction.prediction ? prediction.prediction : Date.now() + index;
-  }
-
   return (
     <div>
       <p style={{ marginBottom: 0 }}>
