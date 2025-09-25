@@ -71,7 +71,7 @@
 
         elMakePrediction.addEventListener("click", async (e) => {
           elMakePrediction.disabled = true;
-          elStatus.innerText = "STATUS: Working..." + CURRENT_BROWSER === "firefox" ? "(firefox may take a bit longer)" : "";
+          elStatus.innerText = CURRENT_BROWSER === "firefox" ? "STATUS: Working... (firefox may take a bit longer)" : "STATUS: Working...";
           const p = await predictor.predictNext();
           elPredictions.innerText += p + "\n";
           elMakePrediction.disabled = false;
