@@ -6,12 +6,17 @@
   "directories": {
     "doc": "docs"
   },
+  "prettier": {
+    "semi": true,
+    "singleQuote": false,
+    "printWidth": 150
+  },
   "scripts": {
     "format": "prettier . --write",
-    "build:copy:root:indexhtml": "node copyIndexHTML.js",
+    "build:root": "node build.js",
     "build:react:vite": "cd react/vite && npm run build:prod && cd ../..",
     "build:vanillajs": "cd vanillajs && node build.js && cd ../",
-    "build": "rimraf docs && npm run build:copy:root:indexhtml && npm run build:react:vite && npm run build:vanillajs"
+    "build": "rimraf docs && npm run build:root && npm run build:react:vite && npm run build:vanillajs"
   },
   "keywords": [],
   "author": "",

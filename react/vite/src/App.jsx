@@ -17,10 +17,7 @@ function getCurrentBrowser() {
     return "edge";
   } else if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
     return "opera";
-  } else if (
-    userAgent.indexOf("MSIE") > -1 ||
-    userAgent.indexOf("Trident/") > -1
-  ) {
+  } else if (userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident/") > -1) {
     return "internetExplorer";
   }
   return "";
@@ -89,8 +86,7 @@ export default function App() {
       }
       prev[predictionIndex].prediction = prediction;
       if (prev[predictionIndex].random) {
-        prev[predictionIndex].correct =
-          prev[predictionIndex].random === prediction;
+        prev[predictionIndex].correct = prev[predictionIndex].random === prediction;
       }
       return [...prev];
     });
@@ -116,11 +112,7 @@ export default function App() {
   }
 
   function createKeyFromPrediction(prediction, index) {
-    return prediction.random
-      ? prediction.random
-      : prediction.prediction
-        ? prediction.prediction
-        : Date.now() + index;
+    return prediction.random ? prediction.random : prediction.prediction ? prediction.prediction : Date.now() + index;
   }
 
   return (
@@ -132,23 +124,16 @@ export default function App() {
         <small>Sequence: {JSON.stringify(sequence)}</small>
       </p>
       <h2 style={{ marginBottom: 0 }}>Demo for supported browsers only!</h2>
-      <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/react/basic">
-        Source Code
-      </a>
+      <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/react/basic">Source Code</a>
       {predictor === null ? (
         <h1>Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
       ) : (
         <h3>
-          You can either call <code>Math.random()</code> by clicking "Call
-          Math.random()" or by opening your browser console and manually calling{" "}
+          You can either call <code>Math.random()</code> by clicking "Call Math.random()" or by opening your browser console and manually calling{" "}
           <code>Math.random()</code>
         </h3>
       )}
-      <button
-        onClick={() => handlePrediction()}
-        disabled={predictor === null || status !== ""}
-        style={{ marginRight: "5px" }}
-      >
+      <button onClick={() => handlePrediction()} disabled={predictor === null || status !== ""} style={{ marginRight: "5px" }}>
         Make Prediction
       </button>
       <button onClick={() => handleMathRandom()} disabled={predictor === null}>
@@ -161,8 +146,7 @@ export default function App() {
         ref={tableContainerRef}
         className="table-container"
         style={{
-          display:
-            predictor !== null && predictions.length > 0 ? "flex" : "none",
+          display: predictor !== null && predictions.length > 0 ? "flex" : "none",
         }}
       >
         <table style={{ borderCollapse: "separate", borderSpacing: 0 }}>
@@ -177,20 +161,11 @@ export default function App() {
           <tbody>
             {predictions.map((prediction, index) => {
               return (
-                <tr
-                  ref={(el) => (tableRowRefs.current[index] = el)}
-                  key={JSON.stringify(prediction)}
-                >
+                <tr ref={(el) => (tableRowRefs.current[index] = el)} key={JSON.stringify(prediction)}>
                   <td className="table-data-cell">{index + 1}</td>
-                  <td className="table-data-cell">
-                    {prediction.prediction ?? ""}
-                  </td>
+                  <td className="table-data-cell">{prediction.prediction ?? ""}</td>
                   <td className="table-data-cell">{prediction.random ?? ""}</td>
-                  <td className="table-data-cell">
-                    {prediction.correct === null
-                      ? ""
-                      : prediction.correct.toString()}
-                  </td>
+                  <td className="table-data-cell">{prediction.correct === null ? "" : prediction.correct.toString()}</td>
                 </tr>
               );
             })}

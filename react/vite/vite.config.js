@@ -4,8 +4,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   root: nodePath.resolve(__dirname, "../../react/vite"),
-  base:
-    process.env.BUILD_FOR === "prod" ? "/js-randomness-predictor-demos/" : "/",
+  base: process.env.BUILD_FOR === "prod" ? "/js-randomness-predictor-demos/" : "/",
   build: {
     outDir: "../../docs",
     rollupOptions: {
