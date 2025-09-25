@@ -76,7 +76,8 @@ export default function App() {
   }, [predictions, scrollToIndex]);
 
   async function handlePrediction() {
-    setStatus("Working...");
+    const status = "Working..." + browser === "firefox" ? " (firefox may take a bit longer)" : "";
+    setStatus(status);
     const prediction = await predictor.predictNext();
     setPredictions((prev) => {
       if (!prev.length || !prev[predictionIndex]) {
