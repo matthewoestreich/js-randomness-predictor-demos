@@ -124,7 +124,7 @@ export default function App() {
         <small>Sequence: {JSON.stringify(sequence)}</small>
       </p>
       <h2 style={{ marginBottom: 0 }}>Demo for supported browsers only!</h2>
-      <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/react/basic">Source Code</a>
+      <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/react/vite">Source Code</a>
       {predictor === null ? (
         <h1>Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
       ) : (
