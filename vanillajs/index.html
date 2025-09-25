@@ -24,6 +24,7 @@
     <div id="predictor-section" style="display: none">
       <button id="make-prediction">Make Prediction</button>
       <button id="call-math-random">Call Math.random()</button>
+      <p id="status"></p>
       <h1>Predictions</h1>
       <div id="predictions"></div>
       <h1>Actual Rands</h1>
@@ -41,6 +42,7 @@
       document.getElementById("your-current-browser").innerText = CURRENT_BROWSER === "" ? "UNRECOGNIZED BROWSER" : CURRENT_BROWSER;
       document.getElementById("is-your-current-browser-supported").innerText = IS_SUPPORTED_BROWSER ? "Yes" : "No";
 
+      const elStatus = document.getElementById("status");
       const elPredictorSection = document.getElementById("predictor-section");
       const elMakePrediction = document.getElementById("make-prediction");
       const elCallMathRandom = document.getElementById("call-math-random");
@@ -53,9 +55,11 @@
 
         elMakePrediction.addEventListener("click", async (e) => {
           elMakePrediction.disabled = true;
+          elStatus.innerText = "STATUS: Working..."
           const p = await PREDICTOR.predictNext();
           elPredictions.innerText += p + "\n";
           elMakePrediction.disabled = false;
+          elStatus.innerText = "";
         });
 
         elCallMathRandom.addEventListener("click", (e) => {
