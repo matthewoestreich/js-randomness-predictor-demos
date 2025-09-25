@@ -5,6 +5,14 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
 	root: nodePath.resolve(__dirname, "../../react/basic"),
   base: process.env.BUILD_FOR === "prod" ? "/js-randomness-predictor-demos/" : "/",
+  build: {
+		outDir: "../../docs",
+    rollupOptions: {
+      input: {
+        main: nodePath.resolve(__dirname, './basic-react.html'),
+      },
+    },
+  },
 	plugins: [
 		react(),
 		{
@@ -23,15 +31,14 @@ export default defineConfig({
 			"Cross-Origin-Opener-Policy": "same-origin",
 			"Cross-Origin-Embedder-Policy": "require-corp",
 		},
+		open: "basic-react.html"
 	},
 	server: {
 		headers: {
 			"Cross-Origin-Opener-Policy": "same-origin",
 			"Cross-Origin-Embedder-Policy": "require-corp",
 		},
-	},
-	build: {
-		outDir: "../../docs",
+		open: "basic-react.html"
 	},
 	define: {
 		global: "globalThis",

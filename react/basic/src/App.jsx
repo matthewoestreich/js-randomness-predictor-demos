@@ -125,6 +125,7 @@ export default function App() {
 			</p>
 			<h2 style={{ marginBottom: 0 }}>Demo for supported browsers only!</h2>
 			<a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/react/basic">Source Code</a>
+			<a href="vanillajs.html">Vanilla JS Demo</a>
 			{predictor === null ? (
 				<h1>Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
 			) : (

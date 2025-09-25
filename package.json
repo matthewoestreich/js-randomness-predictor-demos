@@ -1,0 +1,21 @@
+{
+  "name": "js-randomness-predictor-demos",
+  "version": "1.0.0",
+  "description": "Demos and examples for js-randomness-predictor",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build:copy:root:indexhtml": "node copyIndexHTML.js",
+    "build:react:basic": "cd react/basic && npm run build:prod && cd ../..",
+    "build:vanillajs": "cd vanillajs && node build.js && cd ../",
+    "build": "rimraf docs && npm run build:copy:root:indexhtml && npm run build:react:basic && npm run build:vanillajs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rimraf": "^6.0.1"
+  }
+}

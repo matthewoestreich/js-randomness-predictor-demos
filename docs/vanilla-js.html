@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jsrp vanillajs</title>
+</head>
+<body>
+  <script src="coi.serviceworker.js"></script>
+  <script src="https://matthewoestreich.github.io/z3-cdn/z3-built.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-randomness-predictor@2.4.3/dist/umd/js-randomness-predictor.min.js"></script>
+  <script>
+    (async () => {
+      await JSRandomnessPredictor.init();
+      const firefox = JSRandomnessPredictor.firefox(Array.from({ length: 4 }, Math.random));
+      console.log(firefox);
+      const nextPred = await firefox.predictNext();
+      document.body.innerText = nextPred;
+    })();
+  </script>
+</body>
+</html>
