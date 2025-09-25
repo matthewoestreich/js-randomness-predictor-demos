@@ -41,6 +41,14 @@
       const elPredictions = document.getElementById("predictions");
       const elActualRandoms = document.getElementById("actual-randoms");
 
+      // Hook Math.random so we keep our UI in sync if Math.random is called from console
+      const MATH_RANDOM = Math.random;
+      Math.random = () => {
+        const rand = MATH_RANDOM();
+        elActualRandoms.innerText += rand + "\n";
+        return rand;
+      }
+
       const CURRENT_BROWSER = getCurrentBrowser();
       const IS_SUPPORTED_BROWSER = isCurrentBrowserSupported(CURRENT_BROWSER);
 
@@ -63,14 +71,14 @@
         });
 
         elCallMathRandom.addEventListener("click", (e) => {
-          elActualRandoms.innerText += Math.random() + "\n";
+          elActualRandoms.innerText += MATH_RANDOM() + "\n";
         });
       }
 
       function callMathRandom(nTimes = 1) {
         const output = [];
         for (let i = 0; i < nTimes; i++) {
-          output.push(Math.random());
+          output.push(MATH_RANDOM());
         }
         return output;
       }
