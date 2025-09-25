@@ -72,7 +72,7 @@
         elMakePrediction.addEventListener("click", async (e) => {
           elMakePrediction.disabled = true;
           elStatus.innerText = "STATUS: Working...";
-          const p = await PREDICTOR.predictNext();
+          const p = await predictor.predictNext();
           elPredictions.innerText += p + "\n";
           elMakePrediction.disabled = false;
           elStatus.innerText = "";
