@@ -3,14 +3,14 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  root: nodePath.resolve(__dirname, "../../react/basic"),
+  root: nodePath.resolve(__dirname, "../../react/vite"),
   base:
     process.env.BUILD_FOR === "prod" ? "/js-randomness-predictor-demos/" : "/",
   build: {
     outDir: "../../docs",
     rollupOptions: {
       input: {
-        main: nodePath.resolve(__dirname, "./basic-react.html"),
+        main: nodePath.resolve(__dirname, "./react-vite.html"),
       },
     },
   },
@@ -32,14 +32,14 @@ export default defineConfig({
       "Cross-Origin-Opener-Policy": "same-origin",
       "Cross-Origin-Embedder-Policy": "require-corp",
     },
-    open: "basic-react.html",
+    open: "react-vite.html",
   },
   server: {
     headers: {
       "Cross-Origin-Opener-Policy": "same-origin",
       "Cross-Origin-Embedder-Policy": "require-corp",
     },
-    open: "basic-react.html",
+    open: "react-vite.html",
   },
   define: {
     global: "globalThis",
