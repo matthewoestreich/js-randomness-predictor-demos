@@ -43,7 +43,7 @@ export default function App() {
   const tableContainerRef = useRef(null);
   const tableRowRefs = useRef([]);
   const [browser] = useState(getCurrentBrowser());
-  const [sequence] = useState(callMathRandomNTimes(browser === "safari" ? 6 : 4));
+  const [sequence] = useState(() => callMathRandomNTimes(browser === "safari" ? 6 : 4));
   // A 'prediction' has the following shape { prediction: number, random: number, correct: boolean }
   const [predictions, setPredictions] = useState([]);
   const [predictionIndex, setPredictionIndex] = useState(0);
