@@ -63,7 +63,7 @@
 
         // "MAIN"
 
-        const predictor = JSRandomnessPredictor[CURRENT_BROWSER](callMathRandom(4));
+        const predictor = JSRandomnessPredictor[CURRENT_BROWSER](callMathRandom(CURRENT_BROWSER === "safari" ? 6 : 4));
 
         elCallMathRandom.disabled = false;
         elMakePrediction.disabled = false;

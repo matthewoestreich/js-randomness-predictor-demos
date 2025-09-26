@@ -43,20 +43,19 @@ export default function App() {
   const tableContainerRef = useRef(null);
   const tableRowRefs = useRef([]);
   const [browser] = useState(getCurrentBrowser());
-  const [sequence] = useState(() => callMathRandomNTimes(4));
-  const [predictor] = useState(() => {
-    if (isCurrentBrowserSupported(browser)) {
-      return JSRandomnessPredictor[browser](sequence);
-    }
-    return null;
-  });
-
+  const [sequence] = useState(callMathRandomNTimes(browser === "safari" ? 6 : 4));
   // A 'prediction' has the following shape { prediction: number, random: number, correct: boolean }
   const [predictions, setPredictions] = useState([]);
   const [predictionIndex, setPredictionIndex] = useState(0);
   const [randomIndex, setRandomIndex] = useState(0);
   const [scrollToIndex, setScrollToIndex] = useState(null);
   const [status, setStatus] = useState("");
+  const [predictor] = useState(() => {
+    if (isCurrentBrowserSupported(browser)) {
+      return JSRandomnessPredictor[browser](sequence);
+    }
+    return null;
+  });
 
   // We hook Math.random so we can keep the UI updated for every Math.random call.
   Math.random = () => {
