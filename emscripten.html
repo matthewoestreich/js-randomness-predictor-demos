@@ -6,38 +6,7 @@
     <title>Document</title>
   </head>
   <body>
-    <script>
-      async function loadEmscriptenFromCDN(url) {
-        // Fetch the JS source from CDN
-        const response = await fetch(url);
-        const jsSource = await response.text();
-
-        // Create a Blob
-        const blob = new Blob([jsSource], { type: "application/javascript" });
-
-        // Set mainScriptUrlOrBlob to the Blob
-        var Module = {
-          mainScriptUrlOrBlob: blob,
-          onRuntimeInitialized: function() {
-            console.log("WASM ready!");
-          },
-        };
-
-        // Evaluate the JS in the page
-        const script = document.createElement("script");
-        script.type = "text/javascript";
-        script.textContent = `var emscriptenPOC = undefined; ${jsSource}`;
-        document.body.appendChild(script);
-
-        // Now call the factory
-        return emscriptenPOC().then((Module) => {
-          console.log("Module loaded");
-          return Module;
-        });
-      }
-
-      loadEmscriptenFromCDN("https://z3-tawny.vercel.app/emscripten-poc-built.js");
-    </script>
+    <button id="initEmscriptenPOC">Init</button>
     <!--
     <script>
       var Module = {
@@ -55,7 +24,14 @@
         console.log("Module loaded");
       });
     </script>
-    <script src="https://z3-tawny.vercel.app/emscripten-poc-built.js"></script>
     -->
+    <script src="https://z3-tawny.vercel.app/emscripten-poc-built.js"></script>
+    <script>
+      initEmscriptenPOC.addEventListener("click", () => {
+        emscriptenPOC().then((Module) => {
+          console.log("Module loaded");
+        });
+      });
+    </script>
   </body>
 </html>
