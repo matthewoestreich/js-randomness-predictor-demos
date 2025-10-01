@@ -1,19 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
     <script>
       var Module = {
-        mainScriptUrlOrBlob: 'https://z3-tawny.vercel.app/emscripten-poc-built.js',
-        onRuntimeInitialized() {
-          console.log("Runtime initialized");
-        }
+        // Absolute or CDN URL to your JS build
+        mainScriptUrlOrBlob: "https://z3-tawny.vercel.app/emscripten-poc-built.js",
+
+        // Optional: hook runtime init
+        onRuntimeInitialized: function () {
+          console.log("WASM ready!");
+        },
       };
     </script>
-  <script src="https://z3-tawny.vercel.app/emscripten-poc-built.js"></script>
-</body>
+    <!-- Load the Emscripten build from CDN -->
+    <script src="https://z3-tawny.vercel.app/emscripten-poc-built.js"></script>
+  </body>
 </html>
