@@ -16,15 +16,13 @@
           console.log("WASM ready!");
         },
       };
+
+      // Call the factory to trigger WASM fetch
+      emscriptenPOC().then((Module) => {
+        console.log("Module loaded");
+      });
     </script>
     <!-- Load the Emscripten build from CDN -->
     <script src="https://z3-tawny.vercel.app/emscripten-poc-built.js"></script>
-    <!--
-    <script>
-      emscriptenPOC().then((Module) => {
-        console.log("Module loaded:", Module);
-      });
-    </script>
-    -->
   </body>
 </html>
