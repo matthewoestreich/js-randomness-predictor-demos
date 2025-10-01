@@ -8,8 +8,8 @@ const indexhtmlDest = path.resolve(destDir, "index.html");
 // JUST TESTING THIS
 const emscSrc = path.resolve(__dirname, "./emscripten.html");
 const emscDest = path.resolve(destDir, "./emscripten.html");
-const emscriptenLoaderSrc = path.resolve(__dirname, "./emscripten-poc-loader.js");
-const emscriptenLoaderDest = path.resolve(destDir, "./emscripten-poc-loader.js");
+const emscriptenLoaderSrc = path.resolve(__dirname, "./js-randomness-predictor-loader.js");
+const emscriptenLoaderDest = path.resolve(destDir, "./js-randomness-predictor-loader.js");
 
 try {
   fs.mkdirSync(destDir);

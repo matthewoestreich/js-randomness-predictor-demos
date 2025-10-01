@@ -4,8 +4,8 @@
   try {
     // Step 1: Fetch the main JavaScript file and the WebAssembly binary
     const [jsResponse, wasmResponse] = await Promise.all([
-      fetch("https://z3-tawny.vercel.app/emscripten-poc-built.js"),
-      fetch("https://z3-tawny.vercel.app/emscripten-poc-built.wasm"),
+      fetch("https://z3-tawny.vercel.app/z3-built.js"),
+      fetch("https://z3-tawny.vercel.app/z3-built.wasm"),
     ]);
 
     console.log({ step: "1. fetch stuff", jsResponse, wasmResponse });
@@ -28,9 +28,7 @@
       locateFile: (path, prefix) => {
         console.log({ step: "locateFile", path, prefix });
         if (path.endsWith(".wasm")) {
-          //const returning = "emscripten-poc-built.wasm";
-          const returning = "https://z3-tawny.vercel.app/emscripten-poc-built.wasm";
-          return returning;
+          return "https://z3-tawny.vercel.app/z3-built.wasm";
         }
         return prefix + path;
       },
@@ -45,12 +43,10 @@
       onRuntimeInitialized: () => {
         // Optional: Clean up the blob URL after the runtime has started
         // For a multithreaded app, it's safer to leave this until the app exits
-        console.log("Emscripten runtime initialized.");
+        console.log("initZ3 runtime initialized.");
         // URL.revokeObjectURL(mainScriptUrlOrBlob);
       },
     };
-
-    window._Module = Module;
 
     console.log({ step: "4. Module now defined, adding local script tag", Module });
 
@@ -59,19 +55,19 @@
     script.src = mainScriptUrlOrBlob;
     document.body.appendChild(script);
 
-    function callPOC() {
+    function initialize() {
       try {
-        if (typeof emscriptenPOC === "undefined") {
-          console.log("emscriptenPOC not found, will try again in 1sec");
-          setTimeout(() => callPOC(), 1000);
+        if (typeof initZ3 === "undefined") {
+          console.log("initZ3 not found, will try again in 1sec");
+          setTimeout(() => initialize(), 1000);
         } else {
-          emscriptenPOC(Module).then((moduleInstance) => {
-            console.log("emscriptenPOC Initialized!", { moduleInstance });
+          initZ3(Module).then((moduleInstance) => {
+            console.log("initZ3 Initialized!", { moduleInstance });
           });
         }
       } catch (e) {}
     }
-    callPOC();
+    initialize();
 
     // For pthreads, the main thread's script URL is not used by workers.
     // However, the Module.mainScriptUrlOrBlob needs to be a URL, not a Blob,
