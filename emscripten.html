@@ -78,7 +78,9 @@
           script.src = mainScriptUrlOrBlob;
           document.body.appendChild(script);
 
-          emscriptenPOC().then(() => console.log("-------> CALLED emscriptenPOC()"));
+          const loadEmscriptenPOCScript = document.createElement("script");
+          script.innerText = `emscriptenPOC().then(() => console.log("-------> CALLED emscriptenPOC()"));`
+          document.body.appendChild(loadEmscriptenPOCScript);
 
           // For pthreads, the main thread's script URL is not used by workers.
           // However, the Module.mainScriptUrlOrBlob needs to be a URL, not a Blob,
