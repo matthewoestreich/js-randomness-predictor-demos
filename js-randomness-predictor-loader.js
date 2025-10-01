@@ -63,6 +63,8 @@
         } else {
           initZ3(Module).then((moduleInstance) => {
             console.log("initZ3 Initialized!", { moduleInstance });
+            window.initZ3 = initZ3;
+            window.loaded_initZ3 = initZ3;
           });
         }
       } catch (e) {}
