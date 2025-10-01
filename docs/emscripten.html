@@ -47,10 +47,10 @@
           var Module = {
             // Set the location of the WASM file for loading
             locateFile: (path, prefix) => {
+              console.log({ step: "3-1. locateFile", path, prefix, returning });
               if (path.endsWith(".wasm")) {
                 const returning = "emscripten-poc-built.wasm";
                 //const returning = "https://z3-tawny.vercel.app/emscripten-poc-built.wasm";
-                console.log({ step: "3-1. locateFile->path.endsWith('.wasm')", path, prefix, returning });
                 return returning;
               }
               return prefix + path;
@@ -77,6 +77,8 @@
           const script = document.createElement("script");
           script.src = mainScriptUrlOrBlob;
           document.body.appendChild(script);
+
+          emscriptenPOC().then(() => console.log("-------> CALLED emscriptenPOC()"));
 
           // For pthreads, the main thread's script URL is not used by workers.
           // However, the Module.mainScriptUrlOrBlob needs to be a URL, not a Blob,
