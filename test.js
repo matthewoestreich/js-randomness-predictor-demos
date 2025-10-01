@@ -1,6 +1,4 @@
 let e = undefined;
-callPOC();
-
 function callPOC() {
   try {
     console.log("callPOC");
@@ -24,3 +22,4 @@ function callPOC() {
     }
   }
 }
+callPOC();

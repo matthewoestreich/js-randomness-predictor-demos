@@ -83,28 +83,18 @@
           script.src = mainScriptUrlOrBlob;
           document.body.appendChild(script);
 
-          let e = undefined;
           function callPOC() {
             try {
-              console.log("callPOC");
-              if (emscriptenPOC != undefined) {
-                e = emscriptenPOC;
-              }
-              if (!e || e == undefined) {
-                console.log("e not found");
+              if (emscriptenPOC == undefined) {
+                console.log("emscriptenPOC not found, will try again in 1sec");
                 setTimeout(() => callPOC(), 1000);
               } else {
-                e = emscriptenPOC;
-                e(Module).then((moduleInstance) => console.log("emscriptenPOC() has been called!", { moduleInstance }));
+                emscriptenPOC(Module).then((moduleInstance) => {
+                  console.log("emscriptenPOC Initialized!", { moduleInstance });
+                });
               }
-            } catch (err) {
-              if (!e || e == undefined) {
-                console.log("e not found");
-                setTimeout(() => callPOC(), 1000);
-              } else {
-                e = emscriptenPOC;
-                e(Module).then((moduleInstance) => console.log("emscriptenPOC() has been called!", { moduleInstance }));
-              }
+            } catch (e) {
+              console.log("ERROR", e);
             }
           }
           callPOC();
