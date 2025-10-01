@@ -27,7 +27,7 @@
 
         try {
           // Step 1: Fetch the main JavaScript file and the WebAssembly binary
-          const [jsResponse, wasmResponse] = await Promise.all([fetch("https://z3-tawny.vercel.app/emscripten-poc-built.js"), fetch("https://z3-tawny.vercel.app/emscripten-poc-built.js")]);
+          const [jsResponse, wasmResponse] = await Promise.all([fetch("https://z3-tawny.vercel.app/emscripten-poc-built.js"), fetch("https://z3-tawny.vercel.app/emscripten-poc-built.wasm")]);
 
           if (!jsResponse.ok || !wasmResponse.ok) {
             throw new Error("Failed to fetch Emscripten files.");
