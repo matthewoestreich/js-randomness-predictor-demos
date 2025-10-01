@@ -80,9 +80,12 @@
 
           const loadEmscriptenPOCScript = document.createElement("script");
           loadEmscriptenPOCScript.textContent = `
-          let e = emscriptenPOC;
+          let e = undefined;
 
           function callPOC() {
+            if (emscriptenPOC != undefined) {
+              e = emscriptenPOC;
+            }
             if (!e || e == undefined) {
               console.log('e not found');
               setTimeout(() => callPOC(), 1000);
