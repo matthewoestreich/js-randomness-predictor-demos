@@ -23,6 +23,7 @@
     <script>
       // Use a self-executing async function to handle the promises from fetch
       (async () => {
+        let mainScriptUrlOrBlob
         try {
           // Step 1: Fetch the main JavaScript file and the WebAssembly binary
           const [jsResponse, wasmResponse] = await Promise.all([
@@ -39,7 +40,7 @@
           // Step 2: Get the script text and create a blob URL
           const jsText = await jsResponse.text();
           const jsBlob = new Blob([jsText], { type: "text/javascript" });
-          let mainScriptUrlOrBlob = URL.createObjectURL(jsBlob);
+          mainScriptUrlOrBlob = URL.createObjectURL(jsBlob);
 
           console.log({ step: "2. set mainScriptUrlOrBlob", jsText, jsBlob });
           console.log({ step: "3. Define Module" });
