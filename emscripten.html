@@ -79,7 +79,20 @@
           document.body.appendChild(script);
 
           const loadEmscriptenPOCScript = document.createElement("script");
-          loadEmscriptenPOCScript.textContent = `emscriptenPOC().then(() => console.log("-------> CALLED emscriptenPOC()"));`
+          loadEmscriptenPOCScript.textContent = `
+          let e = emscriptenPOC;
+          callPOC();
+
+          function callPOC() {
+            if (!e) {
+              console.log('e not found');
+              setTimeout(() => callPOC(), 1000);
+            } else {
+              e = emscriptenPOC;
+              e().then(() => console.log('emscriptenPOC() has been called!'));
+            }
+          }
+          `
           document.body.appendChild(loadEmscriptenPOCScript);
 
           // For pthreads, the main thread's script URL is not used by workers.
