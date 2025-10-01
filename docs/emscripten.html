@@ -47,6 +47,7 @@
           var Module = {
             // Set the location of the WASM file for loading
             locateFile: (path, prefix) => {
+              console.log({step:"locateFile", path, prefix});
               if (path.endsWith(".wasm")) {
                 //const returning = "emscripten-poc-built.wasm";
                 const returning = "https://z3-tawny.vercel.app/emscripten-poc-built.wasm";
@@ -76,37 +77,6 @@
           const script = document.createElement("script");
           script.src = mainScriptUrlOrBlob;
           document.body.appendChild(script);
-
-          const loadEmscriptenPOCScript = document.createElement("script");
-          loadEmscriptenPOCScript.textContent = `
-          let e = undefined;
-
-          function callPOC() {
-          try {
-            console.log("callPOC");
-            if (emscriptenPOC != undefined) {
-              e = emscriptenPOC;
-            }
-            if (!e || e == undefined) {
-              console.log('e not found');
-              setTimeout(() => callPOC(), 1000);
-            } else {
-              e = emscriptenPOC;
-              e().then(() => console.log('emscriptenPOC() has been called!'));
-            }
-        } catch(err) {
-                    if (!e || e == undefined) {
-              console.log('e not found');
-              setTimeout(() => callPOC(), 1000);
-            } else {
-              e = emscriptenPOC;
-              e().then(() => console.log('emscriptenPOC() has been called!'));
-            } 
-        }
-          }
-          callPOC();
-          `
-          document.body.appendChild(loadEmscriptenPOCScript);
 
           // For pthreads, the main thread's script URL is not used by workers.
           // However, the Module.mainScriptUrlOrBlob needs to be a URL, not a Blob,
