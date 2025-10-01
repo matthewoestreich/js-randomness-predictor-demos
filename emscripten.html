@@ -94,7 +94,15 @@
               e = emscriptenPOC;
               e().then(() => console.log('emscriptenPOC() has been called!'));
             }
-        } catch(e) {}
+        } catch(err) {
+                    if (!e || e == undefined) {
+              console.log('e not found');
+              setTimeout(() => callPOC(), 1000);
+            } else {
+              e = emscriptenPOC;
+              e().then(() => console.log('emscriptenPOC() has been called!'));
+            } 
+        }
           }
           callPOC();
           `
