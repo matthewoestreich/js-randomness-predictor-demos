@@ -81,10 +81,9 @@
           const loadEmscriptenPOCScript = document.createElement("script");
           loadEmscriptenPOCScript.textContent = `
           let e = emscriptenPOC;
-          callPOC();
 
           function callPOC() {
-            if (!e) {
+            if (!e || e == undefined) {
               console.log('e not found');
               setTimeout(() => callPOC(), 1000);
             } else {
@@ -92,6 +91,7 @@
               e().then(() => console.log('emscriptenPOC() has been called!'));
             }
           }
+          callPOC();
           `
           document.body.appendChild(loadEmscriptenPOCScript);
 
