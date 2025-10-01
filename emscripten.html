@@ -29,6 +29,8 @@
           // Step 1: Fetch the main JavaScript file and the WebAssembly binary
           const [jsResponse, wasmResponse] = await Promise.all([fetch("https://z3-tawny.vercel.app/emscripten-poc-built.js"), fetch("https://z3-tawny.vercel.app/emscripten-poc-built.wasm")]);
 
+          console.log({step: "1. fetch stuff", jsResponse, wasmResponse});
+
           if (!jsResponse.ok || !wasmResponse.ok) {
             throw new Error("Failed to fetch Emscripten files.");
           }
@@ -38,12 +40,18 @@
           const jsBlob = new Blob([jsText], { type: "text/javascript" });
           mainScriptUrlOrBlob = URL.createObjectURL(jsBlob);
 
+          console.log({ step: "2. set mainScriptUrlOrBlob", jsText, jsBlob });
+          console.log({ step: "3. Define Module" });
+
           // Step 3: Define the Module object with mainScriptUrlOrBlob
           var Module = {
             // Set the location of the WASM file for loading
             locateFile: (path, prefix) => {
               if (path.endsWith(".wasm")) {
-                return "https://z3-tawny.vercel.app/emscripten-poc-built.js";
+                const returning = "emscripten-poc-built.wasm";
+                //const returning = "https://z3-tawny.vercel.app/emscripten-poc-built.wasm";
+                console.log({ step: "3-1. locateFile->path.endsWith('.wasm')", path, prefix, returning });
+                return returning;
               }
               return prefix + path;
             },
@@ -62,6 +70,8 @@
               // URL.revokeObjectURL(mainScriptUrlOrBlob);
             },
           };
+
+          console.log({ step: "4. Module now defined, adding local script tag", Module });
 
           // Step 4: Create a script tag and append it to the body to execute the code
           const script = document.createElement("script");
