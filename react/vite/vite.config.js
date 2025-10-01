@@ -9,7 +9,7 @@ const base = process.env.BUILD_FOR === "prod" ? "/js-randomness-predictor-demos/
 
 // So we can go to "http://localhost:5173/docs/vanilla-js.html", etc...
 // As the 'nodepath.resolve' suggest, this path is relative to the "root" option.
-const publicDir = nodepath.resolve(root, "../../");
+const publicDir = process.env.BUILD_FOR === "prod" ? "" : nodepath.resolve(root, "../../");
 
 console.log({ base, root, publicDir });
 
