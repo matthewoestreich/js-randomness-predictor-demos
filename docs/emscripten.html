@@ -6,11 +6,14 @@
   <title>Document</title>
 </head>
 <body>
+    <script>
+      var Module = {
+        mainScriptUrlOrBlob: '.emscripten-poc-built.js',
+        onRuntimeInitialized() {
+          console.log("Runtime initialized");
+        }
+      };
+    </script>
   <script src="https://z3-tawny.vercel.app/emscripten-poc-built.js"></script>
-  <script>
-    emscriptenPOC().then(Module => {
-      console.log("Demo loaded:", Module);
-    });
-  </script>
 </body>
 </html>
