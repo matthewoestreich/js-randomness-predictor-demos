@@ -74,6 +74,8 @@
             },
           };
 
+          window._Module = Module;
+
           console.log({ step: "4. Module now defined, adding local script tag", Module });
 
           // Step 4: Create a script tag and append it to the body to execute the code
@@ -83,32 +85,32 @@
 
           const loadEmscriptenPOCScript = document.createElement("script");
           loadEmscriptenPOCScript.textContent = `
-          let e = undefined;
+            let e = undefined;
+            callPOC();
 
-          function callPOC() {
-          try {
-            console.log("callPOC");
-            if (emscriptenPOC != undefined) {
-              e = emscriptenPOC;
+            function callPOC() {
+              try {
+                console.log("callPOC");
+                if (emscriptenPOC != undefined) {
+                  e = emscriptenPOC;
+                }
+                if (!e || e == undefined) {
+                  console.log("e not found");
+                  setTimeout(() => callPOC(), 1000);
+                } else {
+                  e = emscriptenPOC;
+                  e(Module).then((moduleInstance) => console.log("emscriptenPOC() has been called!", { moduleInstance }));
+                }
+              } catch (err) {
+                if (!e || e == undefined) {
+                  console.log("e not found");
+                  setTimeout(() => callPOC(), 1000);
+                } else {
+                  e = emscriptenPOC;
+                  e(Module).then((moduleInstance) => console.log("emscriptenPOC() has been called!", { moduleInstance }));
+                }
+              }
             }
-            if (!e || e == undefined) {
-              console.log('e not found');
-              setTimeout(() => callPOC(), 1000);
-            } else {
-              e = emscriptenPOC;
-              e().then(() => console.log('emscriptenPOC() has been called!'));
-            }
-        } catch(err) {
-                    if (!e || e == undefined) {
-              console.log('e not found');
-              setTimeout(() => callPOC(), 1000);
-            } else {
-              e = emscriptenPOC;
-              e(Module).then((moduleInstance) => console.log('emscriptenPOC() has been called!', {moduleInstance}));
-            } 
-        }
-          }
-          callPOC();
           `;
           document.body.appendChild(loadEmscriptenPOCScript);
 
