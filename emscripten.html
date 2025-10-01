@@ -47,10 +47,9 @@
           var Module = {
             // Set the location of the WASM file for loading
             locateFile: (path, prefix) => {
-              console.log({ step: "3-1. locateFile", path, prefix, returning });
               if (path.endsWith(".wasm")) {
-                const returning = "emscripten-poc-built.wasm";
-                //const returning = "https://z3-tawny.vercel.app/emscripten-poc-built.wasm";
+                //const returning = "emscripten-poc-built.wasm";
+                const returning = "https://z3-tawny.vercel.app/emscripten-poc-built.wasm";
                 return returning;
               }
               return prefix + path;
@@ -83,6 +82,8 @@
           let e = undefined;
 
           function callPOC() {
+          try {
+            console.log("callPOC");
             if (emscriptenPOC != undefined) {
               e = emscriptenPOC;
             }
@@ -93,6 +94,7 @@
               e = emscriptenPOC;
               e().then(() => console.log('emscriptenPOC() has been called!'));
             }
+        } catch(e) {}
           }
           callPOC();
           `
