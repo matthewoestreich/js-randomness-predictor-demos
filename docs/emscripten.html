@@ -83,9 +83,10 @@
           script.src = mainScriptUrlOrBlob;
           document.body.appendChild(script);
 
+          let emscriptenPOC = undefined;
           function callPOC() {
             try {
-              if (emscriptenPOC == undefined) {
+              if (emscriptenPOC === undefined) {
                 console.log("emscriptenPOC not found, will try again in 1sec");
                 setTimeout(() => callPOC(), 1000);
               } else {
