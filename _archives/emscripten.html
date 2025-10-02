@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Emscripten App from Blob</title>
+    <style>
+      /* A simple visual feedback element to show when the app is running */
+      #output {
+        border: 1px solid #ccc;
+        padding: 10px;
+        height: 200px;
+        overflow: auto;
+        white-space: pre;
+        background: #f4f4f4;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Loading an Emscripten Module from a Blob</h1>
+    <p>This demonstrates loading a multithreaded Emscripten application from dynamically fetched files.</p>
+    <div id="output">Loading...</div>
+
+    <script src="emscripten-poc-loader.js"></script>
+  </body>
+</html>
