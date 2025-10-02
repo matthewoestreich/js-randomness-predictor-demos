@@ -24,29 +24,37 @@
       },
       mainScriptUrlOrBlob: mainScriptUrlOrBlob,
       onRuntimeInitialized: () => {
-        console.log("js-randomness-predictor initialized.");
+        console.log("from jsrp-loader : js-randomness-predictor initialized.");
       },
     };
 
     const script = document.createElement("script");
     script.src = mainScriptUrlOrBlob;
+    script.id = `z3-built-jsrp`;
     document.body.appendChild(script);
 
     function initialize() {
       try {
         if (typeof initZ3 === "undefined") {
+          console.log("from jsrp-loader : initZ3 is undefined");
           setTimeout(() => initialize(), 1000);
         } else {
-          initZ3(Module).then(() => {
-            window.initZ3 = initZ3;
-          });
+          if (window.initZ3) {
+            console.log("from jsrp-loader : window.initZ3 now exists", window.initZ3);
+            //window.initZ3(Module);
+            return;
+          }
+          //initZ3(Module).then((initializedZ3Module) => {
+          //  console.log({status:"initialized",initializedZ3Module});
+          //  window.initZ3 = initializedZ3Module;
+          //});
         }
       } catch (e) {
         console.error("js-randomness-predictor something went wrong during initialize()", e);
       }
     }
-
     initialize();
+
   } catch (error) {
     console.error("js-randomness-predictor an error occurred during loading:", error);
   }
