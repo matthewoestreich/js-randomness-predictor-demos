@@ -3,8 +3,8 @@
   "specifiers": {
     "jsr:@std/assert@1": "1.0.14",
     "jsr:@std/internal@^1.0.10": "1.0.10",
-    "npm:js-randomness-predictor@*": "3.1.4",
-    "npm:js-randomness-predictor@^3.1.4": "3.1.4"
+    "npm:js-randomness-predictor@*": "3.2.11",
+    "npm:js-randomness-predictor@^3.2.11": "3.2.11"
   },
   "jsr": {
     "@std/assert@1.0.14": {
@@ -50,8 +50,8 @@
     "get-east-asian-width@1.4.0": {
       "integrity": "sha512-QZjmEOC+IT1uk6Rx0sX22V6uHWVwbdbxf1faPqJ1QhLdGgsRGCZoyaQBm/piRdJy/D2um6hM1UP7ZEeQ4EkP+Q=="
     },
-    "js-randomness-predictor@3.1.4": {
-      "integrity": "sha512-WWdAlAj7C6b1RBG6pQZ4RJq3pDDz7+FHXgI/htw0vZdQjN3qzPgmKwNrV7ZQOwmzlvu2AfgYmzGQL0pG34W/kg==",
+    "js-randomness-predictor@3.2.11": {
+      "integrity": "sha512-BbVy0Jqqz23Fpz4nB/b9aVkUQ61PPrFmBfEVhVa4LRRbOgS5SiffJUiqRNsmkdK26GXLeb0thxEAJMwcz3IBEg==",
       "dependencies": [
         "yargs",
         "z3-solver-jsrp"
@@ -100,8 +100,8 @@
         "yargs-parser"
       ]
     },
-    "z3-solver-jsrp@4.15.3-republish": {
-      "integrity": "sha512-ev5cXAdeER5csmpFMzAaTTwxE+Z7NEAB+YAHbFzkYXO8UENOETK+9C9yzn89GynKSlAIX9W44qVwWrPQIdaEYw==",
+    "z3-solver-jsrp@4.15.3-republish.1": {
+      "integrity": "sha512-1/87YcF9SAdYsj+4qoc8uoSRBVmmFhbjGOibvhAAa5W21rmYygNztxMSdINxCHb9I/12IDPtLdmhmY5hXH44yg==",
       "dependencies": [
         "async-mutex"
       ]
@@ -110,7 +110,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@1",
-      "npm:js-randomness-predictor@^3.1.4"
+      "npm:js-randomness-predictor@^3.2.11"
     ]
   }
 }

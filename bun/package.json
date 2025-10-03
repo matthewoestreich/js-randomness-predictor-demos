@@ -5,7 +5,7 @@
   "private": true,
   "devDependencies": {
     "@types/bun": "latest",
-    "js-randomness-predictor": "^3.1.4"
+    "js-randomness-predictor": "^3.2.11"
   },
   "peerDependencies": {
     "typescript": "^5"
