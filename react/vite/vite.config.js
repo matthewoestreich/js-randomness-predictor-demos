@@ -2,8 +2,10 @@ import nodepath from "node:path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+console.log(process.env.DEV);
+
 export default defineConfig({
-  base: "/js-randomness-predictor-demos/react-vite/",
+  base: process.env.DEV !== undefined ? "/react-vite/" : "/js-randomness-predictor-demos/react-vite/",
   build: {
     outDir: nodepath.resolve(__dirname, "../../docs/react-vite"),
   },
