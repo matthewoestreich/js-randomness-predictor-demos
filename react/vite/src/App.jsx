@@ -1,35 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import JSRandomnessPredictor from "js-randomness-predictor/umd";
+import { getCurrentBrowser, isCurrentBrowserSupported } from "../../helperFunctions";
 
 // Store original Math.random as a global variable.
 // We hook Math.random so we can keep the UI updated for every Math.random call.
 const MATH_RANDOM = Math.random;
-
-function getCurrentBrowser() {
-  const userAgent = navigator.userAgent;
-  if (userAgent.indexOf("Chrome") > -1) {
-    return "chrome";
-  } else if (userAgent.indexOf("Firefox") > -1) {
-    return "firefox";
-  } else if (userAgent.indexOf("Safari") > -1) {
-    return "safari";
-  } else if (userAgent.indexOf("Edge") > -1) {
-    return "edge";
-  } else if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
-    return "opera";
-  } else if (userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident/") > -1) {
-    return "internetExplorer";
-  }
-  return "";
-}
-
-function isCurrentBrowserSupported(currentBrowser = "") {
-  const supportedBrowsers = ["chrome", "firefox", "safari"];
-  if (currentBrowser === "" || !currentBrowser) {
-    return false;
-  }
-  return supportedBrowsers.includes(currentBrowser);
-}
 
 function callMathRandomNTimes(n) {
   const output = [];

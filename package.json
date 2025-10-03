@@ -14,14 +14,16 @@
   "scripts": {
     "format": "prettier . --write",
     "build:root": "node build.js",
-    "build:react:vite": "cd react/vite && npm run build:prod && cd ../..",
+    "build:react:vite": "cd react/vite && npm run build && cd ../..",
+    "build:react:webpack": "npm --prefix react/webpack run build",
     "build:vanillajs": "cd vanillajs && node build.js && cd ../",
-    "build": "rimraf docs && npm run build:root && npm run build:react:vite && npm run build:vanillajs"
+    "build": "rimraf docs && npm run build:root && npm run build:react:vite && npm run build:react:webpack && npm run build:vanillajs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^5.1.0",
     "rimraf": "^6.0.1"
   },
   "devDependencies": {
