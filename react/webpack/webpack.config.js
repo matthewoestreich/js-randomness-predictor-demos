@@ -32,6 +32,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: "./coi.serviceworker.js", to: "../../docs/react-webpack/coi.serviceworker.js" },
+        { from: "./index.css", to: "../../docs/react-webpack/index.css" },
       ],
     }),
   ],

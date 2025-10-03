@@ -86,6 +86,7 @@ export default function App() {
 
   return (
     <div>
+      <h1>React + Vite</h1>
       <p style={{ marginBottom: 0 }}>
         <small>Browser: {browser === "" ? "UNRECOGNIZED" : browser}</small>
       </p>
