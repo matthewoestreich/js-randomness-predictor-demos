@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import JSRandomnessPredictor from "js-randomness-predictor";
+import JSRandomnessPredictor from "js-randomness-predictor/umd";
 
 // Store original Math.random as a global variable.
 // We hook Math.random so we can keep the UI updated for every Math.random call.

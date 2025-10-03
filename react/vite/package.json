@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.3",
-    "js-randomness-predictor": "3.1.4",
+    "js-randomness-predictor": "^3.2.6",
     "vite": "^7.1.5"
   },
   "description": ""

@@ -29,6 +29,9 @@ export default defineConfig({
     open: "react-vite.html",
   },
   server: {
+    watch: {
+      ignored: ["./node_modules/js-randomness-predictor/**"],
+    },
     open: "react-vite.html",
   },
   define: {

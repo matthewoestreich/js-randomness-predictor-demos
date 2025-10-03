@@ -5,13 +5,13 @@ exports.assert = assert;
 exports.allSatisfy = allSatisfy;
 const types_1 = require("./types");
 function getAllProperties(obj) {
-    const properties = new Set();
-    do {
-        for (const key of Reflect.ownKeys(obj)) {
-            properties.add([obj, key]);
-        }
-    } while ((obj = Reflect.getPrototypeOf(obj)) && obj !== Object.prototype);
-    return properties;
+  const properties = new Set();
+  do {
+    for (const key of Reflect.ownKeys(obj)) {
+      properties.add([obj, key]);
+    }
+  } while ((obj = Reflect.getPrototypeOf(obj)) && obj !== Object.prototype);
+  return properties;
 }
 /**
  * Use to ensure that switches are checked to be exhaustive at compile time
@@ -36,12 +36,12 @@ function getAllProperties(obj) {
  * @param x - The param on which the switch operates
  */
 function assertExhaustive(x) {
-    throw new Error('Unexpected code execution detected, should be caught at compile time');
+  throw new Error("Unexpected code execution detected, should be caught at compile time");
 }
 function assert(condition, reason) {
-    if (!condition) {
-        throw new types_1.Z3AssertionError(reason ?? 'Assertion failed');
-    }
+  if (!condition) {
+    throw new types_1.Z3AssertionError(reason ?? "Assertion failed");
+  }
 }
 /**
  * Check the all elements of a `collection` satisfy the `premise`.
@@ -49,12 +49,12 @@ function assert(condition, reason) {
  * @returns null if the `collection` is empty, boolean otherwise
  */
 function allSatisfy(collection, premise) {
-    let hasItems = false;
-    for (const arg of collection) {
-        hasItems = true;
-        if (!premise(arg)) {
-            return false;
-        }
+  let hasItems = false;
+  for (const arg of collection) {
+    hasItems = true;
+    if (!premise(arg)) {
+      return false;
     }
-    return hasItems === true ? true : null;
+  }
+  return hasItems === true ? true : null;
 }

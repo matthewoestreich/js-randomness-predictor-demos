@@ -23,7 +23,7 @@
     <script>
       // Use a self-executing async function to handle the promises from fetch
       (async () => {
-        let mainScriptUrlOrBlob
+        let mainScriptUrlOrBlob;
         try {
           // Step 1: Fetch the main JavaScript file and the WebAssembly binary
           const [jsResponse, wasmResponse] = await Promise.all([
@@ -92,9 +92,7 @@
                   console.log("emscriptenPOC Initialized!", { moduleInstance });
                 });
               }
-            } catch (e) {
-
-            }
+            } catch (e) {}
           }
           callPOC();
 

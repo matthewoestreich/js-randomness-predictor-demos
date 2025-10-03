@@ -1,1 +1,5361 @@
-(function(bt,st){typeof exports=="object"&&typeof module<"u"?module.exports=st():typeof define=="function"&&define.amd?define(st):(bt=typeof globalThis<"u"?globalThis:bt||self,bt.JSRandomnessPredictor=st())})(this,(function(){"use strict";function bt(l,i){for(var t=0;t<i.length;t++){const u=i[t];if(typeof u!="string"&&!Array.isArray(u)){for(const b in u)if(b!=="default"&&!(b in l)){const g=Object.getOwnPropertyDescriptor(u,b);g&&Object.defineProperty(l,b,g.get?g:{enumerable:!0,get:()=>u[b]})}}}return Object.freeze(Object.defineProperty(l,Symbol.toStringTag,{value:"Module"}))}let st;async function Kt(){if(st)return st;if(!window.initZ3||!window.Module)throw new Error("Z3 not initialized properly! window.initZ3 and window.Module should be set via IIFE in entry!");const l=window.initZ3,i=async()=>await l(window.Module),t=await(await Promise.resolve().then(()=>R_)).init(i),{createApi:u}=await Promise.resolve().then(()=>d_),b={...t,...u(t.Z3)};return st=b,b}class Jt extends Error{constructor(i){i=i===void 0?"Cannot solve state. Unable to make accurate predictions.":i,super(i),this.name="UnsatError",Object.setPrototypeOf(this,new.target.prototype)}}class c_ extends Error{constructor(i){super(i),this.name="InsufficientSequenceLengthError",Object.setPrototypeOf(this,new.target.prototype)}}function Y(l){return l&0xffffffffffffffffn}class W{constructor(){}static symbolic(i){let t=i[0];t=t.xor(t.shl(23)),t=t.xor(t.lshr(17)),t=t.xor(i[1]),t=t.xor(i[1].lshr(26)),i[0]=i[1],i[1]=t}static symbolicArithmeticShiftRight(i){let t=i[0];t=t.xor(t.shl(23)),t=t.xor(t.shr(17)),t=t.xor(i[1]),t=t.xor(i[1].shr(26)),i[0]=i[1],i[1]=t}static concreteBackwards(i){let t=i[1]^i[0]>>26n^i[0];t=Y(t^t>>17n^t>>34n^t>>51n),t=Y(t^t<<23n^t<<46n),i[1]=i[0],i[0]=t}static concrete(i){let t=i[0];t^=Y(t<<23n),t^=Y(t>>17n),t^=i[1],t^=Y(i[1]>>26n),i[0]=i[1],i[1]=t}static concreteArithmeticShiftRight(i){let t=Y(i[0]);t^=Y(t<<23n),t^=this.#r(t,17n),t^=i[1],t^=this.#r(i[1],26n),i[0]=i[1],i[1]=Y(t)}static#r(i,t){const u=Y(i>>t);if((i&1n<<63n)===0n)return u;const g=(1n<<t)-1n<<64n-t;return u|g}}class m_{#r=Math.pow(2,53);#t=[0n,0n];constructor(i){this.sequence=i}async predictNext(){this.#t[0]===0n&&this.#t[1]===0n&&await this.#e();const i=this.#n(this.#t[0]);return W.concreteBackwards(this.#t),i}async#e(){try{const{Context:i}=await Kt(),t=i("main"),u=new t.Solver,b=t.BitVec.const("ss0",64),g=t.BitVec.const("ss1",64),p=[b,g],P=[...this.sequence].reverse();for(const E of P){W.symbolic(p);const e=this.#_(E);u.add(p[0].lshr(11).eq(t.BitVec.val(e,64)))}if(await u.check()!=="sat")throw new Jt;const o=u.model();this.#t=[o.get(b).value(),o.get(g).value()]}catch(i){return Promise.reject(i)}}#_(i){const t=Math.floor(i*this.#r);return BigInt(t)}#n(i){return Number(i>>11n)/this.#r}}class l_{#r=0x1fffffffffffffn;#t=Math.pow(2,53);#e=[0n,0n];constructor(i){this.sequence=i}async predictNext(){return this.#e[0]===0n&&this.#e[1]===0n&&await this.#_(),W.concrete(this.#e),this.#s(Y(this.#e[0]+this.#e[1]))}async#_(){try{const{Context:i}=await Kt(),t=i("main"),u=new t.Solver,b=t.BitVec.const("ss0",64),g=t.BitVec.const("ss1",64),p=[b,g];for(const E of this.sequence){W.symbolic(p);const e=this.#n(E),Z=p[0].add(p[1]).and(t.BitVec.val(this.#r,64));u.add(Z.eq(t.BitVec.val(e,64)))}if(await u.check()!=="sat")throw new Jt;const P=u.model(),o=[P.get(b).value(),P.get(g).value()];for(const E of this.sequence)W.concrete(o);this.#e=o}catch(i){return Promise.reject(i)}}#n(i){return BigInt(Math.floor(i*this.#t))}#s(i){return Number(i&this.#r)/this.#t}}class f_{#r=6;#t=[0n,0n];#e;#_;#n=0x1fffffffffffffn;#s=Math.pow(2,53);constructor(i){if(i.length<this.#r)throw new c_(`sequence length must be >= 6 : got ${i.length}`);this.#e=t=>W.symbolicArithmeticShiftRight(t),this.#_=t=>W.concreteArithmeticShiftRight(t),this.sequence=i}async predictNext(){return this.#t[0]===0n&&this.#t[1]===0n&&await this.#o(()=>this.#a(),()=>(this.#e=i=>W.symbolic(i),this.#_=i=>W.concrete(i),this.#a())),this.#_(this.#t),this.#i(Y(this.#t[0]+this.#t[1]))}async#o(i,t){try{return await i()}catch{return await t()}}async#a(){try{const{Context:i}=await Kt(),t=i("main"),u=new t.Solver,b=t.BitVec.const("ss0",64),g=t.BitVec.const("ss1",64),p=[b,g];for(const E of this.sequence){this.#e(p);const e=this.#u(E),Z=p[0].add(p[1]).and(t.BitVec.val(this.#n,64));u.add(Z.eq(t.BitVec.val(e,64)))}if(await u.check()!=="sat")throw new Jt;const P=u.model(),o=[P.get(b).value(),P.get(g).value()];for(const E of this.sequence)this.#_(o);this.#t=o}catch(i){return Promise.reject(i)}}#u(i){return BigInt(Math.floor(i*this.#s))}#i(i){return Number(i&this.#n)/this.#s}}const te={firefox:l=>new l_(l),chrome:l=>new m_(l),safari:l=>new f_(l)},p_=te.firefox,b_=te.chrome,g_=te.safari;(async()=>{try{const[i,t]=await Promise.all([fetch("https://z3-tawny.vercel.app/z3-built.js"),fetch("https://z3-tawny.vercel.app/z3-built.wasm")]);(!i.ok||!t.ok)&&console.error("js-randomness-predictor Failed to fetch z3 files",{jsResponse:i.ok,wasmResponse:t.ok});const u=await i.text(),b=new Blob([u],{type:"text/javascript"});let g=URL.createObjectURL(b);var l={locateFile:(P,o)=>P.endsWith(".wasm")?"https://z3-tawny.vercel.app/z3-built.wasm":o+P,wasmBinaryFile:"https://z3-tawny.vercel.app/z3-built.wasm",mainScriptUrlOrBlob:g,onRuntimeInitialized:()=>{console.log("js-randomness-predictor initialized.")}};window.Module=l;const p=document.createElement("script");p.src=g,p.id="z3-built-jsrp",document.body.appendChild(p),(function P(){try{if(typeof initZ3>"u")setTimeout(()=>P(),1e3);else if(window.initZ3){window.initZ3=initZ3;return}}catch(o){console.error("js-randomness-predictor something went wrong during initialize()",o)}})()}catch(i){console.error("js-randomness-predictor an error occurred during loading:",i)}})();const h_={firefox:p_,safari:g_,chrome:b_};var O_=typeof globalThis<"u"?globalThis:typeof window<"u"?window:typeof global<"u"?global:typeof self<"u"?self:{};function P_(l){if(Object.prototype.hasOwnProperty.call(l,"__esModule"))return l;var i=l.default;if(typeof i=="function"){var t=function u(){var b=!1;try{b=this instanceof u}catch{}return b?Reflect.construct(i,arguments,this.constructor):i.apply(this,arguments)};t.prototype=i.prototype}else t={};return Object.defineProperty(t,"__esModule",{value:!0}),Object.keys(l).forEach(function(u){var b=Object.getOwnPropertyDescriptor(l,u);Object.defineProperty(t,u,b.get?b:{enumerable:!0,get:function(){return l[u]}})}),t}var at={},U={},De;function E_(){if(De)return U;De=1,Object.defineProperty(U,"__esModule",{value:!0}),U.Z3_goal_prec=U.Z3_error_code=U.Z3_ast_print_mode=U.Z3_param_kind=U.Z3_decl_kind=U.Z3_ast_kind=U.Z3_sort_kind=U.Z3_parameter_kind=U.Z3_symbol_kind=U.Z3_lbool=void 0;var l;(function(e){e[e.Z3_L_FALSE=-1]="Z3_L_FALSE",e[e.Z3_L_UNDEF=0]="Z3_L_UNDEF",e[e.Z3_L_TRUE=1]="Z3_L_TRUE"})(l||(U.Z3_lbool=l={}));var i;(function(e){e[e.Z3_INT_SYMBOL=0]="Z3_INT_SYMBOL",e[e.Z3_STRING_SYMBOL=1]="Z3_STRING_SYMBOL"})(i||(U.Z3_symbol_kind=i={}));var t;(function(e){e[e.Z3_PARAMETER_INT=0]="Z3_PARAMETER_INT",e[e.Z3_PARAMETER_DOUBLE=1]="Z3_PARAMETER_DOUBLE",e[e.Z3_PARAMETER_RATIONAL=2]="Z3_PARAMETER_RATIONAL",e[e.Z3_PARAMETER_SYMBOL=3]="Z3_PARAMETER_SYMBOL",e[e.Z3_PARAMETER_SORT=4]="Z3_PARAMETER_SORT",e[e.Z3_PARAMETER_AST=5]="Z3_PARAMETER_AST",e[e.Z3_PARAMETER_FUNC_DECL=6]="Z3_PARAMETER_FUNC_DECL",e[e.Z3_PARAMETER_INTERNAL=7]="Z3_PARAMETER_INTERNAL",e[e.Z3_PARAMETER_ZSTRING=8]="Z3_PARAMETER_ZSTRING"})(t||(U.Z3_parameter_kind=t={}));var u;(function(e){e[e.Z3_UNINTERPRETED_SORT=0]="Z3_UNINTERPRETED_SORT",e[e.Z3_BOOL_SORT=1]="Z3_BOOL_SORT",e[e.Z3_INT_SORT=2]="Z3_INT_SORT",e[e.Z3_REAL_SORT=3]="Z3_REAL_SORT",e[e.Z3_BV_SORT=4]="Z3_BV_SORT",e[e.Z3_ARRAY_SORT=5]="Z3_ARRAY_SORT",e[e.Z3_DATATYPE_SORT=6]="Z3_DATATYPE_SORT",e[e.Z3_RELATION_SORT=7]="Z3_RELATION_SORT",e[e.Z3_FINITE_DOMAIN_SORT=8]="Z3_FINITE_DOMAIN_SORT",e[e.Z3_FLOATING_POINT_SORT=9]="Z3_FLOATING_POINT_SORT",e[e.Z3_ROUNDING_MODE_SORT=10]="Z3_ROUNDING_MODE_SORT",e[e.Z3_SEQ_SORT=11]="Z3_SEQ_SORT",e[e.Z3_RE_SORT=12]="Z3_RE_SORT",e[e.Z3_CHAR_SORT=13]="Z3_CHAR_SORT",e[e.Z3_TYPE_VAR=14]="Z3_TYPE_VAR",e[e.Z3_UNKNOWN_SORT=1e3]="Z3_UNKNOWN_SORT"})(u||(U.Z3_sort_kind=u={}));var b;(function(e){e[e.Z3_NUMERAL_AST=0]="Z3_NUMERAL_AST",e[e.Z3_APP_AST=1]="Z3_APP_AST",e[e.Z3_VAR_AST=2]="Z3_VAR_AST",e[e.Z3_QUANTIFIER_AST=3]="Z3_QUANTIFIER_AST",e[e.Z3_SORT_AST=4]="Z3_SORT_AST",e[e.Z3_FUNC_DECL_AST=5]="Z3_FUNC_DECL_AST",e[e.Z3_UNKNOWN_AST=1e3]="Z3_UNKNOWN_AST"})(b||(U.Z3_ast_kind=b={}));var g;(function(e){e[e.Z3_OP_TRUE=256]="Z3_OP_TRUE",e[e.Z3_OP_FALSE=257]="Z3_OP_FALSE",e[e.Z3_OP_EQ=258]="Z3_OP_EQ",e[e.Z3_OP_DISTINCT=259]="Z3_OP_DISTINCT",e[e.Z3_OP_ITE=260]="Z3_OP_ITE",e[e.Z3_OP_AND=261]="Z3_OP_AND",e[e.Z3_OP_OR=262]="Z3_OP_OR",e[e.Z3_OP_IFF=263]="Z3_OP_IFF",e[e.Z3_OP_XOR=264]="Z3_OP_XOR",e[e.Z3_OP_NOT=265]="Z3_OP_NOT",e[e.Z3_OP_IMPLIES=266]="Z3_OP_IMPLIES",e[e.Z3_OP_OEQ=267]="Z3_OP_OEQ",e[e.Z3_OP_ANUM=512]="Z3_OP_ANUM",e[e.Z3_OP_AGNUM=513]="Z3_OP_AGNUM",e[e.Z3_OP_LE=514]="Z3_OP_LE",e[e.Z3_OP_GE=515]="Z3_OP_GE",e[e.Z3_OP_LT=516]="Z3_OP_LT",e[e.Z3_OP_GT=517]="Z3_OP_GT",e[e.Z3_OP_ADD=518]="Z3_OP_ADD",e[e.Z3_OP_SUB=519]="Z3_OP_SUB",e[e.Z3_OP_UMINUS=520]="Z3_OP_UMINUS",e[e.Z3_OP_MUL=521]="Z3_OP_MUL",e[e.Z3_OP_DIV=522]="Z3_OP_DIV",e[e.Z3_OP_IDIV=523]="Z3_OP_IDIV",e[e.Z3_OP_REM=524]="Z3_OP_REM",e[e.Z3_OP_MOD=525]="Z3_OP_MOD",e[e.Z3_OP_TO_REAL=526]="Z3_OP_TO_REAL",e[e.Z3_OP_TO_INT=527]="Z3_OP_TO_INT",e[e.Z3_OP_IS_INT=528]="Z3_OP_IS_INT",e[e.Z3_OP_POWER=529]="Z3_OP_POWER",e[e.Z3_OP_ABS=530]="Z3_OP_ABS",e[e.Z3_OP_STORE=768]="Z3_OP_STORE",e[e.Z3_OP_SELECT=769]="Z3_OP_SELECT",e[e.Z3_OP_CONST_ARRAY=770]="Z3_OP_CONST_ARRAY",e[e.Z3_OP_ARRAY_MAP=771]="Z3_OP_ARRAY_MAP",e[e.Z3_OP_ARRAY_DEFAULT=772]="Z3_OP_ARRAY_DEFAULT",e[e.Z3_OP_SET_UNION=773]="Z3_OP_SET_UNION",e[e.Z3_OP_SET_INTERSECT=774]="Z3_OP_SET_INTERSECT",e[e.Z3_OP_SET_DIFFERENCE=775]="Z3_OP_SET_DIFFERENCE",e[e.Z3_OP_SET_COMPLEMENT=776]="Z3_OP_SET_COMPLEMENT",e[e.Z3_OP_SET_SUBSET=777]="Z3_OP_SET_SUBSET",e[e.Z3_OP_AS_ARRAY=778]="Z3_OP_AS_ARRAY",e[e.Z3_OP_ARRAY_EXT=779]="Z3_OP_ARRAY_EXT",e[e.Z3_OP_SET_HAS_SIZE=780]="Z3_OP_SET_HAS_SIZE",e[e.Z3_OP_SET_CARD=781]="Z3_OP_SET_CARD",e[e.Z3_OP_BNUM=1024]="Z3_OP_BNUM",e[e.Z3_OP_BIT1=1025]="Z3_OP_BIT1",e[e.Z3_OP_BIT0=1026]="Z3_OP_BIT0",e[e.Z3_OP_BNEG=1027]="Z3_OP_BNEG",e[e.Z3_OP_BADD=1028]="Z3_OP_BADD",e[e.Z3_OP_BSUB=1029]="Z3_OP_BSUB",e[e.Z3_OP_BMUL=1030]="Z3_OP_BMUL",e[e.Z3_OP_BSDIV=1031]="Z3_OP_BSDIV",e[e.Z3_OP_BUDIV=1032]="Z3_OP_BUDIV",e[e.Z3_OP_BSREM=1033]="Z3_OP_BSREM",e[e.Z3_OP_BUREM=1034]="Z3_OP_BUREM",e[e.Z3_OP_BSMOD=1035]="Z3_OP_BSMOD",e[e.Z3_OP_BSDIV0=1036]="Z3_OP_BSDIV0",e[e.Z3_OP_BUDIV0=1037]="Z3_OP_BUDIV0",e[e.Z3_OP_BSREM0=1038]="Z3_OP_BSREM0",e[e.Z3_OP_BUREM0=1039]="Z3_OP_BUREM0",e[e.Z3_OP_BSMOD0=1040]="Z3_OP_BSMOD0",e[e.Z3_OP_ULEQ=1041]="Z3_OP_ULEQ",e[e.Z3_OP_SLEQ=1042]="Z3_OP_SLEQ",e[e.Z3_OP_UGEQ=1043]="Z3_OP_UGEQ",e[e.Z3_OP_SGEQ=1044]="Z3_OP_SGEQ",e[e.Z3_OP_ULT=1045]="Z3_OP_ULT",e[e.Z3_OP_SLT=1046]="Z3_OP_SLT",e[e.Z3_OP_UGT=1047]="Z3_OP_UGT",e[e.Z3_OP_SGT=1048]="Z3_OP_SGT",e[e.Z3_OP_BAND=1049]="Z3_OP_BAND",e[e.Z3_OP_BOR=1050]="Z3_OP_BOR",e[e.Z3_OP_BNOT=1051]="Z3_OP_BNOT",e[e.Z3_OP_BXOR=1052]="Z3_OP_BXOR",e[e.Z3_OP_BNAND=1053]="Z3_OP_BNAND",e[e.Z3_OP_BNOR=1054]="Z3_OP_BNOR",e[e.Z3_OP_BXNOR=1055]="Z3_OP_BXNOR",e[e.Z3_OP_CONCAT=1056]="Z3_OP_CONCAT",e[e.Z3_OP_SIGN_EXT=1057]="Z3_OP_SIGN_EXT",e[e.Z3_OP_ZERO_EXT=1058]="Z3_OP_ZERO_EXT",e[e.Z3_OP_EXTRACT=1059]="Z3_OP_EXTRACT",e[e.Z3_OP_REPEAT=1060]="Z3_OP_REPEAT",e[e.Z3_OP_BREDOR=1061]="Z3_OP_BREDOR",e[e.Z3_OP_BREDAND=1062]="Z3_OP_BREDAND",e[e.Z3_OP_BCOMP=1063]="Z3_OP_BCOMP",e[e.Z3_OP_BSHL=1064]="Z3_OP_BSHL",e[e.Z3_OP_BLSHR=1065]="Z3_OP_BLSHR",e[e.Z3_OP_BASHR=1066]="Z3_OP_BASHR",e[e.Z3_OP_ROTATE_LEFT=1067]="Z3_OP_ROTATE_LEFT",e[e.Z3_OP_ROTATE_RIGHT=1068]="Z3_OP_ROTATE_RIGHT",e[e.Z3_OP_EXT_ROTATE_LEFT=1069]="Z3_OP_EXT_ROTATE_LEFT",e[e.Z3_OP_EXT_ROTATE_RIGHT=1070]="Z3_OP_EXT_ROTATE_RIGHT",e[e.Z3_OP_BIT2BOOL=1071]="Z3_OP_BIT2BOOL",e[e.Z3_OP_INT2BV=1072]="Z3_OP_INT2BV",e[e.Z3_OP_BV2INT=1073]="Z3_OP_BV2INT",e[e.Z3_OP_SBV2INT=1074]="Z3_OP_SBV2INT",e[e.Z3_OP_CARRY=1075]="Z3_OP_CARRY",e[e.Z3_OP_XOR3=1076]="Z3_OP_XOR3",e[e.Z3_OP_BSMUL_NO_OVFL=1077]="Z3_OP_BSMUL_NO_OVFL",e[e.Z3_OP_BUMUL_NO_OVFL=1078]="Z3_OP_BUMUL_NO_OVFL",e[e.Z3_OP_BSMUL_NO_UDFL=1079]="Z3_OP_BSMUL_NO_UDFL",e[e.Z3_OP_BSDIV_I=1080]="Z3_OP_BSDIV_I",e[e.Z3_OP_BUDIV_I=1081]="Z3_OP_BUDIV_I",e[e.Z3_OP_BSREM_I=1082]="Z3_OP_BSREM_I",e[e.Z3_OP_BUREM_I=1083]="Z3_OP_BUREM_I",e[e.Z3_OP_BSMOD_I=1084]="Z3_OP_BSMOD_I",e[e.Z3_OP_PR_UNDEF=1280]="Z3_OP_PR_UNDEF",e[e.Z3_OP_PR_TRUE=1281]="Z3_OP_PR_TRUE",e[e.Z3_OP_PR_ASSERTED=1282]="Z3_OP_PR_ASSERTED",e[e.Z3_OP_PR_GOAL=1283]="Z3_OP_PR_GOAL",e[e.Z3_OP_PR_MODUS_PONENS=1284]="Z3_OP_PR_MODUS_PONENS",e[e.Z3_OP_PR_REFLEXIVITY=1285]="Z3_OP_PR_REFLEXIVITY",e[e.Z3_OP_PR_SYMMETRY=1286]="Z3_OP_PR_SYMMETRY",e[e.Z3_OP_PR_TRANSITIVITY=1287]="Z3_OP_PR_TRANSITIVITY",e[e.Z3_OP_PR_TRANSITIVITY_STAR=1288]="Z3_OP_PR_TRANSITIVITY_STAR",e[e.Z3_OP_PR_MONOTONICITY=1289]="Z3_OP_PR_MONOTONICITY",e[e.Z3_OP_PR_QUANT_INTRO=1290]="Z3_OP_PR_QUANT_INTRO",e[e.Z3_OP_PR_BIND=1291]="Z3_OP_PR_BIND",e[e.Z3_OP_PR_DISTRIBUTIVITY=1292]="Z3_OP_PR_DISTRIBUTIVITY",e[e.Z3_OP_PR_AND_ELIM=1293]="Z3_OP_PR_AND_ELIM",e[e.Z3_OP_PR_NOT_OR_ELIM=1294]="Z3_OP_PR_NOT_OR_ELIM",e[e.Z3_OP_PR_REWRITE=1295]="Z3_OP_PR_REWRITE",e[e.Z3_OP_PR_REWRITE_STAR=1296]="Z3_OP_PR_REWRITE_STAR",e[e.Z3_OP_PR_PULL_QUANT=1297]="Z3_OP_PR_PULL_QUANT",e[e.Z3_OP_PR_PUSH_QUANT=1298]="Z3_OP_PR_PUSH_QUANT",e[e.Z3_OP_PR_ELIM_UNUSED_VARS=1299]="Z3_OP_PR_ELIM_UNUSED_VARS",e[e.Z3_OP_PR_DER=1300]="Z3_OP_PR_DER",e[e.Z3_OP_PR_QUANT_INST=1301]="Z3_OP_PR_QUANT_INST",e[e.Z3_OP_PR_HYPOTHESIS=1302]="Z3_OP_PR_HYPOTHESIS",e[e.Z3_OP_PR_LEMMA=1303]="Z3_OP_PR_LEMMA",e[e.Z3_OP_PR_UNIT_RESOLUTION=1304]="Z3_OP_PR_UNIT_RESOLUTION",e[e.Z3_OP_PR_IFF_TRUE=1305]="Z3_OP_PR_IFF_TRUE",e[e.Z3_OP_PR_IFF_FALSE=1306]="Z3_OP_PR_IFF_FALSE",e[e.Z3_OP_PR_COMMUTATIVITY=1307]="Z3_OP_PR_COMMUTATIVITY",e[e.Z3_OP_PR_DEF_AXIOM=1308]="Z3_OP_PR_DEF_AXIOM",e[e.Z3_OP_PR_ASSUMPTION_ADD=1309]="Z3_OP_PR_ASSUMPTION_ADD",e[e.Z3_OP_PR_LEMMA_ADD=1310]="Z3_OP_PR_LEMMA_ADD",e[e.Z3_OP_PR_REDUNDANT_DEL=1311]="Z3_OP_PR_REDUNDANT_DEL",e[e.Z3_OP_PR_CLAUSE_TRAIL=1312]="Z3_OP_PR_CLAUSE_TRAIL",e[e.Z3_OP_PR_DEF_INTRO=1313]="Z3_OP_PR_DEF_INTRO",e[e.Z3_OP_PR_APPLY_DEF=1314]="Z3_OP_PR_APPLY_DEF",e[e.Z3_OP_PR_IFF_OEQ=1315]="Z3_OP_PR_IFF_OEQ",e[e.Z3_OP_PR_NNF_POS=1316]="Z3_OP_PR_NNF_POS",e[e.Z3_OP_PR_NNF_NEG=1317]="Z3_OP_PR_NNF_NEG",e[e.Z3_OP_PR_SKOLEMIZE=1318]="Z3_OP_PR_SKOLEMIZE",e[e.Z3_OP_PR_MODUS_PONENS_OEQ=1319]="Z3_OP_PR_MODUS_PONENS_OEQ",e[e.Z3_OP_PR_TH_LEMMA=1320]="Z3_OP_PR_TH_LEMMA",e[e.Z3_OP_PR_HYPER_RESOLVE=1321]="Z3_OP_PR_HYPER_RESOLVE",e[e.Z3_OP_RA_STORE=1536]="Z3_OP_RA_STORE",e[e.Z3_OP_RA_EMPTY=1537]="Z3_OP_RA_EMPTY",e[e.Z3_OP_RA_IS_EMPTY=1538]="Z3_OP_RA_IS_EMPTY",e[e.Z3_OP_RA_JOIN=1539]="Z3_OP_RA_JOIN",e[e.Z3_OP_RA_UNION=1540]="Z3_OP_RA_UNION",e[e.Z3_OP_RA_WIDEN=1541]="Z3_OP_RA_WIDEN",e[e.Z3_OP_RA_PROJECT=1542]="Z3_OP_RA_PROJECT",e[e.Z3_OP_RA_FILTER=1543]="Z3_OP_RA_FILTER",e[e.Z3_OP_RA_NEGATION_FILTER=1544]="Z3_OP_RA_NEGATION_FILTER",e[e.Z3_OP_RA_RENAME=1545]="Z3_OP_RA_RENAME",e[e.Z3_OP_RA_COMPLEMENT=1546]="Z3_OP_RA_COMPLEMENT",e[e.Z3_OP_RA_SELECT=1547]="Z3_OP_RA_SELECT",e[e.Z3_OP_RA_CLONE=1548]="Z3_OP_RA_CLONE",e[e.Z3_OP_FD_CONSTANT=1549]="Z3_OP_FD_CONSTANT",e[e.Z3_OP_FD_LT=1550]="Z3_OP_FD_LT",e[e.Z3_OP_SEQ_UNIT=1551]="Z3_OP_SEQ_UNIT",e[e.Z3_OP_SEQ_EMPTY=1552]="Z3_OP_SEQ_EMPTY",e[e.Z3_OP_SEQ_CONCAT=1553]="Z3_OP_SEQ_CONCAT",e[e.Z3_OP_SEQ_PREFIX=1554]="Z3_OP_SEQ_PREFIX",e[e.Z3_OP_SEQ_SUFFIX=1555]="Z3_OP_SEQ_SUFFIX",e[e.Z3_OP_SEQ_CONTAINS=1556]="Z3_OP_SEQ_CONTAINS",e[e.Z3_OP_SEQ_EXTRACT=1557]="Z3_OP_SEQ_EXTRACT",e[e.Z3_OP_SEQ_REPLACE=1558]="Z3_OP_SEQ_REPLACE",e[e.Z3_OP_SEQ_REPLACE_RE=1559]="Z3_OP_SEQ_REPLACE_RE",e[e.Z3_OP_SEQ_REPLACE_RE_ALL=1560]="Z3_OP_SEQ_REPLACE_RE_ALL",e[e.Z3_OP_SEQ_REPLACE_ALL=1561]="Z3_OP_SEQ_REPLACE_ALL",e[e.Z3_OP_SEQ_AT=1562]="Z3_OP_SEQ_AT",e[e.Z3_OP_SEQ_NTH=1563]="Z3_OP_SEQ_NTH",e[e.Z3_OP_SEQ_LENGTH=1564]="Z3_OP_SEQ_LENGTH",e[e.Z3_OP_SEQ_INDEX=1565]="Z3_OP_SEQ_INDEX",e[e.Z3_OP_SEQ_LAST_INDEX=1566]="Z3_OP_SEQ_LAST_INDEX",e[e.Z3_OP_SEQ_TO_RE=1567]="Z3_OP_SEQ_TO_RE",e[e.Z3_OP_SEQ_IN_RE=1568]="Z3_OP_SEQ_IN_RE",e[e.Z3_OP_SEQ_MAP=1569]="Z3_OP_SEQ_MAP",e[e.Z3_OP_SEQ_MAPI=1570]="Z3_OP_SEQ_MAPI",e[e.Z3_OP_SEQ_FOLDL=1571]="Z3_OP_SEQ_FOLDL",e[e.Z3_OP_SEQ_FOLDLI=1572]="Z3_OP_SEQ_FOLDLI",e[e.Z3_OP_STR_TO_INT=1573]="Z3_OP_STR_TO_INT",e[e.Z3_OP_INT_TO_STR=1574]="Z3_OP_INT_TO_STR",e[e.Z3_OP_UBV_TO_STR=1575]="Z3_OP_UBV_TO_STR",e[e.Z3_OP_SBV_TO_STR=1576]="Z3_OP_SBV_TO_STR",e[e.Z3_OP_STR_TO_CODE=1577]="Z3_OP_STR_TO_CODE",e[e.Z3_OP_STR_FROM_CODE=1578]="Z3_OP_STR_FROM_CODE",e[e.Z3_OP_STRING_LT=1579]="Z3_OP_STRING_LT",e[e.Z3_OP_STRING_LE=1580]="Z3_OP_STRING_LE",e[e.Z3_OP_RE_PLUS=1581]="Z3_OP_RE_PLUS",e[e.Z3_OP_RE_STAR=1582]="Z3_OP_RE_STAR",e[e.Z3_OP_RE_OPTION=1583]="Z3_OP_RE_OPTION",e[e.Z3_OP_RE_CONCAT=1584]="Z3_OP_RE_CONCAT",e[e.Z3_OP_RE_UNION=1585]="Z3_OP_RE_UNION",e[e.Z3_OP_RE_RANGE=1586]="Z3_OP_RE_RANGE",e[e.Z3_OP_RE_DIFF=1587]="Z3_OP_RE_DIFF",e[e.Z3_OP_RE_INTERSECT=1588]="Z3_OP_RE_INTERSECT",e[e.Z3_OP_RE_LOOP=1589]="Z3_OP_RE_LOOP",e[e.Z3_OP_RE_POWER=1590]="Z3_OP_RE_POWER",e[e.Z3_OP_RE_COMPLEMENT=1591]="Z3_OP_RE_COMPLEMENT",e[e.Z3_OP_RE_EMPTY_SET=1592]="Z3_OP_RE_EMPTY_SET",e[e.Z3_OP_RE_FULL_SET=1593]="Z3_OP_RE_FULL_SET",e[e.Z3_OP_RE_FULL_CHAR_SET=1594]="Z3_OP_RE_FULL_CHAR_SET",e[e.Z3_OP_RE_OF_PRED=1595]="Z3_OP_RE_OF_PRED",e[e.Z3_OP_RE_REVERSE=1596]="Z3_OP_RE_REVERSE",e[e.Z3_OP_RE_DERIVATIVE=1597]="Z3_OP_RE_DERIVATIVE",e[e.Z3_OP_CHAR_CONST=1598]="Z3_OP_CHAR_CONST",e[e.Z3_OP_CHAR_LE=1599]="Z3_OP_CHAR_LE",e[e.Z3_OP_CHAR_TO_INT=1600]="Z3_OP_CHAR_TO_INT",e[e.Z3_OP_CHAR_TO_BV=1601]="Z3_OP_CHAR_TO_BV",e[e.Z3_OP_CHAR_FROM_BV=1602]="Z3_OP_CHAR_FROM_BV",e[e.Z3_OP_CHAR_IS_DIGIT=1603]="Z3_OP_CHAR_IS_DIGIT",e[e.Z3_OP_LABEL=1792]="Z3_OP_LABEL",e[e.Z3_OP_LABEL_LIT=1793]="Z3_OP_LABEL_LIT",e[e.Z3_OP_DT_CONSTRUCTOR=2048]="Z3_OP_DT_CONSTRUCTOR",e[e.Z3_OP_DT_RECOGNISER=2049]="Z3_OP_DT_RECOGNISER",e[e.Z3_OP_DT_IS=2050]="Z3_OP_DT_IS",e[e.Z3_OP_DT_ACCESSOR=2051]="Z3_OP_DT_ACCESSOR",e[e.Z3_OP_DT_UPDATE_FIELD=2052]="Z3_OP_DT_UPDATE_FIELD",e[e.Z3_OP_PB_AT_MOST=2304]="Z3_OP_PB_AT_MOST",e[e.Z3_OP_PB_AT_LEAST=2305]="Z3_OP_PB_AT_LEAST",e[e.Z3_OP_PB_LE=2306]="Z3_OP_PB_LE",e[e.Z3_OP_PB_GE=2307]="Z3_OP_PB_GE",e[e.Z3_OP_PB_EQ=2308]="Z3_OP_PB_EQ",e[e.Z3_OP_SPECIAL_RELATION_LO=40960]="Z3_OP_SPECIAL_RELATION_LO",e[e.Z3_OP_SPECIAL_RELATION_PO=40961]="Z3_OP_SPECIAL_RELATION_PO",e[e.Z3_OP_SPECIAL_RELATION_PLO=40962]="Z3_OP_SPECIAL_RELATION_PLO",e[e.Z3_OP_SPECIAL_RELATION_TO=40963]="Z3_OP_SPECIAL_RELATION_TO",e[e.Z3_OP_SPECIAL_RELATION_TC=40964]="Z3_OP_SPECIAL_RELATION_TC",e[e.Z3_OP_SPECIAL_RELATION_TRC=40965]="Z3_OP_SPECIAL_RELATION_TRC",e[e.Z3_OP_FPA_RM_NEAREST_TIES_TO_EVEN=45056]="Z3_OP_FPA_RM_NEAREST_TIES_TO_EVEN",e[e.Z3_OP_FPA_RM_NEAREST_TIES_TO_AWAY=45057]="Z3_OP_FPA_RM_NEAREST_TIES_TO_AWAY",e[e.Z3_OP_FPA_RM_TOWARD_POSITIVE=45058]="Z3_OP_FPA_RM_TOWARD_POSITIVE",e[e.Z3_OP_FPA_RM_TOWARD_NEGATIVE=45059]="Z3_OP_FPA_RM_TOWARD_NEGATIVE",e[e.Z3_OP_FPA_RM_TOWARD_ZERO=45060]="Z3_OP_FPA_RM_TOWARD_ZERO",e[e.Z3_OP_FPA_NUM=45061]="Z3_OP_FPA_NUM",e[e.Z3_OP_FPA_PLUS_INF=45062]="Z3_OP_FPA_PLUS_INF",e[e.Z3_OP_FPA_MINUS_INF=45063]="Z3_OP_FPA_MINUS_INF",e[e.Z3_OP_FPA_NAN=45064]="Z3_OP_FPA_NAN",e[e.Z3_OP_FPA_PLUS_ZERO=45065]="Z3_OP_FPA_PLUS_ZERO",e[e.Z3_OP_FPA_MINUS_ZERO=45066]="Z3_OP_FPA_MINUS_ZERO",e[e.Z3_OP_FPA_ADD=45067]="Z3_OP_FPA_ADD",e[e.Z3_OP_FPA_SUB=45068]="Z3_OP_FPA_SUB",e[e.Z3_OP_FPA_NEG=45069]="Z3_OP_FPA_NEG",e[e.Z3_OP_FPA_MUL=45070]="Z3_OP_FPA_MUL",e[e.Z3_OP_FPA_DIV=45071]="Z3_OP_FPA_DIV",e[e.Z3_OP_FPA_REM=45072]="Z3_OP_FPA_REM",e[e.Z3_OP_FPA_ABS=45073]="Z3_OP_FPA_ABS",e[e.Z3_OP_FPA_MIN=45074]="Z3_OP_FPA_MIN",e[e.Z3_OP_FPA_MAX=45075]="Z3_OP_FPA_MAX",e[e.Z3_OP_FPA_FMA=45076]="Z3_OP_FPA_FMA",e[e.Z3_OP_FPA_SQRT=45077]="Z3_OP_FPA_SQRT",e[e.Z3_OP_FPA_ROUND_TO_INTEGRAL=45078]="Z3_OP_FPA_ROUND_TO_INTEGRAL",e[e.Z3_OP_FPA_EQ=45079]="Z3_OP_FPA_EQ",e[e.Z3_OP_FPA_LT=45080]="Z3_OP_FPA_LT",e[e.Z3_OP_FPA_GT=45081]="Z3_OP_FPA_GT",e[e.Z3_OP_FPA_LE=45082]="Z3_OP_FPA_LE",e[e.Z3_OP_FPA_GE=45083]="Z3_OP_FPA_GE",e[e.Z3_OP_FPA_IS_NAN=45084]="Z3_OP_FPA_IS_NAN",e[e.Z3_OP_FPA_IS_INF=45085]="Z3_OP_FPA_IS_INF",e[e.Z3_OP_FPA_IS_ZERO=45086]="Z3_OP_FPA_IS_ZERO",e[e.Z3_OP_FPA_IS_NORMAL=45087]="Z3_OP_FPA_IS_NORMAL",e[e.Z3_OP_FPA_IS_SUBNORMAL=45088]="Z3_OP_FPA_IS_SUBNORMAL",e[e.Z3_OP_FPA_IS_NEGATIVE=45089]="Z3_OP_FPA_IS_NEGATIVE",e[e.Z3_OP_FPA_IS_POSITIVE=45090]="Z3_OP_FPA_IS_POSITIVE",e[e.Z3_OP_FPA_FP=45091]="Z3_OP_FPA_FP",e[e.Z3_OP_FPA_TO_FP=45092]="Z3_OP_FPA_TO_FP",e[e.Z3_OP_FPA_TO_FP_UNSIGNED=45093]="Z3_OP_FPA_TO_FP_UNSIGNED",e[e.Z3_OP_FPA_TO_UBV=45094]="Z3_OP_FPA_TO_UBV",e[e.Z3_OP_FPA_TO_SBV=45095]="Z3_OP_FPA_TO_SBV",e[e.Z3_OP_FPA_TO_REAL=45096]="Z3_OP_FPA_TO_REAL",e[e.Z3_OP_FPA_TO_IEEE_BV=45097]="Z3_OP_FPA_TO_IEEE_BV",e[e.Z3_OP_FPA_BVWRAP=45098]="Z3_OP_FPA_BVWRAP",e[e.Z3_OP_FPA_BV2RM=45099]="Z3_OP_FPA_BV2RM",e[e.Z3_OP_INTERNAL=45100]="Z3_OP_INTERNAL",e[e.Z3_OP_RECURSIVE=45101]="Z3_OP_RECURSIVE",e[e.Z3_OP_UNINTERPRETED=45102]="Z3_OP_UNINTERPRETED"})(g||(U.Z3_decl_kind=g={}));var p;(function(e){e[e.Z3_PK_UINT=0]="Z3_PK_UINT",e[e.Z3_PK_BOOL=1]="Z3_PK_BOOL",e[e.Z3_PK_DOUBLE=2]="Z3_PK_DOUBLE",e[e.Z3_PK_SYMBOL=3]="Z3_PK_SYMBOL",e[e.Z3_PK_STRING=4]="Z3_PK_STRING",e[e.Z3_PK_OTHER=5]="Z3_PK_OTHER",e[e.Z3_PK_INVALID=6]="Z3_PK_INVALID"})(p||(U.Z3_param_kind=p={}));var P;(function(e){e[e.Z3_PRINT_SMTLIB_FULL=0]="Z3_PRINT_SMTLIB_FULL",e[e.Z3_PRINT_LOW_LEVEL=1]="Z3_PRINT_LOW_LEVEL",e[e.Z3_PRINT_SMTLIB2_COMPLIANT=2]="Z3_PRINT_SMTLIB2_COMPLIANT"})(P||(U.Z3_ast_print_mode=P={}));var o;(function(e){e[e.Z3_OK=0]="Z3_OK",e[e.Z3_SORT_ERROR=1]="Z3_SORT_ERROR",e[e.Z3_IOB=2]="Z3_IOB",e[e.Z3_INVALID_ARG=3]="Z3_INVALID_ARG",e[e.Z3_PARSER_ERROR=4]="Z3_PARSER_ERROR",e[e.Z3_NO_PARSER=5]="Z3_NO_PARSER",e[e.Z3_INVALID_PATTERN=6]="Z3_INVALID_PATTERN",e[e.Z3_MEMOUT_FAIL=7]="Z3_MEMOUT_FAIL",e[e.Z3_FILE_ACCESS_ERROR=8]="Z3_FILE_ACCESS_ERROR",e[e.Z3_INTERNAL_FATAL=9]="Z3_INTERNAL_FATAL",e[e.Z3_INVALID_USAGE=10]="Z3_INVALID_USAGE",e[e.Z3_DEC_REF_ERROR=11]="Z3_DEC_REF_ERROR",e[e.Z3_EXCEPTION=12]="Z3_EXCEPTION"})(o||(U.Z3_error_code=o={}));var E;return(function(e){e[e.Z3_GOAL_PRECISE=0]="Z3_GOAL_PRECISE",e[e.Z3_GOAL_UNDER=1]="Z3_GOAL_UNDER",e[e.Z3_GOAL_OVER=2]="Z3_GOAL_OVER",e[e.Z3_GOAL_UNDER_OVER=3]="Z3_GOAL_UNDER_OVER"})(E||(U.Z3_goal_prec=E={})),U}var It={},qe;function y_(){if(qe)return It;qe=1,Object.defineProperty(It,"__esModule",{value:!0}),It.init=l;async function l(i){let t=await i();function u(s){return new Uint8Array(new Uint32Array(s).buffer)}function b(s){return s.map(_=>_?1:0)}function g(s,_){return Array.from(new Uint32Array(t.HEAPU32.buffer,s,_))}let p=t._malloc(24),P=new Uint32Array(t.HEAPU32.buffer,p,4),o=s=>P[s],E=new Int32Array(t.HEAPU32.buffer,p,4),e=s=>E[s],Z=new BigUint64Array(t.HEAPU32.buffer,p,2),N=s=>Z[s],R=new BigInt64Array(t.HEAPU32.buffer,p,2),x=s=>R[s];return{em:t,Z3:{mk_context:function(s){let _=t._Z3_mk_context(s);return t._set_noop_error_handler(_),_},mk_context_rc:function(s){let _=t._Z3_mk_context_rc(s);return t._set_noop_error_handler(_),_},global_param_set:function(s,_){return t.ccall("Z3_global_param_set","void",["string","string"],[s,_])},global_param_reset_all:t._Z3_global_param_reset_all,global_param_get:function(s){return t.ccall("Z3_global_param_get","boolean",["string","number"],[s,p])?t.UTF8ToString(o(0)):null},mk_config:t._Z3_mk_config,del_config:t._Z3_del_config,set_param_value:function(s,_,a){return t.ccall("Z3_set_param_value","void",["number","string","string"],[s,_,a])},del_context:t._Z3_del_context,inc_ref:t._Z3_inc_ref,dec_ref:t._Z3_dec_ref,update_param_value:function(s,_,a){return t.ccall("Z3_update_param_value","void",["number","string","string"],[s,_,a])},get_global_param_descrs:t._Z3_get_global_param_descrs,interrupt:t._Z3_interrupt,enable_concurrent_dec_ref:t._Z3_enable_concurrent_dec_ref,mk_params:t._Z3_mk_params,params_inc_ref:t._Z3_params_inc_ref,params_dec_ref:t._Z3_params_dec_ref,params_set_bool:t._Z3_params_set_bool,params_set_uint:t._Z3_params_set_uint,params_set_double:t._Z3_params_set_double,params_set_symbol:t._Z3_params_set_symbol,params_to_string:function(s,_){return t.ccall("Z3_params_to_string","string",["number","number"],[s,_])},params_validate:t._Z3_params_validate,param_descrs_inc_ref:t._Z3_param_descrs_inc_ref,param_descrs_dec_ref:t._Z3_param_descrs_dec_ref,param_descrs_get_kind:t._Z3_param_descrs_get_kind,param_descrs_size:function(s,_){let a=t.ccall("Z3_param_descrs_size","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},param_descrs_get_name:t._Z3_param_descrs_get_name,param_descrs_get_documentation:function(s,_,a){return t.ccall("Z3_param_descrs_get_documentation","string",["number","number","number"],[s,_,a])},param_descrs_to_string:function(s,_){return t.ccall("Z3_param_descrs_to_string","string",["number","number"],[s,_])},mk_int_symbol:t._Z3_mk_int_symbol,mk_string_symbol:function(s,_){return t.ccall("Z3_mk_string_symbol","number",["number","string"],[s,_])},mk_uninterpreted_sort:t._Z3_mk_uninterpreted_sort,mk_type_variable:t._Z3_mk_type_variable,mk_bool_sort:t._Z3_mk_bool_sort,mk_int_sort:t._Z3_mk_int_sort,mk_real_sort:t._Z3_mk_real_sort,mk_bv_sort:t._Z3_mk_bv_sort,mk_finite_domain_sort:t._Z3_mk_finite_domain_sort,mk_array_sort:t._Z3_mk_array_sort,mk_array_sort_n:function(s,_,a){return t.ccall("Z3_mk_array_sort_n","number",["number","number","array","number"],[s,_.length,u(_),a])},mk_tuple_sort:function(s,_,a,h){if(a.length!==h.length)throw new TypeError(`field_names and field_sorts must be the same length (got ${a.length} and {field_sorts.length})`);let v=t._malloc(4*a.length);try{return{rv:t.ccall("Z3_mk_tuple_sort","number",["number","number","number","array","array","number","number"],[s,_,a.length,u(a),u(h),p,v]),mk_tuple_decl:o(0),proj_decl:g(v,a.length)}}finally{t._free(v)}},mk_enumeration_sort:function(s,_,a){let h=t._malloc(4*a.length);try{let v=t._malloc(4*a.length);try{return{rv:t.ccall("Z3_mk_enumeration_sort","number",["number","number","number","array","number","number"],[s,_,a.length,u(a),h,v]),enum_consts:g(h,a.length),enum_testers:g(v,a.length)}}finally{t._free(v)}}finally{t._free(h)}},mk_list_sort:function(s,_,a){return{rv:t.ccall("Z3_mk_list_sort","number",["number","number","number","number","number","number","number","number","number"],[s,_,a,p,p+4,p+8,p+12,p+16,p+20]),nil_decl:o(0),is_nil_decl:o(1),cons_decl:o(2),is_cons_decl:o(3),head_decl:o(4),tail_decl:o(5)}},mk_constructor:function(s,_,a,h,v,I){if(h.length!==v.length)throw new TypeError(`field_names and sorts must be the same length (got ${h.length} and {sorts.length})`);if(h.length!==I.length)throw new TypeError(`field_names and sort_refs must be the same length (got ${h.length} and {sort_refs.length})`);return t.ccall("Z3_mk_constructor","number",["number","number","number","number","array","array","array"],[s,_,a,h.length,u(h),u(v),u(I)])},constructor_num_fields:function(s,_){let a=t.ccall("Z3_constructor_num_fields","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},del_constructor:t._Z3_del_constructor,mk_datatype:function(s,_,a){return t.ccall("Z3_mk_datatype","number",["number","number","number","array"],[s,_,a.length,u(a)])},mk_datatype_sort:t._Z3_mk_datatype_sort,mk_constructor_list:function(s,_){return t.ccall("Z3_mk_constructor_list","number",["number","number","array"],[s,_.length,u(_)])},del_constructor_list:t._Z3_del_constructor_list,mk_datatypes:function(s,_,a){if(_.length!==a.length)throw new TypeError(`sort_names and constructor_lists must be the same length (got ${_.length} and {constructor_lists.length})`);let h=t._malloc(4*_.length);try{let v=t.ccall("Z3_mk_datatypes","void",["number","number","array","number","array"],[s,_.length,u(_),h,u(a)]);return g(h,_.length)}finally{t._free(h)}},query_constructor:function(s,_,a){let h=t._malloc(4*a);try{let v=t.ccall("Z3_query_constructor","void",["number","number","number","number","number","number"],[s,_,a,p,p+4,h]);return{constructor:o(0),tester:o(1),accessors:g(h,a)}}finally{t._free(h)}},mk_func_decl:function(s,_,a,h){return t.ccall("Z3_mk_func_decl","number",["number","number","number","array","number"],[s,_,a.length,u(a),h])},mk_app:function(s,_,a){return t.ccall("Z3_mk_app","number",["number","number","number","array"],[s,_,a.length,u(a)])},mk_const:t._Z3_mk_const,mk_fresh_func_decl:function(s,_,a,h){return t.ccall("Z3_mk_fresh_func_decl","number",["number","string","number","array","number"],[s,_,a.length,u(a),h])},mk_fresh_const:function(s,_,a){return t.ccall("Z3_mk_fresh_const","number",["number","string","number"],[s,_,a])},mk_rec_func_decl:function(s,_,a,h){return t.ccall("Z3_mk_rec_func_decl","number",["number","number","number","array","number"],[s,_,a.length,u(a),h])},add_rec_def:function(s,_,a,h){return t.ccall("Z3_add_rec_def","void",["number","number","number","array","number"],[s,_,a.length,u(a),h])},mk_true:t._Z3_mk_true,mk_false:t._Z3_mk_false,mk_eq:t._Z3_mk_eq,mk_distinct:function(s,_){return t.ccall("Z3_mk_distinct","number",["number","number","array"],[s,_.length,u(_)])},mk_not:t._Z3_mk_not,mk_ite:t._Z3_mk_ite,mk_iff:t._Z3_mk_iff,mk_implies:t._Z3_mk_implies,mk_xor:t._Z3_mk_xor,mk_and:function(s,_){return t.ccall("Z3_mk_and","number",["number","number","array"],[s,_.length,u(_)])},mk_or:function(s,_){return t.ccall("Z3_mk_or","number",["number","number","array"],[s,_.length,u(_)])},mk_add:function(s,_){return t.ccall("Z3_mk_add","number",["number","number","array"],[s,_.length,u(_)])},mk_mul:function(s,_){return t.ccall("Z3_mk_mul","number",["number","number","array"],[s,_.length,u(_)])},mk_sub:function(s,_){return t.ccall("Z3_mk_sub","number",["number","number","array"],[s,_.length,u(_)])},mk_unary_minus:t._Z3_mk_unary_minus,mk_div:t._Z3_mk_div,mk_mod:t._Z3_mk_mod,mk_rem:t._Z3_mk_rem,mk_power:t._Z3_mk_power,mk_abs:t._Z3_mk_abs,mk_lt:t._Z3_mk_lt,mk_le:t._Z3_mk_le,mk_gt:t._Z3_mk_gt,mk_ge:t._Z3_mk_ge,mk_divides:t._Z3_mk_divides,mk_int2real:t._Z3_mk_int2real,mk_real2int:t._Z3_mk_real2int,mk_is_int:t._Z3_mk_is_int,mk_bvnot:t._Z3_mk_bvnot,mk_bvredand:t._Z3_mk_bvredand,mk_bvredor:t._Z3_mk_bvredor,mk_bvand:t._Z3_mk_bvand,mk_bvor:t._Z3_mk_bvor,mk_bvxor:t._Z3_mk_bvxor,mk_bvnand:t._Z3_mk_bvnand,mk_bvnor:t._Z3_mk_bvnor,mk_bvxnor:t._Z3_mk_bvxnor,mk_bvneg:t._Z3_mk_bvneg,mk_bvadd:t._Z3_mk_bvadd,mk_bvsub:t._Z3_mk_bvsub,mk_bvmul:t._Z3_mk_bvmul,mk_bvudiv:t._Z3_mk_bvudiv,mk_bvsdiv:t._Z3_mk_bvsdiv,mk_bvurem:t._Z3_mk_bvurem,mk_bvsrem:t._Z3_mk_bvsrem,mk_bvsmod:t._Z3_mk_bvsmod,mk_bvult:t._Z3_mk_bvult,mk_bvslt:t._Z3_mk_bvslt,mk_bvule:t._Z3_mk_bvule,mk_bvsle:t._Z3_mk_bvsle,mk_bvuge:t._Z3_mk_bvuge,mk_bvsge:t._Z3_mk_bvsge,mk_bvugt:t._Z3_mk_bvugt,mk_bvsgt:t._Z3_mk_bvsgt,mk_concat:t._Z3_mk_concat,mk_extract:t._Z3_mk_extract,mk_sign_ext:t._Z3_mk_sign_ext,mk_zero_ext:t._Z3_mk_zero_ext,mk_repeat:t._Z3_mk_repeat,mk_bit2bool:t._Z3_mk_bit2bool,mk_bvshl:t._Z3_mk_bvshl,mk_bvlshr:t._Z3_mk_bvlshr,mk_bvashr:t._Z3_mk_bvashr,mk_rotate_left:t._Z3_mk_rotate_left,mk_rotate_right:t._Z3_mk_rotate_right,mk_ext_rotate_left:t._Z3_mk_ext_rotate_left,mk_ext_rotate_right:t._Z3_mk_ext_rotate_right,mk_int2bv:t._Z3_mk_int2bv,mk_bv2int:t._Z3_mk_bv2int,mk_bvadd_no_overflow:t._Z3_mk_bvadd_no_overflow,mk_bvadd_no_underflow:t._Z3_mk_bvadd_no_underflow,mk_bvsub_no_overflow:t._Z3_mk_bvsub_no_overflow,mk_bvsub_no_underflow:t._Z3_mk_bvsub_no_underflow,mk_bvsdiv_no_overflow:t._Z3_mk_bvsdiv_no_overflow,mk_bvneg_no_overflow:t._Z3_mk_bvneg_no_overflow,mk_bvmul_no_overflow:t._Z3_mk_bvmul_no_overflow,mk_bvmul_no_underflow:t._Z3_mk_bvmul_no_underflow,mk_select:t._Z3_mk_select,mk_select_n:function(s,_,a){return t.ccall("Z3_mk_select_n","number",["number","number","number","array"],[s,_,a.length,u(a)])},mk_store:t._Z3_mk_store,mk_store_n:function(s,_,a,h){return t.ccall("Z3_mk_store_n","number",["number","number","number","array","number"],[s,_,a.length,u(a),h])},mk_const_array:t._Z3_mk_const_array,mk_map:function(s,_,a){return t.ccall("Z3_mk_map","number",["number","number","number","array"],[s,_,a.length,u(a)])},mk_array_default:t._Z3_mk_array_default,mk_as_array:t._Z3_mk_as_array,mk_set_has_size:t._Z3_mk_set_has_size,mk_set_sort:t._Z3_mk_set_sort,mk_empty_set:t._Z3_mk_empty_set,mk_full_set:t._Z3_mk_full_set,mk_set_add:t._Z3_mk_set_add,mk_set_del:t._Z3_mk_set_del,mk_set_union:function(s,_){return t.ccall("Z3_mk_set_union","number",["number","number","array"],[s,_.length,u(_)])},mk_set_intersect:function(s,_){return t.ccall("Z3_mk_set_intersect","number",["number","number","array"],[s,_.length,u(_)])},mk_set_difference:t._Z3_mk_set_difference,mk_set_complement:t._Z3_mk_set_complement,mk_set_member:t._Z3_mk_set_member,mk_set_subset:t._Z3_mk_set_subset,mk_array_ext:t._Z3_mk_array_ext,mk_numeral:function(s,_,a){return t.ccall("Z3_mk_numeral","number",["number","string","number"],[s,_,a])},mk_real:t._Z3_mk_real,mk_real_int64:t._Z3_mk_real_int64,mk_int:t._Z3_mk_int,mk_unsigned_int:t._Z3_mk_unsigned_int,mk_int64:t._Z3_mk_int64,mk_unsigned_int64:t._Z3_mk_unsigned_int64,mk_bv_numeral:function(s,_){return t.ccall("Z3_mk_bv_numeral","number",["number","number","array"],[s,_.length,b(_)])},mk_seq_sort:t._Z3_mk_seq_sort,is_seq_sort:function(s,_){return t.ccall("Z3_is_seq_sort","boolean",["number","number"],[s,_])},get_seq_sort_basis:t._Z3_get_seq_sort_basis,mk_re_sort:t._Z3_mk_re_sort,is_re_sort:function(s,_){return t.ccall("Z3_is_re_sort","boolean",["number","number"],[s,_])},get_re_sort_basis:t._Z3_get_re_sort_basis,mk_string_sort:t._Z3_mk_string_sort,mk_char_sort:t._Z3_mk_char_sort,is_string_sort:function(s,_){return t.ccall("Z3_is_string_sort","boolean",["number","number"],[s,_])},is_char_sort:function(s,_){return t.ccall("Z3_is_char_sort","boolean",["number","number"],[s,_])},mk_string:function(s,_){return t.ccall("Z3_mk_string","number",["number","string"],[s,_])},mk_lstring:function(s,_,a){return t.ccall("Z3_mk_lstring","number",["number","number","string"],[s,_,a])},mk_u32string:function(s,_){return t.ccall("Z3_mk_u32string","number",["number","number","array"],[s,_.length,u(_)])},is_string:function(s,_){return t.ccall("Z3_is_string","boolean",["number","number"],[s,_])},get_string:function(s,_){return t.ccall("Z3_get_string","string",["number","number"],[s,_])},get_string_length:function(s,_){let a=t.ccall("Z3_get_string_length","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_string_contents:function(s,_,a){let h=t._malloc(4*a);try{let v=t.ccall("Z3_get_string_contents","void",["number","number","number","number"],[s,_,a,h]);return g(h,a)}finally{t._free(h)}},mk_seq_empty:t._Z3_mk_seq_empty,mk_seq_unit:t._Z3_mk_seq_unit,mk_seq_concat:function(s,_){return t.ccall("Z3_mk_seq_concat","number",["number","number","array"],[s,_.length,u(_)])},mk_seq_prefix:t._Z3_mk_seq_prefix,mk_seq_suffix:t._Z3_mk_seq_suffix,mk_seq_contains:t._Z3_mk_seq_contains,mk_str_lt:t._Z3_mk_str_lt,mk_str_le:t._Z3_mk_str_le,mk_seq_extract:t._Z3_mk_seq_extract,mk_seq_replace:t._Z3_mk_seq_replace,mk_seq_at:t._Z3_mk_seq_at,mk_seq_nth:t._Z3_mk_seq_nth,mk_seq_length:t._Z3_mk_seq_length,mk_seq_index:t._Z3_mk_seq_index,mk_seq_last_index:t._Z3_mk_seq_last_index,mk_seq_map:t._Z3_mk_seq_map,mk_seq_mapi:t._Z3_mk_seq_mapi,mk_seq_foldl:t._Z3_mk_seq_foldl,mk_seq_foldli:t._Z3_mk_seq_foldli,mk_str_to_int:t._Z3_mk_str_to_int,mk_int_to_str:t._Z3_mk_int_to_str,mk_string_to_code:t._Z3_mk_string_to_code,mk_string_from_code:t._Z3_mk_string_from_code,mk_ubv_to_str:t._Z3_mk_ubv_to_str,mk_sbv_to_str:t._Z3_mk_sbv_to_str,mk_seq_to_re:t._Z3_mk_seq_to_re,mk_seq_in_re:t._Z3_mk_seq_in_re,mk_re_plus:t._Z3_mk_re_plus,mk_re_star:t._Z3_mk_re_star,mk_re_option:t._Z3_mk_re_option,mk_re_union:function(s,_){return t.ccall("Z3_mk_re_union","number",["number","number","array"],[s,_.length,u(_)])},mk_re_concat:function(s,_){return t.ccall("Z3_mk_re_concat","number",["number","number","array"],[s,_.length,u(_)])},mk_re_range:t._Z3_mk_re_range,mk_re_allchar:t._Z3_mk_re_allchar,mk_re_loop:t._Z3_mk_re_loop,mk_re_power:t._Z3_mk_re_power,mk_re_intersect:function(s,_){return t.ccall("Z3_mk_re_intersect","number",["number","number","array"],[s,_.length,u(_)])},mk_re_complement:t._Z3_mk_re_complement,mk_re_diff:t._Z3_mk_re_diff,mk_re_empty:t._Z3_mk_re_empty,mk_re_full:t._Z3_mk_re_full,mk_char:t._Z3_mk_char,mk_char_le:t._Z3_mk_char_le,mk_char_to_int:t._Z3_mk_char_to_int,mk_char_to_bv:t._Z3_mk_char_to_bv,mk_char_from_bv:t._Z3_mk_char_from_bv,mk_char_is_digit:t._Z3_mk_char_is_digit,mk_linear_order:t._Z3_mk_linear_order,mk_partial_order:t._Z3_mk_partial_order,mk_piecewise_linear_order:t._Z3_mk_piecewise_linear_order,mk_tree_order:t._Z3_mk_tree_order,mk_transitive_closure:t._Z3_mk_transitive_closure,mk_pattern:function(s,_){return t.ccall("Z3_mk_pattern","number",["number","number","array"],[s,_.length,u(_)])},mk_bound:t._Z3_mk_bound,mk_forall:function(s,_,a,h,v,I){if(h.length!==v.length)throw new TypeError(`sorts and decl_names must be the same length (got ${h.length} and {decl_names.length})`);return t.ccall("Z3_mk_forall","number",["number","number","number","array","number","array","array","number"],[s,_,a.length,u(a),h.length,u(h),u(v),I])},mk_exists:function(s,_,a,h,v,I){if(h.length!==v.length)throw new TypeError(`sorts and decl_names must be the same length (got ${h.length} and {decl_names.length})`);return t.ccall("Z3_mk_exists","number",["number","number","number","array","number","array","array","number"],[s,_,a.length,u(a),h.length,u(h),u(v),I])},mk_quantifier:function(s,_,a,h,v,I,L){if(v.length!==I.length)throw new TypeError(`sorts and decl_names must be the same length (got ${v.length} and {decl_names.length})`);return t.ccall("Z3_mk_quantifier","number",["number","boolean","number","number","array","number","array","array","number"],[s,_,a,h.length,u(h),v.length,u(v),u(I),L])},mk_quantifier_ex:function(s,_,a,h,v,I,L,B,G,c){if(B.length!==G.length)throw new TypeError(`sorts and decl_names must be the same length (got ${B.length} and {decl_names.length})`);return t.ccall("Z3_mk_quantifier_ex","number",["number","boolean","number","number","number","number","array","number","array","number","array","array","number"],[s,_,a,h,v,I.length,u(I),L.length,u(L),B.length,u(B),u(G),c])},mk_forall_const:function(s,_,a,h,v){return t.ccall("Z3_mk_forall_const","number",["number","number","number","array","number","array","number"],[s,_,a.length,u(a),h.length,u(h),v])},mk_exists_const:function(s,_,a,h,v){return t.ccall("Z3_mk_exists_const","number",["number","number","number","array","number","array","number"],[s,_,a.length,u(a),h.length,u(h),v])},mk_quantifier_const:function(s,_,a,h,v,I){return t.ccall("Z3_mk_quantifier_const","number",["number","boolean","number","number","array","number","array","number"],[s,_,a,h.length,u(h),v.length,u(v),I])},mk_quantifier_const_ex:function(s,_,a,h,v,I,L,B,G){return t.ccall("Z3_mk_quantifier_const_ex","number",["number","boolean","number","number","number","number","array","number","array","number","array","number"],[s,_,a,h,v,I.length,u(I),L.length,u(L),B.length,u(B),G])},mk_lambda:function(s,_,a,h){if(_.length!==a.length)throw new TypeError(`sorts and decl_names must be the same length (got ${_.length} and {decl_names.length})`);return t.ccall("Z3_mk_lambda","number",["number","number","array","array","number"],[s,_.length,u(_),u(a),h])},mk_lambda_const:function(s,_,a){return t.ccall("Z3_mk_lambda_const","number",["number","number","array","number"],[s,_.length,u(_),a])},get_symbol_kind:t._Z3_get_symbol_kind,get_symbol_int:t._Z3_get_symbol_int,get_symbol_string:function(s,_){return t.ccall("Z3_get_symbol_string","string",["number","number"],[s,_])},get_sort_name:t._Z3_get_sort_name,get_sort_id:function(s,_){let a=t.ccall("Z3_get_sort_id","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},sort_to_ast:t._Z3_sort_to_ast,is_eq_sort:function(s,_,a){return t.ccall("Z3_is_eq_sort","boolean",["number","number","number"],[s,_,a])},get_sort_kind:t._Z3_get_sort_kind,get_bv_sort_size:function(s,_){let a=t.ccall("Z3_get_bv_sort_size","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_finite_domain_sort_size:function(s,_){return t.ccall("Z3_get_finite_domain_sort_size","boolean",["number","number","number"],[s,_,p])?N(0):null},get_array_arity:function(s,_){let a=t.ccall("Z3_get_array_arity","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_array_sort_domain:t._Z3_get_array_sort_domain,get_array_sort_domain_n:t._Z3_get_array_sort_domain_n,get_array_sort_range:t._Z3_get_array_sort_range,get_tuple_sort_mk_decl:t._Z3_get_tuple_sort_mk_decl,get_tuple_sort_num_fields:function(s,_){let a=t.ccall("Z3_get_tuple_sort_num_fields","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_tuple_sort_field_decl:t._Z3_get_tuple_sort_field_decl,is_recursive_datatype_sort:function(s,_){return t.ccall("Z3_is_recursive_datatype_sort","boolean",["number","number"],[s,_])},get_datatype_sort_num_constructors:function(s,_){let a=t.ccall("Z3_get_datatype_sort_num_constructors","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_datatype_sort_constructor:t._Z3_get_datatype_sort_constructor,get_datatype_sort_recognizer:t._Z3_get_datatype_sort_recognizer,get_datatype_sort_constructor_accessor:t._Z3_get_datatype_sort_constructor_accessor,datatype_update_field:t._Z3_datatype_update_field,get_relation_arity:function(s,_){let a=t.ccall("Z3_get_relation_arity","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_relation_column:t._Z3_get_relation_column,mk_atmost:function(s,_,a){return t.ccall("Z3_mk_atmost","number",["number","number","array","number"],[s,_.length,u(_),a])},mk_atleast:function(s,_,a){return t.ccall("Z3_mk_atleast","number",["number","number","array","number"],[s,_.length,u(_),a])},mk_pble:function(s,_,a,h){if(_.length!==a.length)throw new TypeError(`args and coeffs must be the same length (got ${_.length} and {coeffs.length})`);return t.ccall("Z3_mk_pble","number",["number","number","array","array","number"],[s,_.length,u(_),u(a),h])},mk_pbge:function(s,_,a,h){if(_.length!==a.length)throw new TypeError(`args and coeffs must be the same length (got ${_.length} and {coeffs.length})`);return t.ccall("Z3_mk_pbge","number",["number","number","array","array","number"],[s,_.length,u(_),u(a),h])},mk_pbeq:function(s,_,a,h){if(_.length!==a.length)throw new TypeError(`args and coeffs must be the same length (got ${_.length} and {coeffs.length})`);return t.ccall("Z3_mk_pbeq","number",["number","number","array","array","number"],[s,_.length,u(_),u(a),h])},func_decl_to_ast:t._Z3_func_decl_to_ast,is_eq_func_decl:function(s,_,a){return t.ccall("Z3_is_eq_func_decl","boolean",["number","number","number"],[s,_,a])},get_func_decl_id:function(s,_){let a=t.ccall("Z3_get_func_decl_id","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_decl_name:t._Z3_get_decl_name,get_decl_kind:t._Z3_get_decl_kind,get_domain_size:function(s,_){let a=t.ccall("Z3_get_domain_size","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_arity:function(s,_){let a=t.ccall("Z3_get_arity","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_domain:t._Z3_get_domain,get_range:t._Z3_get_range,get_decl_num_parameters:function(s,_){let a=t.ccall("Z3_get_decl_num_parameters","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_decl_parameter_kind:t._Z3_get_decl_parameter_kind,get_decl_int_parameter:t._Z3_get_decl_int_parameter,get_decl_double_parameter:t._Z3_get_decl_double_parameter,get_decl_symbol_parameter:t._Z3_get_decl_symbol_parameter,get_decl_sort_parameter:t._Z3_get_decl_sort_parameter,get_decl_ast_parameter:t._Z3_get_decl_ast_parameter,get_decl_func_decl_parameter:t._Z3_get_decl_func_decl_parameter,get_decl_rational_parameter:function(s,_,a){return t.ccall("Z3_get_decl_rational_parameter","string",["number","number","number"],[s,_,a])},app_to_ast:t._Z3_app_to_ast,get_app_decl:t._Z3_get_app_decl,get_app_num_args:function(s,_){let a=t.ccall("Z3_get_app_num_args","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_app_arg:t._Z3_get_app_arg,is_eq_ast:function(s,_,a){return t.ccall("Z3_is_eq_ast","boolean",["number","number","number"],[s,_,a])},get_ast_id:function(s,_){let a=t.ccall("Z3_get_ast_id","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_ast_hash:function(s,_){let a=t.ccall("Z3_get_ast_hash","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_sort:t._Z3_get_sort,is_well_sorted:function(s,_){return t.ccall("Z3_is_well_sorted","boolean",["number","number"],[s,_])},get_bool_value:t._Z3_get_bool_value,get_ast_kind:t._Z3_get_ast_kind,is_app:function(s,_){return t.ccall("Z3_is_app","boolean",["number","number"],[s,_])},is_ground:function(s,_){return t.ccall("Z3_is_ground","boolean",["number","number"],[s,_])},get_depth:function(s,_){let a=t.ccall("Z3_get_depth","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},is_numeral_ast:function(s,_){return t.ccall("Z3_is_numeral_ast","boolean",["number","number"],[s,_])},is_algebraic_number:function(s,_){return t.ccall("Z3_is_algebraic_number","boolean",["number","number"],[s,_])},to_app:t._Z3_to_app,to_func_decl:t._Z3_to_func_decl,get_numeral_string:function(s,_){return t.ccall("Z3_get_numeral_string","string",["number","number"],[s,_])},get_numeral_binary_string:function(s,_){return t.ccall("Z3_get_numeral_binary_string","string",["number","number"],[s,_])},get_numeral_decimal_string:function(s,_,a){return t.ccall("Z3_get_numeral_decimal_string","string",["number","number","number"],[s,_,a])},get_numeral_double:t._Z3_get_numeral_double,get_numerator:t._Z3_get_numerator,get_denominator:t._Z3_get_denominator,get_numeral_small:function(s,_){return t.ccall("Z3_get_numeral_small","boolean",["number","number","number","number"],[s,_,p,p+8])?{num:x(0),den:x(1)}:null},get_numeral_int:function(s,_){return t.ccall("Z3_get_numeral_int","boolean",["number","number","number"],[s,_,p])?e(0):null},get_numeral_uint:function(s,_){return t.ccall("Z3_get_numeral_uint","boolean",["number","number","number"],[s,_,p])?o(0):null},get_numeral_uint64:function(s,_){return t.ccall("Z3_get_numeral_uint64","boolean",["number","number","number"],[s,_,p])?N(0):null},get_numeral_int64:function(s,_){return t.ccall("Z3_get_numeral_int64","boolean",["number","number","number"],[s,_,p])?x(0):null},get_numeral_rational_int64:function(s,_){return t.ccall("Z3_get_numeral_rational_int64","boolean",["number","number","number","number"],[s,_,p,p+8])?{num:x(0),den:x(1)}:null},get_algebraic_number_lower:t._Z3_get_algebraic_number_lower,get_algebraic_number_upper:t._Z3_get_algebraic_number_upper,pattern_to_ast:t._Z3_pattern_to_ast,get_pattern_num_terms:function(s,_){let a=t.ccall("Z3_get_pattern_num_terms","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_pattern:t._Z3_get_pattern,get_index_value:function(s,_){let a=t.ccall("Z3_get_index_value","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},is_quantifier_forall:function(s,_){return t.ccall("Z3_is_quantifier_forall","boolean",["number","number"],[s,_])},is_quantifier_exists:function(s,_){return t.ccall("Z3_is_quantifier_exists","boolean",["number","number"],[s,_])},is_lambda:function(s,_){return t.ccall("Z3_is_lambda","boolean",["number","number"],[s,_])},get_quantifier_weight:function(s,_){let a=t.ccall("Z3_get_quantifier_weight","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_quantifier_skolem_id:t._Z3_get_quantifier_skolem_id,get_quantifier_id:t._Z3_get_quantifier_id,get_quantifier_num_patterns:function(s,_){let a=t.ccall("Z3_get_quantifier_num_patterns","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_quantifier_pattern_ast:t._Z3_get_quantifier_pattern_ast,get_quantifier_num_no_patterns:function(s,_){let a=t.ccall("Z3_get_quantifier_num_no_patterns","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_quantifier_no_pattern_ast:t._Z3_get_quantifier_no_pattern_ast,get_quantifier_num_bound:function(s,_){let a=t.ccall("Z3_get_quantifier_num_bound","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},get_quantifier_bound_name:t._Z3_get_quantifier_bound_name,get_quantifier_bound_sort:t._Z3_get_quantifier_bound_sort,get_quantifier_body:t._Z3_get_quantifier_body,simplify:function(s,_){return t.async_call(t._async_Z3_simplify,s,_)},simplify_ex:function(s,_,a){return t.async_call(t._async_Z3_simplify_ex,s,_,a)},simplify_get_help:function(s){return t.ccall("Z3_simplify_get_help","string",["number"],[s])},simplify_get_param_descrs:t._Z3_simplify_get_param_descrs,update_term:function(s,_,a){return t.ccall("Z3_update_term","number",["number","number","number","array"],[s,_,a.length,u(a)])},substitute:function(s,_,a,h){if(a.length!==h.length)throw new TypeError(`from and to must be the same length (got ${a.length} and {to.length})`);return t.ccall("Z3_substitute","number",["number","number","number","array","array"],[s,_,a.length,u(a),u(h)])},substitute_vars:function(s,_,a){return t.ccall("Z3_substitute_vars","number",["number","number","number","array"],[s,_,a.length,u(a)])},substitute_funs:function(s,_,a,h){if(a.length!==h.length)throw new TypeError(`from and to must be the same length (got ${a.length} and {to.length})`);return t.ccall("Z3_substitute_funs","number",["number","number","number","array","array"],[s,_,a.length,u(a),u(h)])},translate:t._Z3_translate,mk_model:t._Z3_mk_model,model_inc_ref:t._Z3_model_inc_ref,model_dec_ref:t._Z3_model_dec_ref,model_eval:function(s,_,a,h){return t.ccall("Z3_model_eval","boolean",["number","number","number","boolean","number"],[s,_,a,h,p])?o(0):null},model_get_const_interp:t._Z3_model_get_const_interp,model_has_interp:function(s,_,a){return t.ccall("Z3_model_has_interp","boolean",["number","number","number"],[s,_,a])},model_get_func_interp:t._Z3_model_get_func_interp,model_get_num_consts:function(s,_){let a=t.ccall("Z3_model_get_num_consts","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},model_get_const_decl:t._Z3_model_get_const_decl,model_get_num_funcs:function(s,_){let a=t.ccall("Z3_model_get_num_funcs","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},model_get_func_decl:t._Z3_model_get_func_decl,model_get_num_sorts:function(s,_){let a=t.ccall("Z3_model_get_num_sorts","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},model_get_sort:t._Z3_model_get_sort,model_get_sort_universe:t._Z3_model_get_sort_universe,model_translate:t._Z3_model_translate,is_as_array:function(s,_){return t.ccall("Z3_is_as_array","boolean",["number","number"],[s,_])},get_as_array_func_decl:t._Z3_get_as_array_func_decl,add_func_interp:t._Z3_add_func_interp,add_const_interp:t._Z3_add_const_interp,func_interp_inc_ref:t._Z3_func_interp_inc_ref,func_interp_dec_ref:t._Z3_func_interp_dec_ref,func_interp_get_num_entries:function(s,_){let a=t.ccall("Z3_func_interp_get_num_entries","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},func_interp_get_entry:t._Z3_func_interp_get_entry,func_interp_get_else:t._Z3_func_interp_get_else,func_interp_set_else:t._Z3_func_interp_set_else,func_interp_get_arity:function(s,_){let a=t.ccall("Z3_func_interp_get_arity","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},func_interp_add_entry:t._Z3_func_interp_add_entry,func_entry_inc_ref:t._Z3_func_entry_inc_ref,func_entry_dec_ref:t._Z3_func_entry_dec_ref,func_entry_get_value:t._Z3_func_entry_get_value,func_entry_get_num_args:function(s,_){let a=t.ccall("Z3_func_entry_get_num_args","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},func_entry_get_arg:t._Z3_func_entry_get_arg,open_log:function(s){return t.ccall("Z3_open_log","boolean",["string"],[s])},append_log:function(s){return t.ccall("Z3_append_log","void",["string"],[s])},close_log:t._Z3_close_log,toggle_warning_messages:t._Z3_toggle_warning_messages,set_ast_print_mode:t._Z3_set_ast_print_mode,ast_to_string:function(s,_){return t.ccall("Z3_ast_to_string","string",["number","number"],[s,_])},pattern_to_string:function(s,_){return t.ccall("Z3_pattern_to_string","string",["number","number"],[s,_])},sort_to_string:function(s,_){return t.ccall("Z3_sort_to_string","string",["number","number"],[s,_])},func_decl_to_string:function(s,_){return t.ccall("Z3_func_decl_to_string","string",["number","number"],[s,_])},model_to_string:function(s,_){return t.ccall("Z3_model_to_string","string",["number","number"],[s,_])},benchmark_to_smtlib_string:function(s,_,a,h,v,I,L){return t.ccall("Z3_benchmark_to_smtlib_string","string",["number","string","string","string","string","number","array","number"],[s,_,a,h,v,I.length,u(I),L])},parse_smtlib2_string:function(s,_,a,h,v,I){if(a.length!==h.length)throw new TypeError(`sort_names and sorts must be the same length (got ${a.length} and {sorts.length})`);if(v.length!==I.length)throw new TypeError(`decl_names and decls must be the same length (got ${v.length} and {decls.length})`);return t.ccall("Z3_parse_smtlib2_string","number",["number","string","number","array","array","number","array","array"],[s,_,a.length,u(a),u(h),v.length,u(v),u(I)])},parse_smtlib2_file:function(s,_,a,h,v,I){if(a.length!==h.length)throw new TypeError(`sort_names and sorts must be the same length (got ${a.length} and {sorts.length})`);if(v.length!==I.length)throw new TypeError(`decl_names and decls must be the same length (got ${v.length} and {decls.length})`);return t.ccall("Z3_parse_smtlib2_file","number",["number","string","number","array","array","number","array","array"],[s,_,a.length,u(a),u(h),v.length,u(v),u(I)])},eval_smtlib2_string:async function(s,_){return await t.async_call(()=>t.ccall("async_Z3_eval_smtlib2_string","void",["number","string"],[s,_]))},mk_parser_context:t._Z3_mk_parser_context,parser_context_inc_ref:t._Z3_parser_context_inc_ref,parser_context_dec_ref:t._Z3_parser_context_dec_ref,parser_context_add_sort:t._Z3_parser_context_add_sort,parser_context_add_decl:t._Z3_parser_context_add_decl,parser_context_from_string:function(s,_,a){return t.ccall("Z3_parser_context_from_string","number",["number","number","string"],[s,_,a])},get_error_code:t._Z3_get_error_code,set_error:t._Z3_set_error,get_error_msg:function(s,_){return t.ccall("Z3_get_error_msg","string",["number","number"],[s,_])},get_version:function(){return t.ccall("Z3_get_version","void",["number","number","number","number"],[p,p+4,p+8,p+12]),{major:o(0),minor:o(1),build_number:o(2),revision_number:o(3)}},get_full_version:function(){return t.ccall("Z3_get_full_version","string",[],[])},enable_trace:function(s){return t.ccall("Z3_enable_trace","void",["string"],[s])},disable_trace:function(s){return t.ccall("Z3_disable_trace","void",["string"],[s])},reset_memory:t._Z3_reset_memory,finalize_memory:t._Z3_finalize_memory,mk_goal:t._Z3_mk_goal,goal_inc_ref:t._Z3_goal_inc_ref,goal_dec_ref:t._Z3_goal_dec_ref,goal_precision:t._Z3_goal_precision,goal_assert:t._Z3_goal_assert,goal_inconsistent:function(s,_){return t.ccall("Z3_goal_inconsistent","boolean",["number","number"],[s,_])},goal_depth:function(s,_){let a=t.ccall("Z3_goal_depth","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},goal_reset:t._Z3_goal_reset,goal_size:function(s,_){let a=t.ccall("Z3_goal_size","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},goal_formula:t._Z3_goal_formula,goal_num_exprs:function(s,_){let a=t.ccall("Z3_goal_num_exprs","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},goal_is_decided_sat:function(s,_){return t.ccall("Z3_goal_is_decided_sat","boolean",["number","number"],[s,_])},goal_is_decided_unsat:function(s,_){return t.ccall("Z3_goal_is_decided_unsat","boolean",["number","number"],[s,_])},goal_translate:t._Z3_goal_translate,goal_convert_model:t._Z3_goal_convert_model,goal_to_string:function(s,_){return t.ccall("Z3_goal_to_string","string",["number","number"],[s,_])},goal_to_dimacs_string:function(s,_,a){return t.ccall("Z3_goal_to_dimacs_string","string",["number","number","boolean"],[s,_,a])},mk_tactic:function(s,_){return t.ccall("Z3_mk_tactic","number",["number","string"],[s,_])},tactic_inc_ref:t._Z3_tactic_inc_ref,tactic_dec_ref:t._Z3_tactic_dec_ref,mk_probe:function(s,_){return t.ccall("Z3_mk_probe","number",["number","string"],[s,_])},probe_inc_ref:t._Z3_probe_inc_ref,probe_dec_ref:t._Z3_probe_dec_ref,tactic_and_then:t._Z3_tactic_and_then,tactic_or_else:t._Z3_tactic_or_else,tactic_par_or:function(s,_){return t.ccall("Z3_tactic_par_or","number",["number","number","array"],[s,_.length,u(_)])},tactic_par_and_then:t._Z3_tactic_par_and_then,tactic_try_for:t._Z3_tactic_try_for,tactic_when:t._Z3_tactic_when,tactic_cond:t._Z3_tactic_cond,tactic_repeat:t._Z3_tactic_repeat,tactic_skip:t._Z3_tactic_skip,tactic_fail:t._Z3_tactic_fail,tactic_fail_if:t._Z3_tactic_fail_if,tactic_fail_if_not_decided:t._Z3_tactic_fail_if_not_decided,tactic_using_params:t._Z3_tactic_using_params,mk_simplifier:function(s,_){return t.ccall("Z3_mk_simplifier","number",["number","string"],[s,_])},simplifier_inc_ref:t._Z3_simplifier_inc_ref,simplifier_dec_ref:t._Z3_simplifier_dec_ref,solver_add_simplifier:t._Z3_solver_add_simplifier,simplifier_and_then:t._Z3_simplifier_and_then,simplifier_using_params:t._Z3_simplifier_using_params,get_num_simplifiers:function(s){let _=t.ccall("Z3_get_num_simplifiers","number",["number"],[s]);return _=new Uint32Array([_])[0],_},get_simplifier_name:function(s,_){return t.ccall("Z3_get_simplifier_name","string",["number","number"],[s,_])},simplifier_get_help:function(s,_){return t.ccall("Z3_simplifier_get_help","string",["number","number"],[s,_])},simplifier_get_param_descrs:t._Z3_simplifier_get_param_descrs,simplifier_get_descr:function(s,_){return t.ccall("Z3_simplifier_get_descr","string",["number","string"],[s,_])},probe_const:t._Z3_probe_const,probe_lt:t._Z3_probe_lt,probe_gt:t._Z3_probe_gt,probe_le:t._Z3_probe_le,probe_ge:t._Z3_probe_ge,probe_eq:t._Z3_probe_eq,probe_and:t._Z3_probe_and,probe_or:t._Z3_probe_or,probe_not:t._Z3_probe_not,get_num_tactics:function(s){let _=t.ccall("Z3_get_num_tactics","number",["number"],[s]);return _=new Uint32Array([_])[0],_},get_tactic_name:function(s,_){return t.ccall("Z3_get_tactic_name","string",["number","number"],[s,_])},get_num_probes:function(s){let _=t.ccall("Z3_get_num_probes","number",["number"],[s]);return _=new Uint32Array([_])[0],_},get_probe_name:function(s,_){return t.ccall("Z3_get_probe_name","string",["number","number"],[s,_])},tactic_get_help:function(s,_){return t.ccall("Z3_tactic_get_help","string",["number","number"],[s,_])},tactic_get_param_descrs:t._Z3_tactic_get_param_descrs,tactic_get_descr:function(s,_){return t.ccall("Z3_tactic_get_descr","string",["number","string"],[s,_])},probe_get_descr:function(s,_){return t.ccall("Z3_probe_get_descr","string",["number","string"],[s,_])},probe_apply:t._Z3_probe_apply,tactic_apply:function(s,_,a){return t.async_call(t._async_Z3_tactic_apply,s,_,a)},tactic_apply_ex:function(s,_,a,h){return t.async_call(t._async_Z3_tactic_apply_ex,s,_,a,h)},apply_result_inc_ref:t._Z3_apply_result_inc_ref,apply_result_dec_ref:t._Z3_apply_result_dec_ref,apply_result_to_string:function(s,_){return t.ccall("Z3_apply_result_to_string","string",["number","number"],[s,_])},apply_result_get_num_subgoals:function(s,_){let a=t.ccall("Z3_apply_result_get_num_subgoals","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},apply_result_get_subgoal:t._Z3_apply_result_get_subgoal,mk_solver:t._Z3_mk_solver,mk_simple_solver:t._Z3_mk_simple_solver,mk_solver_for_logic:t._Z3_mk_solver_for_logic,mk_solver_from_tactic:t._Z3_mk_solver_from_tactic,solver_translate:t._Z3_solver_translate,solver_import_model_converter:t._Z3_solver_import_model_converter,solver_get_help:function(s,_){return t.ccall("Z3_solver_get_help","string",["number","number"],[s,_])},solver_get_param_descrs:t._Z3_solver_get_param_descrs,solver_set_params:t._Z3_solver_set_params,solver_inc_ref:t._Z3_solver_inc_ref,solver_dec_ref:t._Z3_solver_dec_ref,solver_interrupt:t._Z3_solver_interrupt,solver_push:t._Z3_solver_push,solver_pop:t._Z3_solver_pop,solver_reset:t._Z3_solver_reset,solver_get_num_scopes:function(s,_){let a=t.ccall("Z3_solver_get_num_scopes","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},solver_assert:t._Z3_solver_assert,solver_assert_and_track:t._Z3_solver_assert_and_track,solver_from_file:function(s,_,a){return t.ccall("Z3_solver_from_file","void",["number","number","string"],[s,_,a])},solver_from_string:function(s,_,a){return t.ccall("Z3_solver_from_string","void",["number","number","string"],[s,_,a])},solver_get_assertions:t._Z3_solver_get_assertions,solver_get_units:t._Z3_solver_get_units,solver_get_trail:t._Z3_solver_get_trail,solver_get_non_units:t._Z3_solver_get_non_units,solver_get_levels:function(s,_,a,h){return t.ccall("Z3_solver_get_levels","void",["number","number","number","number","array"],[s,_,a,h.length,u(h)])},solver_congruence_root:t._Z3_solver_congruence_root,solver_congruence_next:t._Z3_solver_congruence_next,solver_congruence_explain:t._Z3_solver_congruence_explain,solver_solve_for:t._Z3_solver_solve_for,solver_next_split:function(s,_,a,h,v){return t.ccall("Z3_solver_next_split","boolean",["number","number","number","number","number"],[s,_,a,h,v])},solver_propagate_declare:function(s,_,a,h){return t.ccall("Z3_solver_propagate_declare","number",["number","number","number","array","number"],[s,_,a.length,u(a),h])},solver_propagate_register:t._Z3_solver_propagate_register,solver_propagate_register_cb:t._Z3_solver_propagate_register_cb,solver_propagate_consequence:function(s,_,a,h,v,I){if(h.length!==v.length)throw new TypeError(`eq_lhs and eq_rhs must be the same length (got ${h.length} and {eq_rhs.length})`);return t.ccall("Z3_solver_propagate_consequence","boolean",["number","number","number","array","number","array","array","number"],[s,_,a.length,u(a),h.length,u(h),u(v),I])},solver_set_initial_value:t._Z3_solver_set_initial_value,solver_check:function(s,_){return t.async_call(t._async_Z3_solver_check,s,_)},solver_check_assumptions:async function(s,_,a){return await t.async_call(()=>t.ccall("async_Z3_solver_check_assumptions","void",["number","number","number","array"],[s,_,a.length,u(a)]))},get_implied_equalities:function(s,_,a){let h=t._malloc(4*a.length);try{return{rv:t.ccall("Z3_get_implied_equalities","number",["number","number","number","array","number"],[s,_,a.length,u(a),h]),class_ids:g(h,a.length)}}finally{t._free(h)}},solver_get_consequences:function(s,_,a,h,v){return t.async_call(t._async_Z3_solver_get_consequences,s,_,a,h,v)},solver_cube:function(s,_,a,h){return t.async_call(t._async_Z3_solver_cube,s,_,a,h)},solver_get_model:t._Z3_solver_get_model,solver_get_proof:t._Z3_solver_get_proof,solver_get_unsat_core:t._Z3_solver_get_unsat_core,solver_get_reason_unknown:function(s,_){return t.ccall("Z3_solver_get_reason_unknown","string",["number","number"],[s,_])},solver_get_statistics:t._Z3_solver_get_statistics,solver_to_string:function(s,_){return t.ccall("Z3_solver_to_string","string",["number","number"],[s,_])},solver_to_dimacs_string:function(s,_,a){return t.ccall("Z3_solver_to_dimacs_string","string",["number","number","boolean"],[s,_,a])},stats_to_string:function(s,_){return t.ccall("Z3_stats_to_string","string",["number","number"],[s,_])},stats_inc_ref:t._Z3_stats_inc_ref,stats_dec_ref:t._Z3_stats_dec_ref,stats_size:function(s,_){let a=t.ccall("Z3_stats_size","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},stats_get_key:function(s,_,a){return t.ccall("Z3_stats_get_key","string",["number","number","number"],[s,_,a])},stats_is_uint:function(s,_,a){return t.ccall("Z3_stats_is_uint","boolean",["number","number","number"],[s,_,a])},stats_is_double:function(s,_,a){return t.ccall("Z3_stats_is_double","boolean",["number","number","number"],[s,_,a])},stats_get_uint_value:function(s,_,a){let h=t.ccall("Z3_stats_get_uint_value","number",["number","number","number"],[s,_,a]);return h=new Uint32Array([h])[0],h},stats_get_double_value:t._Z3_stats_get_double_value,get_estimated_alloc_size:t._Z3_get_estimated_alloc_size,algebraic_is_value:function(s,_){return t.ccall("Z3_algebraic_is_value","boolean",["number","number"],[s,_])},algebraic_is_pos:function(s,_){return t.ccall("Z3_algebraic_is_pos","boolean",["number","number"],[s,_])},algebraic_is_neg:function(s,_){return t.ccall("Z3_algebraic_is_neg","boolean",["number","number"],[s,_])},algebraic_is_zero:function(s,_){return t.ccall("Z3_algebraic_is_zero","boolean",["number","number"],[s,_])},algebraic_sign:t._Z3_algebraic_sign,algebraic_add:t._Z3_algebraic_add,algebraic_sub:t._Z3_algebraic_sub,algebraic_mul:t._Z3_algebraic_mul,algebraic_div:t._Z3_algebraic_div,algebraic_root:t._Z3_algebraic_root,algebraic_power:t._Z3_algebraic_power,algebraic_lt:function(s,_,a){return t.ccall("Z3_algebraic_lt","boolean",["number","number","number"],[s,_,a])},algebraic_gt:function(s,_,a){return t.ccall("Z3_algebraic_gt","boolean",["number","number","number"],[s,_,a])},algebraic_le:function(s,_,a){return t.ccall("Z3_algebraic_le","boolean",["number","number","number"],[s,_,a])},algebraic_ge:function(s,_,a){return t.ccall("Z3_algebraic_ge","boolean",["number","number","number"],[s,_,a])},algebraic_eq:function(s,_,a){return t.ccall("Z3_algebraic_eq","boolean",["number","number","number"],[s,_,a])},algebraic_neq:function(s,_,a){return t.ccall("Z3_algebraic_neq","boolean",["number","number","number"],[s,_,a])},algebraic_roots:async function(s,_,a){return await t.async_call(()=>t.ccall("async_Z3_algebraic_roots","void",["number","number","number","array"],[s,_,a.length,u(a)]))},algebraic_eval:async function(s,_,a){return await t.async_call(()=>t.ccall("async_Z3_algebraic_eval","void",["number","number","number","array"],[s,_,a.length,u(a)]))},algebraic_get_poly:t._Z3_algebraic_get_poly,algebraic_get_i:function(s,_){let a=t.ccall("Z3_algebraic_get_i","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},mk_ast_vector:t._Z3_mk_ast_vector,ast_vector_inc_ref:t._Z3_ast_vector_inc_ref,ast_vector_dec_ref:t._Z3_ast_vector_dec_ref,ast_vector_size:function(s,_){let a=t.ccall("Z3_ast_vector_size","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},ast_vector_get:t._Z3_ast_vector_get,ast_vector_set:t._Z3_ast_vector_set,ast_vector_resize:t._Z3_ast_vector_resize,ast_vector_push:t._Z3_ast_vector_push,ast_vector_translate:t._Z3_ast_vector_translate,ast_vector_to_string:function(s,_){return t.ccall("Z3_ast_vector_to_string","string",["number","number"],[s,_])},mk_ast_map:t._Z3_mk_ast_map,ast_map_inc_ref:t._Z3_ast_map_inc_ref,ast_map_dec_ref:t._Z3_ast_map_dec_ref,ast_map_contains:function(s,_,a){return t.ccall("Z3_ast_map_contains","boolean",["number","number","number"],[s,_,a])},ast_map_find:t._Z3_ast_map_find,ast_map_insert:t._Z3_ast_map_insert,ast_map_erase:t._Z3_ast_map_erase,ast_map_reset:t._Z3_ast_map_reset,ast_map_size:function(s,_){let a=t.ccall("Z3_ast_map_size","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},ast_map_keys:t._Z3_ast_map_keys,ast_map_to_string:function(s,_){return t.ccall("Z3_ast_map_to_string","string",["number","number"],[s,_])},mk_fixedpoint:t._Z3_mk_fixedpoint,fixedpoint_inc_ref:t._Z3_fixedpoint_inc_ref,fixedpoint_dec_ref:t._Z3_fixedpoint_dec_ref,fixedpoint_add_rule:t._Z3_fixedpoint_add_rule,fixedpoint_add_fact:function(s,_,a,h){return t.ccall("Z3_fixedpoint_add_fact","void",["number","number","number","number","array"],[s,_,a,h.length,u(h)])},fixedpoint_assert:t._Z3_fixedpoint_assert,fixedpoint_query:function(s,_,a){return t.async_call(t._async_Z3_fixedpoint_query,s,_,a)},fixedpoint_query_relations:async function(s,_,a){return await t.async_call(()=>t.ccall("async_Z3_fixedpoint_query_relations","void",["number","number","number","array"],[s,_,a.length,u(a)]))},fixedpoint_get_answer:t._Z3_fixedpoint_get_answer,fixedpoint_get_reason_unknown:function(s,_){return t.ccall("Z3_fixedpoint_get_reason_unknown","string",["number","number"],[s,_])},fixedpoint_update_rule:t._Z3_fixedpoint_update_rule,fixedpoint_get_num_levels:function(s,_,a){let h=t.ccall("Z3_fixedpoint_get_num_levels","number",["number","number","number"],[s,_,a]);return h=new Uint32Array([h])[0],h},fixedpoint_get_cover_delta:t._Z3_fixedpoint_get_cover_delta,fixedpoint_add_cover:t._Z3_fixedpoint_add_cover,fixedpoint_get_statistics:t._Z3_fixedpoint_get_statistics,fixedpoint_register_relation:t._Z3_fixedpoint_register_relation,fixedpoint_set_predicate_representation:function(s,_,a,h){return t.ccall("Z3_fixedpoint_set_predicate_representation","void",["number","number","number","number","array"],[s,_,a,h.length,u(h)])},fixedpoint_get_rules:t._Z3_fixedpoint_get_rules,fixedpoint_get_assertions:t._Z3_fixedpoint_get_assertions,fixedpoint_set_params:t._Z3_fixedpoint_set_params,fixedpoint_get_help:function(s,_){return t.ccall("Z3_fixedpoint_get_help","string",["number","number"],[s,_])},fixedpoint_get_param_descrs:t._Z3_fixedpoint_get_param_descrs,fixedpoint_to_string:function(s,_,a){return t.ccall("Z3_fixedpoint_to_string","string",["number","number","number","array"],[s,_,a.length,u(a)])},fixedpoint_from_string:function(s,_,a){return t.ccall("Z3_fixedpoint_from_string","number",["number","number","string"],[s,_,a])},fixedpoint_from_file:function(s,_,a){return t.ccall("Z3_fixedpoint_from_file","number",["number","number","string"],[s,_,a])},mk_fpa_rounding_mode_sort:t._Z3_mk_fpa_rounding_mode_sort,mk_fpa_round_nearest_ties_to_even:t._Z3_mk_fpa_round_nearest_ties_to_even,mk_fpa_rne:t._Z3_mk_fpa_rne,mk_fpa_round_nearest_ties_to_away:t._Z3_mk_fpa_round_nearest_ties_to_away,mk_fpa_rna:t._Z3_mk_fpa_rna,mk_fpa_round_toward_positive:t._Z3_mk_fpa_round_toward_positive,mk_fpa_rtp:t._Z3_mk_fpa_rtp,mk_fpa_round_toward_negative:t._Z3_mk_fpa_round_toward_negative,mk_fpa_rtn:t._Z3_mk_fpa_rtn,mk_fpa_round_toward_zero:t._Z3_mk_fpa_round_toward_zero,mk_fpa_rtz:t._Z3_mk_fpa_rtz,mk_fpa_sort:t._Z3_mk_fpa_sort,mk_fpa_sort_half:t._Z3_mk_fpa_sort_half,mk_fpa_sort_16:t._Z3_mk_fpa_sort_16,mk_fpa_sort_single:t._Z3_mk_fpa_sort_single,mk_fpa_sort_32:t._Z3_mk_fpa_sort_32,mk_fpa_sort_double:t._Z3_mk_fpa_sort_double,mk_fpa_sort_64:t._Z3_mk_fpa_sort_64,mk_fpa_sort_quadruple:t._Z3_mk_fpa_sort_quadruple,mk_fpa_sort_128:t._Z3_mk_fpa_sort_128,mk_fpa_nan:t._Z3_mk_fpa_nan,mk_fpa_inf:t._Z3_mk_fpa_inf,mk_fpa_zero:t._Z3_mk_fpa_zero,mk_fpa_fp:t._Z3_mk_fpa_fp,mk_fpa_numeral_float:t._Z3_mk_fpa_numeral_float,mk_fpa_numeral_double:t._Z3_mk_fpa_numeral_double,mk_fpa_numeral_int:t._Z3_mk_fpa_numeral_int,mk_fpa_numeral_int_uint:t._Z3_mk_fpa_numeral_int_uint,mk_fpa_numeral_int64_uint64:t._Z3_mk_fpa_numeral_int64_uint64,mk_fpa_abs:t._Z3_mk_fpa_abs,mk_fpa_neg:t._Z3_mk_fpa_neg,mk_fpa_add:t._Z3_mk_fpa_add,mk_fpa_sub:t._Z3_mk_fpa_sub,mk_fpa_mul:t._Z3_mk_fpa_mul,mk_fpa_div:t._Z3_mk_fpa_div,mk_fpa_fma:t._Z3_mk_fpa_fma,mk_fpa_sqrt:t._Z3_mk_fpa_sqrt,mk_fpa_rem:t._Z3_mk_fpa_rem,mk_fpa_round_to_integral:t._Z3_mk_fpa_round_to_integral,mk_fpa_min:t._Z3_mk_fpa_min,mk_fpa_max:t._Z3_mk_fpa_max,mk_fpa_leq:t._Z3_mk_fpa_leq,mk_fpa_lt:t._Z3_mk_fpa_lt,mk_fpa_geq:t._Z3_mk_fpa_geq,mk_fpa_gt:t._Z3_mk_fpa_gt,mk_fpa_eq:t._Z3_mk_fpa_eq,mk_fpa_is_normal:t._Z3_mk_fpa_is_normal,mk_fpa_is_subnormal:t._Z3_mk_fpa_is_subnormal,mk_fpa_is_zero:t._Z3_mk_fpa_is_zero,mk_fpa_is_infinite:t._Z3_mk_fpa_is_infinite,mk_fpa_is_nan:t._Z3_mk_fpa_is_nan,mk_fpa_is_negative:t._Z3_mk_fpa_is_negative,mk_fpa_is_positive:t._Z3_mk_fpa_is_positive,mk_fpa_to_fp_bv:t._Z3_mk_fpa_to_fp_bv,mk_fpa_to_fp_float:t._Z3_mk_fpa_to_fp_float,mk_fpa_to_fp_real:t._Z3_mk_fpa_to_fp_real,mk_fpa_to_fp_signed:t._Z3_mk_fpa_to_fp_signed,mk_fpa_to_fp_unsigned:t._Z3_mk_fpa_to_fp_unsigned,mk_fpa_to_ubv:t._Z3_mk_fpa_to_ubv,mk_fpa_to_sbv:t._Z3_mk_fpa_to_sbv,mk_fpa_to_real:t._Z3_mk_fpa_to_real,fpa_get_ebits:function(s,_){let a=t.ccall("Z3_fpa_get_ebits","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},fpa_get_sbits:function(s,_){let a=t.ccall("Z3_fpa_get_sbits","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},fpa_is_numeral_nan:function(s,_){return t.ccall("Z3_fpa_is_numeral_nan","boolean",["number","number"],[s,_])},fpa_is_numeral_inf:function(s,_){return t.ccall("Z3_fpa_is_numeral_inf","boolean",["number","number"],[s,_])},fpa_is_numeral_zero:function(s,_){return t.ccall("Z3_fpa_is_numeral_zero","boolean",["number","number"],[s,_])},fpa_is_numeral_normal:function(s,_){return t.ccall("Z3_fpa_is_numeral_normal","boolean",["number","number"],[s,_])},fpa_is_numeral_subnormal:function(s,_){return t.ccall("Z3_fpa_is_numeral_subnormal","boolean",["number","number"],[s,_])},fpa_is_numeral_positive:function(s,_){return t.ccall("Z3_fpa_is_numeral_positive","boolean",["number","number"],[s,_])},fpa_is_numeral_negative:function(s,_){return t.ccall("Z3_fpa_is_numeral_negative","boolean",["number","number"],[s,_])},fpa_get_numeral_sign_bv:t._Z3_fpa_get_numeral_sign_bv,fpa_get_numeral_significand_bv:t._Z3_fpa_get_numeral_significand_bv,fpa_get_numeral_sign:function(s,_){return t.ccall("Z3_fpa_get_numeral_sign","boolean",["number","number","number"],[s,_,p])?e(0):null},fpa_get_numeral_significand_string:function(s,_){return t.ccall("Z3_fpa_get_numeral_significand_string","string",["number","number"],[s,_])},fpa_get_numeral_significand_uint64:function(s,_){return t.ccall("Z3_fpa_get_numeral_significand_uint64","boolean",["number","number","number"],[s,_,p])?N(0):null},fpa_get_numeral_exponent_string:function(s,_,a){return t.ccall("Z3_fpa_get_numeral_exponent_string","string",["number","number","boolean"],[s,_,a])},fpa_get_numeral_exponent_int64:function(s,_,a){return t.ccall("Z3_fpa_get_numeral_exponent_int64","boolean",["number","number","number","boolean"],[s,_,p,a])?x(0):null},fpa_get_numeral_exponent_bv:t._Z3_fpa_get_numeral_exponent_bv,mk_fpa_to_ieee_bv:t._Z3_mk_fpa_to_ieee_bv,mk_fpa_to_fp_int_real:t._Z3_mk_fpa_to_fp_int_real,mk_optimize:t._Z3_mk_optimize,optimize_inc_ref:t._Z3_optimize_inc_ref,optimize_dec_ref:t._Z3_optimize_dec_ref,optimize_assert:t._Z3_optimize_assert,optimize_assert_and_track:t._Z3_optimize_assert_and_track,optimize_assert_soft:function(s,_,a,h,v){let I=t.ccall("Z3_optimize_assert_soft","number",["number","number","number","string","number"],[s,_,a,h,v]);return I=new Uint32Array([I])[0],I},optimize_maximize:function(s,_,a){let h=t.ccall("Z3_optimize_maximize","number",["number","number","number"],[s,_,a]);return h=new Uint32Array([h])[0],h},optimize_minimize:function(s,_,a){let h=t.ccall("Z3_optimize_minimize","number",["number","number","number"],[s,_,a]);return h=new Uint32Array([h])[0],h},optimize_push:t._Z3_optimize_push,optimize_pop:t._Z3_optimize_pop,optimize_set_initial_value:t._Z3_optimize_set_initial_value,optimize_check:async function(s,_,a){return await t.async_call(()=>t.ccall("async_Z3_optimize_check","void",["number","number","number","array"],[s,_,a.length,u(a)]))},optimize_get_reason_unknown:function(s,_){return t.ccall("Z3_optimize_get_reason_unknown","string",["number","number"],[s,_])},optimize_get_model:t._Z3_optimize_get_model,optimize_get_unsat_core:t._Z3_optimize_get_unsat_core,optimize_set_params:t._Z3_optimize_set_params,optimize_get_param_descrs:t._Z3_optimize_get_param_descrs,optimize_get_lower:t._Z3_optimize_get_lower,optimize_get_upper:t._Z3_optimize_get_upper,optimize_get_lower_as_vector:t._Z3_optimize_get_lower_as_vector,optimize_get_upper_as_vector:t._Z3_optimize_get_upper_as_vector,optimize_to_string:function(s,_){return t.ccall("Z3_optimize_to_string","string",["number","number"],[s,_])},optimize_from_string:function(s,_,a){return t.ccall("Z3_optimize_from_string","void",["number","number","string"],[s,_,a])},optimize_from_file:function(s,_,a){return t.ccall("Z3_optimize_from_file","void",["number","number","string"],[s,_,a])},optimize_get_help:function(s,_){return t.ccall("Z3_optimize_get_help","string",["number","number"],[s,_])},optimize_get_statistics:t._Z3_optimize_get_statistics,optimize_get_assertions:t._Z3_optimize_get_assertions,optimize_get_objectives:t._Z3_optimize_get_objectives,polynomial_subresultants:function(s,_,a,h){return t.async_call(t._async_Z3_polynomial_subresultants,s,_,a,h)},rcf_del:t._Z3_rcf_del,rcf_mk_rational:function(s,_){return t.ccall("Z3_rcf_mk_rational","number",["number","string"],[s,_])},rcf_mk_small_int:t._Z3_rcf_mk_small_int,rcf_mk_pi:t._Z3_rcf_mk_pi,rcf_mk_e:t._Z3_rcf_mk_e,rcf_mk_infinitesimal:t._Z3_rcf_mk_infinitesimal,rcf_mk_roots:function(s,_){let a=t._malloc(4*_.length);try{let h=t.ccall("Z3_rcf_mk_roots","number",["number","number","array","number"],[s,_.length,u(_),a]);return h=new Uint32Array([h])[0],{rv:h,roots:g(a,_.length)}}finally{t._free(a)}},rcf_add:t._Z3_rcf_add,rcf_sub:t._Z3_rcf_sub,rcf_mul:t._Z3_rcf_mul,rcf_div:t._Z3_rcf_div,rcf_neg:t._Z3_rcf_neg,rcf_inv:t._Z3_rcf_inv,rcf_power:t._Z3_rcf_power,rcf_lt:function(s,_,a){return t.ccall("Z3_rcf_lt","boolean",["number","number","number"],[s,_,a])},rcf_gt:function(s,_,a){return t.ccall("Z3_rcf_gt","boolean",["number","number","number"],[s,_,a])},rcf_le:function(s,_,a){return t.ccall("Z3_rcf_le","boolean",["number","number","number"],[s,_,a])},rcf_ge:function(s,_,a){return t.ccall("Z3_rcf_ge","boolean",["number","number","number"],[s,_,a])},rcf_eq:function(s,_,a){return t.ccall("Z3_rcf_eq","boolean",["number","number","number"],[s,_,a])},rcf_neq:function(s,_,a){return t.ccall("Z3_rcf_neq","boolean",["number","number","number"],[s,_,a])},rcf_num_to_string:function(s,_,a,h){return t.ccall("Z3_rcf_num_to_string","string",["number","number","boolean","boolean"],[s,_,a,h])},rcf_num_to_decimal_string:function(s,_,a){return t.ccall("Z3_rcf_num_to_decimal_string","string",["number","number","number"],[s,_,a])},rcf_get_numerator_denominator:function(s,_){return t.ccall("Z3_rcf_get_numerator_denominator","void",["number","number","number","number"],[s,_,p,p+4]),{n:o(0),d:o(1)}},rcf_is_rational:function(s,_){return t.ccall("Z3_rcf_is_rational","boolean",["number","number"],[s,_])},rcf_is_algebraic:function(s,_){return t.ccall("Z3_rcf_is_algebraic","boolean",["number","number"],[s,_])},rcf_is_infinitesimal:function(s,_){return t.ccall("Z3_rcf_is_infinitesimal","boolean",["number","number"],[s,_])},rcf_is_transcendental:function(s,_){return t.ccall("Z3_rcf_is_transcendental","boolean",["number","number"],[s,_])},rcf_extension_index:function(s,_){let a=t.ccall("Z3_rcf_extension_index","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},rcf_transcendental_name:t._Z3_rcf_transcendental_name,rcf_infinitesimal_name:t._Z3_rcf_infinitesimal_name,rcf_num_coefficients:function(s,_){let a=t.ccall("Z3_rcf_num_coefficients","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},rcf_coefficient:t._Z3_rcf_coefficient,rcf_num_sign_conditions:function(s,_){let a=t.ccall("Z3_rcf_num_sign_conditions","number",["number","number"],[s,_]);return a=new Uint32Array([a])[0],a},rcf_sign_condition_sign:t._Z3_rcf_sign_condition_sign,rcf_num_sign_condition_coefficients:function(s,_,a){let h=t.ccall("Z3_rcf_num_sign_condition_coefficients","number",["number","number","number"],[s,_,a]);return h=new Uint32Array([h])[0],h},rcf_sign_condition_coefficient:t._Z3_rcf_sign_condition_coefficient,fixedpoint_query_from_lvl:function(s,_,a,h){return t.async_call(t._async_Z3_fixedpoint_query_from_lvl,s,_,a,h)},fixedpoint_get_ground_sat_answer:t._Z3_fixedpoint_get_ground_sat_answer,fixedpoint_get_rules_along_trace:t._Z3_fixedpoint_get_rules_along_trace,fixedpoint_get_rule_names_along_trace:t._Z3_fixedpoint_get_rule_names_along_trace,fixedpoint_add_invariant:t._Z3_fixedpoint_add_invariant,fixedpoint_get_reachable:t._Z3_fixedpoint_get_reachable,qe_model_project:function(s,_,a,h){return t.ccall("Z3_qe_model_project","number",["number","number","number","array","number"],[s,_,a.length,u(a),h])},qe_model_project_skolem:function(s,_,a,h,v){return t.ccall("Z3_qe_model_project_skolem","number",["number","number","number","array","number","number"],[s,_,a.length,u(a),h,v])},qe_model_project_with_witness:function(s,_,a,h,v){return t.ccall("Z3_qe_model_project_with_witness","number",["number","number","number","array","number","number"],[s,_,a.length,u(a),h,v])},model_extrapolate:t._Z3_model_extrapolate,qe_lite:t._Z3_qe_lite}}}return It}var Be;function Ce(){return Be||(Be=1,(function(l){var i=at&&at.__createBinding||(Object.create?(function(u,b,g,p){p===void 0&&(p=g);var P=Object.getOwnPropertyDescriptor(b,g);(!P||("get"in P?!b.__esModule:P.writable||P.configurable))&&(P={enumerable:!0,get:function(){return b[g]}}),Object.defineProperty(u,p,P)}):(function(u,b,g,p){p===void 0&&(p=g),u[p]=b[g]})),t=at&&at.__exportStar||function(u,b){for(var g in u)g!=="default"&&!Object.prototype.hasOwnProperty.call(b,g)&&i(b,u,g)};Object.defineProperty(l,"__esModule",{value:!0}),t(E_(),l),t(y_(),l)})(at)),at}var v_=Ce();const R_=bt({__proto__:null},[v_]);var ot={},Nt={},ee={},re=function(l,i){return re=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,u){t.__proto__=u}||function(t,u){for(var b in u)Object.prototype.hasOwnProperty.call(u,b)&&(t[b]=u[b])},re(l,i)};function ze(l,i){if(typeof i!="function"&&i!==null)throw new TypeError("Class extends value "+String(i)+" is not a constructor or null");re(l,i);function t(){this.constructor=l}l.prototype=i===null?Object.create(i):(t.prototype=i.prototype,new t)}var Lt=function(){return Lt=Object.assign||function(i){for(var t,u=1,b=arguments.length;u<b;u++){t=arguments[u];for(var g in t)Object.prototype.hasOwnProperty.call(t,g)&&(i[g]=t[g])}return i},Lt.apply(this,arguments)};function Ve(l,i){var t={};for(var u in l)Object.prototype.hasOwnProperty.call(l,u)&&i.indexOf(u)<0&&(t[u]=l[u]);if(l!=null&&typeof Object.getOwnPropertySymbols=="function")for(var b=0,u=Object.getOwnPropertySymbols(l);b<u.length;b++)i.indexOf(u[b])<0&&Object.prototype.propertyIsEnumerable.call(l,u[b])&&(t[u[b]]=l[u[b]]);return t}function Ge(l,i,t,u){var b=arguments.length,g=b<3?i:u===null?u=Object.getOwnPropertyDescriptor(i,t):u,p;if(typeof Reflect=="object"&&typeof Reflect.decorate=="function")g=Reflect.decorate(l,i,t,u);else for(var P=l.length-1;P>=0;P--)(p=l[P])&&(g=(b<3?p(g):b>3?p(i,t,g):p(i,t))||g);return b>3&&g&&Object.defineProperty(i,t,g),g}function Qe(l,i){return function(t,u){i(t,u,l)}}function je(l,i,t,u,b,g){function p(a){if(a!==void 0&&typeof a!="function")throw new TypeError("Function expected");return a}for(var P=u.kind,o=P==="getter"?"get":P==="setter"?"set":"value",E=!i&&l?u.static?l:l.prototype:null,e=i||(E?Object.getOwnPropertyDescriptor(E,u.name):{}),Z,N=!1,R=t.length-1;R>=0;R--){var x={};for(var s in u)x[s]=s==="access"?{}:u[s];for(var s in u.access)x.access[s]=u.access[s];x.addInitializer=function(a){if(N)throw new TypeError("Cannot add initializers after decoration has completed");g.push(p(a||null))};var _=(0,t[R])(P==="accessor"?{get:e.get,set:e.set}:e[o],x);if(P==="accessor"){if(_===void 0)continue;if(_===null||typeof _!="object")throw new TypeError("Object expected");(Z=p(_.get))&&(e.get=Z),(Z=p(_.set))&&(e.set=Z),(Z=p(_.init))&&b.unshift(Z)}else(Z=p(_))&&(P==="field"?b.unshift(Z):e[o]=Z)}E&&Object.defineProperty(E,u.name,e),N=!0}function Ye(l,i,t){for(var u=arguments.length>2,b=0;b<i.length;b++)t=u?i[b].call(l,t):i[b].call(l);return u?t:void 0}function $e(l){return typeof l=="symbol"?l:"".concat(l)}function He(l,i,t){return typeof i=="symbol"&&(i=i.description?"[".concat(i.description,"]"):""),Object.defineProperty(l,"name",{configurable:!0,value:t?"".concat(t," ",i):i})}function We(l,i){if(typeof Reflect=="object"&&typeof Reflect.metadata=="function")return Reflect.metadata(l,i)}function Xe(l,i,t,u){function b(g){return g instanceof t?g:new t(function(p){p(g)})}return new(t||(t=Promise))(function(g,p){function P(e){try{E(u.next(e))}catch(Z){p(Z)}}function o(e){try{E(u.throw(e))}catch(Z){p(Z)}}function E(e){e.done?g(e.value):b(e.value).then(P,o)}E((u=u.apply(l,i||[])).next())})}function Ke(l,i){var t={label:0,sent:function(){if(g[0]&1)throw g[1];return g[1]},trys:[],ops:[]},u,b,g,p=Object.create((typeof Iterator=="function"?Iterator:Object).prototype);return p.next=P(0),p.throw=P(1),p.return=P(2),typeof Symbol=="function"&&(p[Symbol.iterator]=function(){return this}),p;function P(E){return function(e){return o([E,e])}}function o(E){if(u)throw new TypeError("Generator is already executing.");for(;p&&(p=0,E[0]&&(t=0)),t;)try{if(u=1,b&&(g=E[0]&2?b.return:E[0]?b.throw||((g=b.return)&&g.call(b),0):b.next)&&!(g=g.call(b,E[1])).done)return g;switch(b=0,g&&(E=[E[0]&2,g.value]),E[0]){case 0:case 1:g=E;break;case 4:return t.label++,{value:E[1],done:!1};case 5:t.label++,b=E[1],E=[0];continue;case 7:E=t.ops.pop(),t.trys.pop();continue;default:if(g=t.trys,!(g=g.length>0&&g[g.length-1])&&(E[0]===6||E[0]===2)){t=0;continue}if(E[0]===3&&(!g||E[1]>g[0]&&E[1]<g[3])){t.label=E[1];break}if(E[0]===6&&t.label<g[1]){t.label=g[1],g=E;break}if(g&&t.label<g[2]){t.label=g[2],t.ops.push(E);break}g[2]&&t.ops.pop(),t.trys.pop();continue}E=i.call(l,t)}catch(e){E=[6,e],b=0}finally{u=g=0}if(E[0]&5)throw E[1];return{value:E[0]?E[1]:void 0,done:!0}}}var xt=Object.create?(function(l,i,t,u){u===void 0&&(u=t);var b=Object.getOwnPropertyDescriptor(i,t);(!b||("get"in b?!i.__esModule:b.writable||b.configurable))&&(b={enumerable:!0,get:function(){return i[t]}}),Object.defineProperty(l,u,b)}):(function(l,i,t,u){u===void 0&&(u=t),l[u]=i[t]});function Je(l,i){for(var t in l)t!=="default"&&!Object.prototype.hasOwnProperty.call(i,t)&&xt(i,l,t)}function dt(l){var i=typeof Symbol=="function"&&Symbol.iterator,t=i&&l[i],u=0;if(t)return t.call(l);if(l&&typeof l.length=="number")return{next:function(){return l&&u>=l.length&&(l=void 0),{value:l&&l[u++],done:!l}}};throw new TypeError(i?"Object is not iterable.":"Symbol.iterator is not defined.")}function _e(l,i){var t=typeof Symbol=="function"&&l[Symbol.iterator];if(!t)return l;var u=t.call(l),b,g=[],p;try{for(;(i===void 0||i-- >0)&&!(b=u.next()).done;)g.push(b.value)}catch(P){p={error:P}}finally{try{b&&!b.done&&(t=u.return)&&t.call(u)}finally{if(p)throw p.error}}return g}function tr(){for(var l=[],i=0;i<arguments.length;i++)l=l.concat(_e(arguments[i]));return l}function er(){for(var l=0,i=0,t=arguments.length;i<t;i++)l+=arguments[i].length;for(var u=Array(l),b=0,i=0;i<t;i++)for(var g=arguments[i],p=0,P=g.length;p<P;p++,b++)u[b]=g[p];return u}function rr(l,i,t){if(t||arguments.length===2)for(var u=0,b=i.length,g;u<b;u++)(g||!(u in i))&&(g||(g=Array.prototype.slice.call(i,0,u)),g[u]=i[u]);return l.concat(g||Array.prototype.slice.call(i))}function gt(l){return this instanceof gt?(this.v=l,this):new gt(l)}function _r(l,i,t){if(!Symbol.asyncIterator)throw new TypeError("Symbol.asyncIterator is not defined.");var u=t.apply(l,i||[]),b,g=[];return b=Object.create((typeof AsyncIterator=="function"?AsyncIterator:Object).prototype),P("next"),P("throw"),P("return",p),b[Symbol.asyncIterator]=function(){return this},b;function p(R){return function(x){return Promise.resolve(x).then(R,Z)}}function P(R,x){u[R]&&(b[R]=function(s){return new Promise(function(_,a){g.push([R,s,_,a])>1||o(R,s)})},x&&(b[R]=x(b[R])))}function o(R,x){try{E(u[R](x))}catch(s){N(g[0][3],s)}}function E(R){R.value instanceof gt?Promise.resolve(R.value.v).then(e,Z):N(g[0][2],R)}function e(R){o("next",R)}function Z(R){o("throw",R)}function N(R,x){R(x),g.shift(),g.length&&o(g[0][0],g[0][1])}}function nr(l){var i,t;return i={},u("next"),u("throw",function(b){throw b}),u("return"),i[Symbol.iterator]=function(){return this},i;function u(b,g){i[b]=l[b]?function(p){return(t=!t)?{value:gt(l[b](p)),done:!1}:g?g(p):p}:g}}function sr(l){if(!Symbol.asyncIterator)throw new TypeError("Symbol.asyncIterator is not defined.");var i=l[Symbol.asyncIterator],t;return i?i.call(l):(l=typeof dt=="function"?dt(l):l[Symbol.iterator](),t={},u("next"),u("throw"),u("return"),t[Symbol.asyncIterator]=function(){return this},t);function u(g){t[g]=l[g]&&function(p){return new Promise(function(P,o){p=l[g](p),b(P,o,p.done,p.value)})}}function b(g,p,P,o){Promise.resolve(o).then(function(E){g({value:E,done:P})},p)}}function ar(l,i){return Object.defineProperty?Object.defineProperty(l,"raw",{value:i}):l.raw=i,l}var A_=Object.create?(function(l,i){Object.defineProperty(l,"default",{enumerable:!0,value:i})}):function(l,i){l.default=i},ne=function(l){return ne=Object.getOwnPropertyNames||function(i){var t=[];for(var u in i)Object.prototype.hasOwnProperty.call(i,u)&&(t[t.length]=u);return t},ne(l)};function or(l){if(l&&l.__esModule)return l;var i={};if(l!=null)for(var t=ne(l),u=0;u<t.length;u++)t[u]!=="default"&&xt(i,l,t[u]);return A_(i,l),i}function ur(l){return l&&l.__esModule?l:{default:l}}function ir(l,i,t,u){if(t==="a"&&!u)throw new TypeError("Private accessor was defined without a getter");if(typeof i=="function"?l!==i||!u:!i.has(l))throw new TypeError("Cannot read private member from an object whose class did not declare it");return t==="m"?u:t==="a"?u.call(l):u?u.value:i.get(l)}function cr(l,i,t,u,b){if(u==="m")throw new TypeError("Private method is not writable");if(u==="a"&&!b)throw new TypeError("Private accessor was defined without a setter");if(typeof i=="function"?l!==i||!b:!i.has(l))throw new TypeError("Cannot write private member to an object whose class did not declare it");return u==="a"?b.call(l,t):b?b.value=t:i.set(l,t),t}function mr(l,i){if(i===null||typeof i!="object"&&typeof i!="function")throw new TypeError("Cannot use 'in' operator on non-object");return typeof l=="function"?i===l:l.has(i)}function lr(l,i,t){if(i!=null){if(typeof i!="object"&&typeof i!="function")throw new TypeError("Object expected.");var u,b;if(t){if(!Symbol.asyncDispose)throw new TypeError("Symbol.asyncDispose is not defined.");u=i[Symbol.asyncDispose]}if(u===void 0){if(!Symbol.dispose)throw new TypeError("Symbol.dispose is not defined.");u=i[Symbol.dispose],t&&(b=u)}if(typeof u!="function")throw new TypeError("Object not disposable.");b&&(u=function(){try{b.call(this)}catch(g){return Promise.reject(g)}}),l.stack.push({value:i,dispose:u,async:t})}else t&&l.stack.push({async:!0});return i}var T_=typeof SuppressedError=="function"?SuppressedError:function(l,i,t){var u=new Error(t);return u.name="SuppressedError",u.error=l,u.suppressed=i,u};function fr(l){function i(g){l.error=l.hasError?new T_(g,l.error,"An error was suppressed during disposal."):g,l.hasError=!0}var t,u=0;function b(){for(;t=l.stack.pop();)try{if(!t.async&&u===1)return u=0,l.stack.push(t),Promise.resolve().then(b);if(t.dispose){var g=t.dispose.call(t.value);if(t.async)return u|=2,Promise.resolve(g).then(b,function(p){return i(p),b()})}else u|=1}catch(p){i(p)}if(u===1)return l.hasError?Promise.reject(l.error):Promise.resolve();if(l.hasError)throw l.error}return b()}function pr(l,i){return typeof l=="string"&&/^\.\.?\//.test(l)?l.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i,function(t,u,b,g,p){return u?i?".jsx":".js":b&&(!g||!p)?t:b+g+"."+p.toLowerCase()+"js"}):l}const Ut=P_(Object.freeze(Object.defineProperty({__proto__:null,__addDisposableResource:lr,get __assign(){return Lt},__asyncDelegator:nr,__asyncGenerator:_r,__asyncValues:sr,__await:gt,__awaiter:Xe,__classPrivateFieldGet:ir,__classPrivateFieldIn:mr,__classPrivateFieldSet:cr,__createBinding:xt,__decorate:Ge,__disposeResources:fr,__esDecorate:je,__exportStar:Je,__extends:ze,__generator:Ke,__importDefault:ur,__importStar:or,__makeTemplateObject:ar,__metadata:We,__param:Qe,__propKey:$e,__read:_e,__rest:Ve,__rewriteRelativeImportExtension:pr,__runInitializers:Ye,__setFunctionName:He,__spread:tr,__spreadArray:rr,__spreadArrays:er,__values:dt,default:{__extends:ze,__assign:Lt,__rest:Ve,__decorate:Ge,__param:Qe,__esDecorate:je,__runInitializers:Ye,__propKey:$e,__setFunctionName:He,__metadata:We,__awaiter:Xe,__generator:Ke,__createBinding:xt,__exportStar:Je,__values:dt,__read:_e,__spread:tr,__spreadArrays:er,__spreadArray:rr,__await:gt,__asyncGenerator:_r,__asyncDelegator:nr,__asyncValues:sr,__makeTemplateObject:ar,__importStar:or,__importDefault:ur,__classPrivateFieldGet:ir,__classPrivateFieldSet:cr,__classPrivateFieldIn:mr,__addDisposableResource:lr,__disposeResources:fr,__rewriteRelativeImportExtension:pr}},Symbol.toStringTag,{value:"Module"})));var Mt={},Ft={},X={},br;function kt(){return br||(br=1,Object.defineProperty(X,"__esModule",{value:!0}),X.E_CANCELED=X.E_ALREADY_LOCKED=X.E_TIMEOUT=void 0,X.E_TIMEOUT=new Error("timeout while waiting for mutex to become available"),X.E_ALREADY_LOCKED=new Error("mutex already locked"),X.E_CANCELED=new Error("request for lock canceled")),X}var gr;function hr(){if(gr)return Ft;gr=1,Object.defineProperty(Ft,"__esModule",{value:!0});var l=Ut,i=kt(),t=(function(){function g(p,P){P===void 0&&(P=i.E_CANCELED),this._value=p,this._cancelError=P,this._queue=[],this._weightedWaiters=[]}return g.prototype.acquire=function(p,P){var o=this;if(p===void 0&&(p=1),P===void 0&&(P=0),p<=0)throw new Error("invalid weight ".concat(p,": must be positive"));return new Promise(function(E,e){var Z={resolve:E,reject:e,weight:p,priority:P},N=b(o._queue,function(R){return P<=R.priority});N===-1&&p<=o._value?o._dispatchItem(Z):o._queue.splice(N+1,0,Z)})},g.prototype.runExclusive=function(p){return l.__awaiter(this,arguments,void 0,function(P,o,E){var e,Z,N;return o===void 0&&(o=1),E===void 0&&(E=0),l.__generator(this,function(R){switch(R.label){case 0:return[4,this.acquire(o,E)];case 1:e=R.sent(),Z=e[0],N=e[1],R.label=2;case 2:return R.trys.push([2,,4,5]),[4,P(Z)];case 3:return[2,R.sent()];case 4:return N(),[7];case 5:return[2]}})})},g.prototype.waitForUnlock=function(p,P){var o=this;if(p===void 0&&(p=1),P===void 0&&(P=0),p<=0)throw new Error("invalid weight ".concat(p,": must be positive"));return this._couldLockImmediately(p,P)?Promise.resolve():new Promise(function(E){o._weightedWaiters[p-1]||(o._weightedWaiters[p-1]=[]),u(o._weightedWaiters[p-1],{resolve:E,priority:P})})},g.prototype.isLocked=function(){return this._value<=0},g.prototype.getValue=function(){return this._value},g.prototype.setValue=function(p){this._value=p,this._dispatchQueue()},g.prototype.release=function(p){if(p===void 0&&(p=1),p<=0)throw new Error("invalid weight ".concat(p,": must be positive"));this._value+=p,this._dispatchQueue()},g.prototype.cancel=function(){var p=this;this._queue.forEach(function(P){return P.reject(p._cancelError)}),this._queue=[]},g.prototype._dispatchQueue=function(){for(this._drainUnlockWaiters();this._queue.length>0&&this._queue[0].weight<=this._value;)this._dispatchItem(this._queue.shift()),this._drainUnlockWaiters()},g.prototype._dispatchItem=function(p){var P=this._value;this._value-=p.weight,p.resolve([P,this._newReleaser(p.weight)])},g.prototype._newReleaser=function(p){var P=this,o=!1;return function(){o||(o=!0,P.release(p))}},g.prototype._drainUnlockWaiters=function(){if(this._queue.length===0)for(var p=this._value;p>0;p--){var P=this._weightedWaiters[p-1];P&&(P.forEach(function(e){return e.resolve()}),this._weightedWaiters[p-1]=[])}else for(var o=this._queue[0].priority,p=this._value;p>0;p--){var P=this._weightedWaiters[p-1];if(P){var E=P.findIndex(function(N){return N.priority<=o});(E===-1?P:P.splice(0,E)).forEach((function(N){return N.resolve()}))}}},g.prototype._couldLockImmediately=function(p,P){return(this._queue.length===0||this._queue[0].priority<P)&&p<=this._value},g})();function u(g,p){var P=b(g,function(o){return p.priority<=o.priority});g.splice(P+1,0,p)}function b(g,p){for(var P=g.length-1;P>=0;P--)if(p(g[P]))return P;return-1}return Ft.default=t,Ft}var Or;function w_(){if(Or)return Mt;Or=1,Object.defineProperty(Mt,"__esModule",{value:!0});var l=Ut,i=hr(),t=(function(){function u(b){this._semaphore=new i.default(1,b)}return u.prototype.acquire=function(){return l.__awaiter(this,arguments,void 0,function(b){var g,p;return b===void 0&&(b=0),l.__generator(this,function(P){switch(P.label){case 0:return[4,this._semaphore.acquire(1,b)];case 1:return g=P.sent(),p=g[1],[2,p]}})})},u.prototype.runExclusive=function(b,g){return g===void 0&&(g=0),this._semaphore.runExclusive(function(){return b()},1,g)},u.prototype.isLocked=function(){return this._semaphore.isLocked()},u.prototype.waitForUnlock=function(b){return b===void 0&&(b=0),this._semaphore.waitForUnlock(1,b)},u.prototype.release=function(){this._semaphore.isLocked()&&this._semaphore.release()},u.prototype.cancel=function(){return this._semaphore.cancel()},u})();return Mt.default=t,Mt}var Et={},Pr;function Er(){if(Pr)return Et;Pr=1,Object.defineProperty(Et,"__esModule",{value:!0}),Et.withTimeout=void 0;var l=Ut,i=kt();function t(b,g,p){var P=this;return p===void 0&&(p=i.E_TIMEOUT),{acquire:function(o,E){var e;if(u(b)?e=o:(e=void 0,E=o),e!==void 0&&e<=0)throw new Error("invalid weight ".concat(e,": must be positive"));return new Promise(function(Z,N){return l.__awaiter(P,void 0,void 0,function(){var R,x,s,_,a;return l.__generator(this,function(h){switch(h.label){case 0:R=!1,x=setTimeout(function(){R=!0,N(p)},g),h.label=1;case 1:return h.trys.push([1,3,,4]),[4,u(b)?b.acquire(e,E):b.acquire(E)];case 2:return s=h.sent(),R?(_=Array.isArray(s)?s[1]:s,_()):(clearTimeout(x),Z(s)),[3,4];case 3:return a=h.sent(),R||(clearTimeout(x),N(a)),[3,4];case 4:return[2]}})})})},runExclusive:function(o,E,e){return l.__awaiter(this,void 0,void 0,function(){var Z,N;return l.__generator(this,function(R){switch(R.label){case 0:Z=function(){},R.label=1;case 1:return R.trys.push([1,,7,8]),[4,this.acquire(E,e)];case 2:return N=R.sent(),Array.isArray(N)?(Z=N[1],[4,o(N[0])]):[3,4];case 3:return[2,R.sent()];case 4:return Z=N,[4,o()];case 5:return[2,R.sent()];case 6:return[3,8];case 7:return Z(),[7];case 8:return[2]}})})},release:function(o){b.release(o)},cancel:function(){return b.cancel()},waitForUnlock:function(o,E){var e;if(u(b)?e=o:(e=void 0,E=o),e!==void 0&&e<=0)throw new Error("invalid weight ".concat(e,": must be positive"));return new Promise(function(Z,N){var R=setTimeout(function(){return N(p)},g);(u(b)?b.waitForUnlock(e,E):b.waitForUnlock(E)).then(function(){clearTimeout(R),Z()})})},isLocked:function(){return b.isLocked()},getValue:function(){return b.getValue()},setValue:function(o){return b.setValue(o)}}}Et.withTimeout=t;function u(b){return b.getValue!==void 0}return Et}var yt={},yr;function Z_(){if(yr)return yt;yr=1,Object.defineProperty(yt,"__esModule",{value:!0}),yt.tryAcquire=void 0;var l=kt(),i=Er();function t(u,b){return b===void 0&&(b=l.E_ALREADY_LOCKED),(0,i.withTimeout)(u,0,b)}return yt.tryAcquire=t,yt}var vr;function S_(){return vr||(vr=1,(function(l){Object.defineProperty(l,"__esModule",{value:!0}),l.tryAcquire=l.withTimeout=l.Semaphore=l.Mutex=void 0;var i=Ut,t=w_();Object.defineProperty(l,"Mutex",{enumerable:!0,get:function(){return t.default}});var u=hr();Object.defineProperty(l,"Semaphore",{enumerable:!0,get:function(){return u.default}});var b=Er();Object.defineProperty(l,"withTimeout",{enumerable:!0,get:function(){return b.withTimeout}});var g=Z_();Object.defineProperty(l,"tryAcquire",{enumerable:!0,get:function(){return g.tryAcquire}}),i.__exportStar(kt(),l)})(ee)),ee}var ut={},Rr;function se(){if(Rr)return ut;Rr=1,Object.defineProperty(ut,"__esModule",{value:!0}),ut.Z3AssertionError=ut.Z3Error=void 0;class l extends Error{}ut.Z3Error=l;class i extends l{}return ut.Z3AssertionError=i,ut}var ht={},Ar;function I_(){if(Ar)return ht;Ar=1,Object.defineProperty(ht,"__esModule",{value:!0}),ht.assertExhaustive=i,ht.assert=t,ht.allSatisfy=u;const l=se();function i(b){throw new Error("Unexpected code execution detected, should be caught at compile time")}function t(b,g){if(!b)throw new l.Z3AssertionError(g??"Assertion failed")}function u(b,g){let p=!1;for(const P of b)if(p=!0,!g(P))return!1;return p===!0?!0:null}return ht}var Tr;function N_(){if(Tr)return Nt;Tr=1,Object.defineProperty(Nt,"__esModule",{value:!0}),Nt.createApi=P;const l=S_(),i=Ce(),t=se(),u=I_(),b=17,g=new l.Mutex;function p(o){const E=o!==null&&(typeof o=="object"||typeof o=="function")&&o.numerator!==null&&(typeof o.numerator=="number"||typeof o.numerator=="bigint")&&o.denominator!==null&&(typeof o.denominator=="number"||typeof o.denominator=="bigint");return E&&(0,u.assert)((typeof o.numerator!="number"||Number.isSafeInteger(o.numerator))&&(typeof o.denominator!="number"||Number.isSafeInteger(o.denominator)),"Fraction numerator and denominator must be integers"),E}function P(o){const E=new FinalizationRegistry(L=>L());function e(L){o.enable_trace(L)}function Z(L){o.disable_trace(L)}function N(){return o.get_version()}function R(){const{major:L,minor:B,build_number:G}=o.get_version();return`${L}.${B}.${G}`}function x(){return o.get_full_version()}function s(L){return o.open_log(L)}function _(L){o.append_log(L)}function a(L,B){typeof L=="string"?o.global_param_set(L,B.toString()):((0,u.assert)(B===void 0,"Can't provide a Record and second parameter to set_param at the same time"),Object.entries(L).forEach(([G,c])=>a(G,c)))}function h(){o.global_param_reset_all()}function v(L){return o.global_param_get(L)}function I(L,B){const G=o.mk_config();B!=null&&Object.entries(B).forEach(([n,r])=>f(o.set_param_value(G,n,r.toString())));const c=o.mk_context_rc(G);o.set_ast_print_mode(c,i.Z3_ast_print_mode.Z3_PRINT_SMTLIB2_COMPLIANT),o.del_config(G);function y(...n){n.forEach(r=>(0,u.assert)("ctx"in r?F===r.ctx:F===r,"Context mismatch"))}function ae(n){if(n==null)throw new TypeError("Expected non-null pointer")}function oe(){if(o.get_error_code(c)!==i.Z3_error_code.Z3_OK)throw new Error(o.get_error_msg(F.ptr,o.get_error_code(F.ptr)))}function f(n){return oe(),n}function M(n){return f(typeof n=="number"?o.mk_int_symbol(c,n):o.mk_string_symbol(c,n))}function Dt(n){const r=f(o.get_symbol_kind(c,n));switch(r){case i.Z3_symbol_kind.Z3_INT_SYMBOL:return o.get_symbol_int(c,n);case i.Z3_symbol_kind.Z3_STRING_SYMBOL:return o.get_symbol_string(c,n);default:(0,u.assertExhaustive)(r)}}function Zr(n,r){const m=o.mk_params(c);return o.params_inc_ref(c,m),typeof r=="boolean"?o.params_set_bool(c,m,M(n),r):typeof r=="number"?Number.isInteger(r)?f(o.params_set_uint(c,m,M(n),r)):f(o.params_set_double(c,m,M(n),r)):typeof r=="string"&&f(o.params_set_symbol(c,m,M(n),M(r))),m}function ue(n){switch(f(o.get_ast_kind(c,n))){case i.Z3_ast_kind.Z3_SORT_AST:return et(n);case i.Z3_ast_kind.Z3_FUNC_DECL_AST:return new V(n);default:return k(n)}}function et(n){switch(f(o.get_sort_kind(c,n))){case i.Z3_sort_kind.Z3_BOOL_SORT:return new n_(n);case i.Z3_sort_kind.Z3_INT_SORT:case i.Z3_sort_kind.Z3_REAL_SORT:return new Tt(n);case i.Z3_sort_kind.Z3_BV_SORT:return new de(n);case i.Z3_sort_kind.Z3_ARRAY_SORT:return new jt(n);default:return new J(n)}}function k(n){const r=f(o.get_ast_kind(c,n));if(r===i.Z3_ast_kind.Z3_QUANTIFIER_AST)return o.is_lambda(c,n)?new u_(n):new Fe(n);switch(f(o.get_sort_kind(c,o.get_sort(c,n)))){case i.Z3_sort_kind.Z3_BOOL_SORT:return new w(n);case i.Z3_sort_kind.Z3_INT_SORT:return r===i.Z3_ast_kind.Z3_NUMERAL_AST?new wt(n):new d(n);case i.Z3_sort_kind.Z3_REAL_SORT:return r===i.Z3_ast_kind.Z3_NUMERAL_AST?new xe(n):new d(n);case i.Z3_sort_kind.Z3_BV_SORT:return r===i.Z3_ast_kind.Z3_NUMERAL_AST?new Ue(n):new S(n);case i.Z3_sort_kind.Z3_ARRAY_SORT:return new Yt(n);default:return new H(n)}}function qt(n){const r=[];for(const m of n)dr(m)?r.push(...m.values()):r.push(m);return r}function Sr(n){return ct(n)?n:new Qt(n)}function Ir(n,r){(0,u.assert)(r.length>0,"At least one argument expected");let m=Sr(r[0]);for(let O=1;O<r.length;O++)m=new Qt(f(n(c,m.ptr,Sr(r[O]).ptr)));return m}function U_(){f(o.interrupt(c))}function M_(n){const r=n instanceof Gt;return r&&y(n),r}function Nr(n){const r=n instanceof Vt;return r&&y(n),r}function Bt(n){const r=n instanceof J;return r&&y(n),r}function Ot(n){const r=n instanceof V;return r&&y(n),r}function Lr(n){const r=n instanceof Ae;return r&&y(n),r}function it(n){if(!q(n))return!1;const r=f(o.get_ast_kind(c,n.ast));return r===i.Z3_ast_kind.Z3_NUMERAL_AST||r===i.Z3_ast_kind.Z3_APP_AST}function K(n){return q(n)&&it(n)&&n.numArgs()===0}function q(n){const r=n instanceof H;return r&&y(n),r}function xr(n){return q(n)&&f(o.get_ast_kind(c,n.ast))===i.Z3_ast_kind.Z3_VAR_AST}function $(n,r){return q(n)&&it(n)&&n.decl().kind()===r}function Ct(n){const r=n instanceof H&&n.sort.kind()===i.Z3_sort_kind.Z3_BOOL_SORT;return r&&y(n),r}function F_(n){return $(n,i.Z3_decl_kind.Z3_OP_TRUE)}function k_(n){return $(n,i.Z3_decl_kind.Z3_OP_FALSE)}function D_(n){return $(n,i.Z3_decl_kind.Z3_OP_AND)}function q_(n){return $(n,i.Z3_decl_kind.Z3_OP_OR)}function B_(n){return $(n,i.Z3_decl_kind.Z3_OP_IMPLIES)}function C_(n){return $(n,i.Z3_decl_kind.Z3_OP_NOT)}function z_(n){return $(n,i.Z3_decl_kind.Z3_OP_EQ)}function V_(n){return $(n,i.Z3_decl_kind.Z3_OP_DISTINCT)}function G_(n){const r=n instanceof Me;return r&&y(n),r}function vt(n){const r=n instanceof d;return r&&y(n),r}function Q_(n){const r=n instanceof Tt;return r&&y(n),r}function ie(n){return vt(n)&&Pt(n.sort)}function j_(n){const r=n instanceof wt;return r&&y(n),r}function Pt(n){return Bt(n)&&n.kind()===i.Z3_sort_kind.Z3_INT_SORT}function ce(n){return vt(n)&&me(n.sort)}function Y_(n){const r=n instanceof xe;return r&&y(n),r}function me(n){return Bt(n)&&n.kind()===i.Z3_sort_kind.Z3_REAL_SORT}function zt(n){const r=n instanceof de;return r&&y(n),r}function $_(n){const r=n instanceof S;return r&&y(n),r}function H_(n){const r=n instanceof Ue;return r&&y(n),r}function W_(n){const r=n instanceof jt;return r&&y(n),r}function X_(n){const r=n instanceof Yt;return r&&y(n),r}function K_(n){return $(n,i.Z3_decl_kind.Z3_OP_CONST_ARRAY)}function ct(n){const r=n instanceof Qt;return r&&y(n),r}function Rt(n){const r=n instanceof Te;return r&&y(n),r}function dr(n){const r=n instanceof rt;return r&&y(n),r}function J_(n,r){return n.eqIdentity(r)}function tn(n){return(0,u.assert)(xr(n),"Z3 bound variable expected"),o.get_index_value(c,n.ast)}function D(n){if(typeof n=="boolean")return Q.val(n);if(typeof n=="number"){if(!Number.isFinite(n))throw new Error(`cannot represent infinity/NaN (got ${n})`);return Math.floor(n)===n?j.val(n):z.val(n)}else{if(p(n))return z.val(n);if(typeof n=="bigint")return j.val(n);if(q(n))return n}(0,u.assert)(!1)}async function en(...n){const r=new F.Solver;r.add(...n);const m=await r.check();return m==="sat"?r.model():m}async function rn(n){const r=await o.simplify(c,n.ast);return k(f(r))}const _n={declare:n=>new J(o.mk_uninterpreted_sort(c,M(n)))},nn={declare:(n,...r)=>{const m=r.length-1,O=r[m];y(O);const A=[];for(let T=0;T<m;T++)y(r[T]),A.push(r[T].ptr);return new V(o.mk_func_decl(c,M(n),A,O.ptr))},fresh:(...n)=>{const r=n.length-1,m=n[r];y(m);const O=[];for(let A=0;A<r;A++)y(n[A]),O.push(n[A].ptr);return new V(o.mk_fresh_func_decl(c,"f",O,m.ptr))}},sn={declare:(n,...r)=>{const m=r.length-1,O=r[m];y(O);const A=[];for(let T=0;T<m;T++)y(r[T]),A.push(r[T].ptr);return new V(o.mk_rec_func_decl(c,M(n),A,O.ptr))},addDefinition:(n,r,m)=>{y(n,...r,m),f(o.add_rec_def(c,n.ptr,r.map(O=>O.ast),m.ast))}},Q={sort:()=>new n_(o.mk_bool_sort(c)),const:n=>new w(o.mk_const(c,M(n),Q.sort().ptr)),consts:n=>(typeof n=="string"&&(n=n.split(" ")),n.map(r=>Q.const(r))),vector:(n,r)=>{const m=[];for(let O=0;O<r;O++)m.push(Q.const(`${n}__${O}`));return m},fresh:(n="b")=>new w(o.mk_fresh_const(c,n,Q.sort().ptr)),val:n=>n?new w(o.mk_true(c)):new w(o.mk_false(c))},j={sort:()=>new Tt(o.mk_int_sort(c)),const:n=>new d(o.mk_const(c,M(n),j.sort().ptr)),consts:n=>(typeof n=="string"&&(n=n.split(" ")),n.map(r=>j.const(r))),vector:(n,r)=>{const m=[];for(let O=0;O<r;O++)m.push(j.const(`${n}__${O}`));return m},fresh:(n="x")=>new d(o.mk_fresh_const(c,n,j.sort().ptr)),val:n=>((0,u.assert)(typeof n=="bigint"||typeof n=="string"||Number.isSafeInteger(n)),new wt(f(o.mk_numeral(c,n.toString(),j.sort().ptr))))},z={sort:()=>new Tt(o.mk_real_sort(c)),const:n=>new d(f(o.mk_const(c,M(n),z.sort().ptr))),consts:n=>(typeof n=="string"&&(n=n.split(" ")),n.map(r=>z.const(r))),vector:(n,r)=>{const m=[];for(let O=0;O<r;O++)m.push(z.const(`${n}__${O}`));return m},fresh:(n="b")=>new d(o.mk_fresh_const(c,n,z.sort().ptr)),val:n=>(p(n)&&(n=`${n.numerator}/${n.denominator}`),new xe(o.mk_numeral(c,n.toString(),z.sort().ptr)))},mt={sort(n){return(0,u.assert)(Number.isSafeInteger(n),"number of bits must be an integer"),new de(o.mk_bv_sort(c,n))},const(n,r){return new S(f(o.mk_const(c,M(n),zt(r)?r.ptr:mt.sort(r).ptr)))},consts(n,r){return typeof n=="string"&&(n=n.split(" ")),n.map(m=>mt.const(m,r))},val(n,r){return n===!0?mt.val(1,r):n===!1?mt.val(0,r):new Ue(f(o.mk_numeral(c,n.toString(),zt(r)?r.ptr:mt.sort(r).ptr)))}},At={sort(...n){const r=n.length-1,m=n[r],O=n[0];if(r===1)return new jt(o.mk_array_sort(c,O.ptr,m.ptr));const A=n.slice(0,r);return new jt(o.mk_array_sort_n(c,A.map(T=>T.ptr),m.ptr))},const(n,...r){return new Yt(f(o.mk_const(c,M(n),At.sort(...r).ptr)))},consts(n,...r){return typeof n=="string"&&(n=n.split(" ")),n.map(m=>At.const(m,...r))},K(n,r){return new Yt(f(o.mk_const_array(c,n.ptr,r.ptr)))}},Ur={sort(n){return At.sort(n,Q.sort())},const(n,r){return new tt(f(o.mk_const(c,M(n),At.sort(r,Q.sort()).ptr)))},consts(n,r){return typeof n=="string"&&(n=n.split(" ")),n.map(m=>Ur.const(m,r))},empty(n){return Re(n)},val(n,r){var m=Re(r);for(const O of n)m=ve(m,O);return m}},an=Object.assign(n=>new a_(F,n),{createDatatypes(...n){return o_(...n)}});function le(n,r,m){return ct(n)&&Rt(r)&&Rt(m)?Fr(n,r,m):((0,u.assert)(!ct(n)&&!Rt(r)&&!Rt(m),"Mixed expressions and goals"),typeof n=="boolean"&&(n=Q.val(n)),r=D(r),m=D(m),k(f(o.mk_ite(c,n.ptr,r.ast,m.ast))))}function on(...n){return(0,u.assert)(n.length>0,"Can't make Distinct ouf of nothing"),new w(f(o.mk_distinct(c,n.map(r=>(r=D(r),y(r),r.ast)))))}function Mr(n,r){return y(r),k(f(o.mk_const(c,M(n),r.ptr)))}function un(n,r){return y(r),typeof n=="string"&&(n=n.split(" ")),n.map(m=>Mr(m,r))}function cn(n,r="c"){return y(n),k(o.mk_fresh_const(n.ctx.ptr,r,n.ptr))}function mn(n,r){return y(r),k(o.mk_bound(r.ctx.ptr,n,r.ptr))}function fe(n,r){return n=D(n),r=D(r),y(n,r),new w(f(o.mk_implies(c,n.ptr,r.ptr)))}function pe(n,r){return n=D(n),r=D(r),y(n,r),new w(f(o.mk_iff(c,n.ptr,r.ptr)))}function ln(n,r){return n=D(n),r=D(r),y(n,r),n.eq(r)}function be(n,r){return n=D(n),r=D(r),y(n,r),new w(f(o.mk_xor(c,n.ptr,r.ptr)))}function ge(n){return typeof n=="boolean"&&(n=D(n)),y(n),ct(n)?new Qt(f(o.probe_not(c,n.ptr))):new w(f(o.mk_not(c,n.ptr)))}function he(...n){if(n.length==1&&n[0]instanceof F.AstVector&&(n=[...n[0].values()],(0,u.assert)((0,u.allSatisfy)(n,Ct)??!0,"AstVector containing not bools")),(0,u.allSatisfy)(n,ct)??!1)return Ir(o.probe_and,n);{const m=n.map(D);return y(...m),new w(f(o.mk_and(c,m.map(O=>O.ptr))))}}function Oe(...n){if(n.length==1&&n[0]instanceof F.AstVector&&(n=[...n[0].values()],(0,u.assert)((0,u.allSatisfy)(n,Ct)??!0,"AstVector containing not bools")),(0,u.allSatisfy)(n,ct)??!1)return Ir(o.probe_or,n);{const m=n.map(D);return y(...m),new w(f(o.mk_or(c,m.map(O=>O.ptr))))}}function fn(n,r,m){if(y(...n),n.length!==r.length)throw new Error("Number of arguments and coefficients must match");return new w(f(o.mk_pbeq(c,n.map(O=>O.ast),r,m)))}function pn(n,r,m){if(y(...n),n.length!==r.length)throw new Error("Number of arguments and coefficients must match");return new w(f(o.mk_pbge(c,n.map(O=>O.ast),r,m)))}function bn(n,r,m){if(y(...n),n.length!==r.length)throw new Error("Number of arguments and coefficients must match");return new w(f(o.mk_pble(c,n.map(O=>O.ast),r,m)))}function gn(n,r,m=1){if(!(0,u.allSatisfy)(n,K))throw new Error("Quantifier variables must be constants");return new Fe(f(o.mk_quantifier_const_ex(c,!0,m,M(""),M(""),n.map(O=>O.ptr),[],[],r.ptr)))}function hn(n,r,m=1){if(!(0,u.allSatisfy)(n,K))throw new Error("Quantifier variables must be constants");return new Fe(f(o.mk_quantifier_const_ex(c,!1,m,M(""),M(""),n.map(O=>O.ptr),[],[],r.ptr)))}function On(n,r){if(!(0,u.allSatisfy)(n,K))throw new Error("Quantifier variables must be constants");return new u_(f(o.mk_lambda_const(c,n.map(m=>m.ptr),r.ptr)))}function Pe(n){return n=D(n),y(n),(0,u.assert)(ie(n),"Int expression expected"),new d(f(o.mk_int2real(c,n.ast)))}function Pn(n){return q(n)||(n=z.val(n)),y(n),(0,u.assert)(ce(n),"Real expression expected"),new d(f(o.mk_real2int(c,n.ast)))}function En(n){return q(n)||(n=z.val(n)),y(n),(0,u.assert)(ce(n),"Real expression expected"),new w(f(o.mk_is_int(c,n.ast)))}function yn(n){return q(n)||(n=z.val(n)),n.pow("1/2")}function vn(n){return q(n)||(n=z.val(n)),n.pow("1/3")}function Rn(n,r){return y(n),new d(f(o.mk_bv2int(c,n.ast,r)))}function An(n,r){return vt(n)?(0,u.assert)(ie(n),"parameter must be an integer"):((0,u.assert)(typeof n!="number"||Number.isSafeInteger(n),"parameter must not have decimal places"),n=j.val(n)),new S(f(o.mk_int2bv(c,r,n.ast)))}function Tn(...n){return y(...n),n.reduce((r,m)=>new S(f(o.mk_concat(c,r.ast,m.ast))))}function Fr(n,r,m){return y(n,r,m),new Te(f(o.tactic_cond(c,n.ptr,r.ptr,m.ptr)))}function kr(n,r){return new w(f(o.mk_lt(c,n.ast,n.sort.cast(r).ast)))}function Dr(n,r){return new w(f(o.mk_gt(c,n.ast,n.sort.cast(r).ast)))}function qr(n,r){return new w(f(o.mk_le(c,n.ast,n.sort.cast(r).ast)))}function Br(n,r){return new w(f(o.mk_ge(c,n.ast,n.sort.cast(r).ast)))}function Cr(n,r){return new w(f(o.mk_bvult(c,n.ast,n.sort.cast(r).ast)))}function zr(n,r){return new w(f(o.mk_bvugt(c,n.ast,n.sort.cast(r).ast)))}function Vr(n,r){return new w(f(o.mk_bvule(c,n.ast,n.sort.cast(r).ast)))}function Gr(n,r){return new w(f(o.mk_bvuge(c,n.ast,n.sort.cast(r).ast)))}function Qr(n,r){return new w(f(o.mk_bvslt(c,n.ast,n.sort.cast(r).ast)))}function jr(n,r){return new w(f(o.mk_bvsgt(c,n.ast,n.sort.cast(r).ast)))}function Yr(n,r){return new w(f(o.mk_bvsle(c,n.ast,n.sort.cast(r).ast)))}function $r(n,r){return new w(f(o.mk_bvsge(c,n.ast,n.sort.cast(r).ast)))}function Hr(n,r,m){return new S(f(o.mk_extract(c,n,r,m.ast)))}function Ee(n,...r){const m=r.map((A,T)=>n.domain_n(T).cast(A));if(m.length===1)return k(f(o.mk_select(c,n.ast,m[0].ast)));const O=m.map(A=>A.ast);return k(f(o.mk_select_n(c,n.ast,O)))}function ye(n,...r){const m=r.map((A,T)=>T===r.length-1?n.range().cast(A):n.domain_n(T).cast(A));if(m.length<=1)throw new Error("Array store requires both index and value arguments");if(m.length===2)return k(f(o.mk_store(c,n.ast,m[0].ast,m[1].ast)));const O=m.slice(0,m.length-1).map(A=>A.ast);return k(f(o.mk_store_n(c,n.ast,O,m[m.length-1].ast)))}function Wr(...n){return new tt(f(o.mk_set_union(c,n.map(r=>r.ast))))}function Xr(...n){return new tt(f(o.mk_set_intersect(c,n.map(r=>r.ast))))}function Kr(n,r){return new tt(f(o.mk_set_difference(c,n.ast,r.ast)))}function Jr(n,r){const m=j.sort().cast(r);return new w(f(o.mk_set_has_size(c,n.ast,m.ast)))}function ve(n,r){const m=n.elemSort().cast(r);return new tt(f(o.mk_set_add(c,n.ast,m.ast)))}function t_(n,r){const m=n.elemSort().cast(r);return new tt(f(o.mk_set_del(c,n.ast,m.ast)))}function e_(n){return new tt(f(o.mk_set_complement(c,n.ast)))}function Re(n){return new tt(f(o.mk_empty_set(c,n.ptr)))}function wn(n){return new tt(f(o.mk_full_set(c,n.ptr)))}function r_(n,r){const m=r.elemSort().cast(n);return new w(f(o.mk_set_member(c,m.ast,r.ast)))}function __(n,r){return new w(f(o.mk_set_subset(c,n.ast,r.ast)))}class Vt{constructor(r){this.ptr=r,this.ctx=F;const m=this.ast;o.inc_ref(c,m),E.register(this,()=>o.dec_ref(c,m),this)}get ast(){return this.ptr}id(){return o.get_ast_id(c,this.ast)}eqIdentity(r){return y(r),f(o.is_eq_ast(c,this.ast,r.ast))}neqIdentity(r){return y(r),!this.eqIdentity(r)}sexpr(){return o.ast_to_string(c,this.ast)}hash(){return o.get_ast_hash(c,this.ast)}toString(){return this.sexpr()}}class Zn{get ptr(){return ae(this._ptr),this._ptr}constructor(r=o.mk_solver(c)){this.ctx=F;let m;typeof r=="string"?m=f(o.mk_solver_for_logic(c,M(r))):m=r,this._ptr=m,o.solver_inc_ref(c,m),E.register(this,()=>o.solver_dec_ref(c,m),this)}set(r,m){o.solver_set_params(c,this.ptr,Zr(r,m))}push(){o.solver_push(c,this.ptr)}pop(r=1){o.solver_pop(c,this.ptr,r)}numScopes(){return o.solver_get_num_scopes(c,this.ptr)}reset(){o.solver_reset(c,this.ptr)}add(...r){qt(r).forEach(m=>{y(m),f(o.solver_assert(c,this.ptr,m.ast))})}addAndTrack(r,m){typeof m=="string"&&(m=Q.const(m)),(0,u.assert)(K(m),"Provided expression that is not a constant to addAndTrack"),f(o.solver_assert_and_track(c,this.ptr,r.ast,m.ast))}assertions(){return new rt(f(o.solver_get_assertions(c,this.ptr)))}async check(...r){const m=qt(r).map(A=>(y(A),A.ast)),O=await g.runExclusive(()=>f(o.solver_check_assumptions(c,this.ptr,m)));switch(O){case i.Z3_lbool.Z3_L_FALSE:return"unsat";case i.Z3_lbool.Z3_L_TRUE:return"sat";case i.Z3_lbool.Z3_L_UNDEF:return"unknown";default:(0,u.assertExhaustive)(O)}}model(){return new Gt(f(o.solver_get_model(c,this.ptr)))}toString(){return f(o.solver_to_string(c,this.ptr))}fromString(r){o.solver_from_string(c,this.ptr,r),oe()}release(){o.solver_dec_ref(c,this.ptr),this._ptr=null,E.unregister(this)}}class Sn{get ptr(){return ae(this._ptr),this._ptr}constructor(r=o.mk_optimize(c)){this.ctx=F;let m;m=r,this._ptr=m,o.optimize_inc_ref(c,m),E.register(this,()=>o.optimize_dec_ref(c,m),this)}set(r,m){o.optimize_set_params(c,this.ptr,Zr(r,m))}push(){o.optimize_push(c,this.ptr)}pop(){o.optimize_pop(c,this.ptr)}add(...r){qt(r).forEach(m=>{y(m),f(o.optimize_assert(c,this.ptr,m.ast))})}addSoft(r,m,O=""){p(m)&&(m=`${m.numerator}/${m.denominator}`),f(o.optimize_assert_soft(c,this.ptr,r.ast,m.toString(),M(O)))}addAndTrack(r,m){typeof m=="string"&&(m=Q.const(m)),(0,u.assert)(K(m),"Provided expression that is not a constant to addAndTrack"),f(o.optimize_assert_and_track(c,this.ptr,r.ast,m.ast))}assertions(){return new rt(f(o.optimize_get_assertions(c,this.ptr)))}maximize(r){f(o.optimize_maximize(c,this.ptr,r.ast))}minimize(r){f(o.optimize_minimize(c,this.ptr,r.ast))}async check(...r){const m=qt(r).map(A=>(y(A),A.ast)),O=await g.runExclusive(()=>f(o.optimize_check(c,this.ptr,m)));switch(O){case i.Z3_lbool.Z3_L_FALSE:return"unsat";case i.Z3_lbool.Z3_L_TRUE:return"sat";case i.Z3_lbool.Z3_L_UNDEF:return"unknown";default:(0,u.assertExhaustive)(O)}}model(){return new Gt(f(o.optimize_get_model(c,this.ptr)))}toString(){return f(o.optimize_to_string(c,this.ptr))}fromString(r){o.optimize_from_string(c,this.ptr,r),oe()}release(){o.optimize_dec_ref(c,this.ptr),this._ptr=null,E.unregister(this)}}class Gt{get ptr(){return ae(this._ptr),this._ptr}constructor(r=o.mk_model(c)){this.ctx=F,this._ptr=r,o.model_inc_ref(c,r),E.register(this,()=>o.model_dec_ref(c,r),this)}length(){return o.model_get_num_consts(c,this.ptr)+o.model_get_num_funcs(c,this.ptr)}[Symbol.iterator](){return this.values()}*entries(){const r=this.length();for(let m=0;m<r;m++)yield[m,this.get(m)]}*keys(){for(const[r]of this.entries())yield r}*values(){for(const[,r]of this.entries())yield r}decls(){return[...this.values()]}sexpr(){return f(o.model_to_string(c,this.ptr))}toString(){return this.sexpr()}eval(r,m=!1){y(r);const O=f(o.model_eval(c,this.ptr,r.ast,m));if(O===null)throw new t.Z3Error("Failed to evaluate expression in the model");return k(O)}get(r,m){if((0,u.assert)(m===void 0||typeof r=="number"),typeof r=="number"){const O=this.length();if(r>=O)throw new RangeError(`expected index ${r} to be less than length ${O}`);if(m===void 0){const T=f(o.model_get_num_consts(c,this.ptr));return r<T?new V(f(o.model_get_const_decl(c,this.ptr,r))):new V(f(o.model_get_func_decl(c,this.ptr,r-T)))}if(m<0&&(m+=O),m>=O)throw new RangeError(`expected index ${m} to be less than length ${O}`);const A=[];for(let T=r;T<m;T++)A.push(this.get(T));return A}else if(Ot(r)||q(r)&&K(r)){const O=this.getInterp(r);return(0,u.assert)(O!==null),O}else if(Bt(r))return this.getUniverse(r);(0,u.assert)(!1,"Number, declaration or constant expected")}updateValue(r,m){if(y(r),y(m),q(r)&&(r=r.decl()),Ot(r)&&r.arity()!==0&&Lr(m)){const O=this.addFuncInterp(r,m.elseValue());for(let A=0;A<m.numEntries();A++){const T=m.entry(A),$t=T.numArgs(),Ht=O_.Array($t).map((_t,C)=>T.argValue(C));O.addEntry(Ht,T.value())}return}if(!Ot(r)||r.arity()!==0)throw new t.Z3Error("Expecting 0-ary function or constant expression");if(!Nr(m))throw new t.Z3Error("Only func declarations can be assigned to func interpretations");f(o.add_const_interp(c,this.ptr,r.ptr,m.ast))}addFuncInterp(r,m){const O=f(o.add_func_interp(c,this.ptr,r.ptr,r.range().cast(m).ptr));return new Ae(O)}getInterp(r){if((0,u.assert)(Ot(r)||K(r),"Declaration expected"),K(r)&&((0,u.assert)(q(r)),r=r.decl()),(0,u.assert)(Ot(r)),r.arity()===0){const m=f(o.model_get_const_interp(c,this.ptr,r.ptr));return m===null?null:k(m)}else{const m=f(o.model_get_func_interp(c,this.ptr,r.ptr));return m===null?null:new Ae(m)}}getUniverse(r){return y(r),new rt(f(o.model_get_sort_universe(c,this.ptr,r.ptr)))}release(){o.model_dec_ref(c,this.ptr),this._ptr=null,E.unregister(this)}}class In{constructor(r){this.ptr=r,this.ctx=F,o.func_entry_inc_ref(c,r),E.register(this,()=>o.func_entry_dec_ref(c,r),this)}numArgs(){return f(o.func_entry_get_num_args(c,this.ptr))}argValue(r){return k(f(o.func_entry_get_arg(c,this.ptr,r)))}value(){return k(f(o.func_entry_get_value(c,this.ptr)))}}class Ae{constructor(r){this.ptr=r,this.ctx=F,o.func_interp_inc_ref(c,r),E.register(this,()=>o.func_interp_dec_ref(c,r),this)}elseValue(){return k(f(o.func_interp_get_else(c,this.ptr)))}numEntries(){return f(o.func_interp_get_num_entries(c,this.ptr))}arity(){return f(o.func_interp_get_arity(c,this.ptr))}entry(r){return new In(f(o.func_interp_get_entry(c,this.ptr,r)))}addEntry(r,m){const O=new rt;for(const A of r)O.push(A);y(O),y(m),(0,u.assert)(this.arity()===O.length(),"Number of arguments in entry doesn't match function arity"),f(o.func_interp_add_entry(c,this.ptr,O.ptr,m.ptr))}}class J extends Vt{get ast(){return o.sort_to_ast(c,this.ptr)}kind(){return o.get_sort_kind(c,this.ptr)}subsort(r){return y(r),!1}cast(r){return y(r),(0,u.assert)(r.sort.eqIdentity(r.sort),"Sort mismatch"),r}name(){return Dt(o.get_sort_name(c,this.ptr))}eqIdentity(r){return y(r),f(o.is_eq_sort(c,this.ptr,r.ptr))}neqIdentity(r){return!this.eqIdentity(r)}}class V extends Vt{get ast(){return o.func_decl_to_ast(c,this.ptr)}name(){return Dt(o.get_decl_name(c,this.ptr))}arity(){return o.get_arity(c,this.ptr)}domain(r){return(0,u.assert)(r<this.arity(),"Index out of bounds"),et(o.get_domain(c,this.ptr,r))}range(){return et(o.get_range(c,this.ptr))}kind(){return o.get_decl_kind(c,this.ptr)}params(){const r=o.get_decl_num_parameters(c,this.ptr),m=[];for(let O=0;O<r;O++){const A=f(o.get_decl_parameter_kind(c,this.ptr,O));switch(A){case i.Z3_parameter_kind.Z3_PARAMETER_INT:m.push(f(o.get_decl_int_parameter(c,this.ptr,O)));break;case i.Z3_parameter_kind.Z3_PARAMETER_DOUBLE:m.push(f(o.get_decl_double_parameter(c,this.ptr,O)));break;case i.Z3_parameter_kind.Z3_PARAMETER_RATIONAL:m.push(f(o.get_decl_rational_parameter(c,this.ptr,O)));break;case i.Z3_parameter_kind.Z3_PARAMETER_SYMBOL:m.push(Dt(f(o.get_decl_symbol_parameter(c,this.ptr,O))));break;case i.Z3_parameter_kind.Z3_PARAMETER_SORT:m.push(new J(f(o.get_decl_sort_parameter(c,this.ptr,O))));break;case i.Z3_parameter_kind.Z3_PARAMETER_AST:m.push(new H(f(o.get_decl_ast_parameter(c,this.ptr,O))));break;case i.Z3_parameter_kind.Z3_PARAMETER_FUNC_DECL:m.push(new V(f(o.get_decl_func_decl_parameter(c,this.ptr,O))));break;case i.Z3_parameter_kind.Z3_PARAMETER_INTERNAL:break;case i.Z3_parameter_kind.Z3_PARAMETER_ZSTRING:break;default:(0,u.assertExhaustive)(A)}}return m}call(...r){return(0,u.assert)(r.length===this.arity(),`Incorrect number of arguments to ${this}`),k(f(o.mk_app(c,this.ptr,r.map((m,O)=>this.domain(O).cast(m).ast))))}}class H extends Vt{get sort(){return et(o.get_sort(c,this.ast))}eq(r){return new w(f(o.mk_eq(c,this.ast,D(r).ast)))}neq(r){return new w(f(o.mk_distinct(c,[this,r].map(m=>D(m).ast))))}name(){return this.decl().name()}params(){return this.decl().params()}decl(){return(0,u.assert)(it(this),"Z3 application expected"),new V(f(o.get_app_decl(c,f(o.to_app(c,this.ast)))))}numArgs(){return(0,u.assert)(it(this),"Z3 applicaiton expected"),f(o.get_app_num_args(c,f(o.to_app(c,this.ast))))}arg(r){return(0,u.assert)(it(this),"Z3 applicaiton expected"),(0,u.assert)(r<this.numArgs(),`Invalid argument index - expected ${r} to be less than ${this.numArgs()}`),k(f(o.get_app_arg(c,f(o.to_app(c,this.ast)),r)))}children(){const r=this.numArgs();if(it(this)){const m=[];for(let O=0;O<r;O++)m.push(this.arg(O));return m}return[]}}class Nn{constructor(r){this.ptr=r,this.ctx=F}}class n_ extends J{cast(r){return typeof r=="boolean"&&(r=Q.val(r)),(0,u.assert)(q(r),"true, false or Z3 Boolean expression expected."),(0,u.assert)(this.eqIdentity(r.sort),"Value cannot be converted into a Z3 Boolean value"),r}subsort(r){return y(r.ctx),r instanceof Tt}}class w extends H{not(){return ge(this)}and(r){return he(this,r)}or(r){return Oe(this,r)}xor(r){return be(this,r)}implies(r){return fe(this,r)}iff(r){return pe(this,r)}}class Qt{constructor(r){this.ptr=r,this.ctx=F}}class Te{constructor(r){this.ctx=F;let m;typeof r=="string"?m=f(o.mk_tactic(c,r)):m=r,this.ptr=m,o.tactic_inc_ref(c,m),E.register(this,()=>o.tactic_dec_ref(c,m),this)}}class Tt extends J{cast(r){const m=Pt(this)?"IntSort":"RealSort";if(q(r)){const O=r.sort;if(vt(r)){if(this.eqIdentity(O))return r;if(Pt(O)&&me(this))return Pe(r);(0,u.assert)(!1,"Can't cast Real to IntSort without loss")}else if(Ct(r))return Pt(this)?le(r,1,0):Pe(le(r,1,0));(0,u.assert)(!1,`Can't cast expression to ${m}`)}else{if(typeof r!="boolean")return Pt(this)?((0,u.assert)(!p(r),"Can't cast fraction to IntSort"),j.val(r)):z.val(r);(0,u.assert)(!1,`Can't cast primitive to ${m}`)}}}function we(n,...r){if(n instanceof S){if(r.length!==1)throw new Error("BitVec add only supports 2 arguments");return new S(f(o.mk_bvadd(c,n.ast,n.sort.cast(r[0]).ast)))}else return(0,u.assert)(n instanceof d),new d(f(o.mk_add(c,[n.ast].concat(r.map(m=>n.sort.cast(m).ast)))))}function Ze(n,...r){if(n instanceof S){if(r.length!==1)throw new Error("BitVec sub only supports 2 arguments");return new S(f(o.mk_bvsub(c,n.ast,n.sort.cast(r[0]).ast)))}else return(0,u.assert)(n instanceof d),new d(f(o.mk_sub(c,[n.ast].concat(r.map(m=>n.sort.cast(m).ast)))))}function Se(n,...r){if(n instanceof S){if(r.length!==1)throw new Error("BitVec mul only supports 2 arguments");return new S(f(o.mk_bvmul(c,n.ast,n.sort.cast(r[0]).ast)))}else return(0,u.assert)(n instanceof d),new d(f(o.mk_mul(c,[n.ast].concat(r.map(m=>n.sort.cast(m).ast)))))}function Ie(n,r){return n instanceof S?new S(f(o.mk_bvsdiv(c,n.ast,n.sort.cast(r).ast))):((0,u.assert)(n instanceof d),new d(f(o.mk_div(c,n.ast,n.sort.cast(r).ast))))}function s_(n,r){return new S(f(o.mk_bvudiv(c,n.ast,n.sort.cast(r).ast)))}function Ne(n){return n instanceof S?new S(f(o.mk_bvneg(c,n.ast))):((0,u.assert)(n instanceof d),new d(f(o.mk_unary_minus(c,n.ast))))}function Le(n,r){return n instanceof S?new S(f(o.mk_bvsrem(c,n.ast,n.sort.cast(r).ast))):((0,u.assert)(n instanceof d),new d(f(o.mk_mod(c,n.ast,n.sort.cast(r).ast))))}class d extends H{add(r){return we(this,r)}mul(r){return Se(this,r)}sub(r){return Ze(this,r)}pow(r){return new d(f(o.mk_power(c,this.ast,this.sort.cast(r).ast)))}div(r){return Ie(this,r)}mod(r){return Le(this,r)}neg(){return Ne(this)}le(r){return qr(this,r)}lt(r){return kr(this,r)}gt(r){return Dr(this,r)}ge(r){return Br(this,r)}}class wt extends d{value(){return BigInt(this.asString())}asString(){return o.get_numeral_string(c,this.ast)}asBinary(){return o.get_numeral_binary_string(c,this.ast)}}class xe extends d{value(){return{numerator:this.numerator().value(),denominator:this.denominator().value()}}numerator(){return new wt(o.get_numerator(c,this.ast))}denominator(){return new wt(o.get_denominator(c,this.ast))}asNumber(){const{numerator:r,denominator:m}=this.value(),O=r/m;return Number(O)+Number(r-O*m)/Number(m)}asDecimal(r=Number.parseInt(v("precision")??b.toString())){return o.get_numeral_decimal_string(c,this.ast,r)}asString(){return o.get_numeral_string(c,this.ast)}}class de extends J{size(){return o.get_bv_sort_size(c,this.ptr)}subsort(r){return zt(r)&&this.size()<r.size()}cast(r){return q(r)?(y(r),r):((0,u.assert)(!p(r),"Can't convert rational to BitVec"),mt.val(r,this.size()))}}class S extends H{size(){return this.sort.size()}add(r){return we(this,r)}mul(r){return Se(this,r)}sub(r){return Ze(this,r)}sdiv(r){return Ie(this,r)}udiv(r){return s_(this,r)}smod(r){return Le(this,r)}urem(r){return new S(f(o.mk_bvurem(c,this.ast,this.sort.cast(r).ast)))}srem(r){return new S(f(o.mk_bvsrem(c,this.ast,this.sort.cast(r).ast)))}neg(){return Ne(this)}or(r){return new S(f(o.mk_bvor(c,this.ast,this.sort.cast(r).ast)))}and(r){return new S(f(o.mk_bvand(c,this.ast,this.sort.cast(r).ast)))}nand(r){return new S(f(o.mk_bvnand(c,this.ast,this.sort.cast(r).ast)))}xor(r){return new S(f(o.mk_bvxor(c,this.ast,this.sort.cast(r).ast)))}xnor(r){return new S(f(o.mk_bvxnor(c,this.ast,this.sort.cast(r).ast)))}shr(r){return new S(f(o.mk_bvashr(c,this.ast,this.sort.cast(r).ast)))}lshr(r){return new S(f(o.mk_bvlshr(c,this.ast,this.sort.cast(r).ast)))}shl(r){return new S(f(o.mk_bvshl(c,this.ast,this.sort.cast(r).ast)))}rotateRight(r){return new S(f(o.mk_ext_rotate_right(c,this.ast,this.sort.cast(r).ast)))}rotateLeft(r){return new S(f(o.mk_ext_rotate_left(c,this.ast,this.sort.cast(r).ast)))}not(){return new S(f(o.mk_bvnot(c,this.ast)))}extract(r,m){return Hr(r,m,this)}signExt(r){return new S(f(o.mk_sign_ext(c,r,this.ast)))}zeroExt(r){return new S(f(o.mk_zero_ext(c,r,this.ast)))}repeat(r){return new S(f(o.mk_repeat(c,r,this.ast)))}sle(r){return Yr(this,r)}ule(r){return Vr(this,r)}slt(r){return Qr(this,r)}ult(r){return Cr(this,r)}sge(r){return $r(this,r)}uge(r){return Gr(this,r)}sgt(r){return jr(this,r)}ugt(r){return zr(this,r)}redAnd(){return new S(f(o.mk_bvredand(c,this.ast)))}redOr(){return new S(f(o.mk_bvredor(c,this.ast)))}addNoOverflow(r,m){return new w(f(o.mk_bvadd_no_overflow(c,this.ast,this.sort.cast(r).ast,m)))}addNoUnderflow(r){return new w(f(o.mk_bvadd_no_underflow(c,this.ast,this.sort.cast(r).ast)))}subNoOverflow(r){return new w(f(o.mk_bvsub_no_overflow(c,this.ast,this.sort.cast(r).ast)))}subNoUndeflow(r,m){return new w(f(o.mk_bvsub_no_underflow(c,this.ast,this.sort.cast(r).ast,m)))}sdivNoOverflow(r){return new w(f(o.mk_bvsdiv_no_overflow(c,this.ast,this.sort.cast(r).ast)))}mulNoOverflow(r,m){return new w(f(o.mk_bvmul_no_overflow(c,this.ast,this.sort.cast(r).ast,m)))}mulNoUndeflow(r){return new w(f(o.mk_bvmul_no_underflow(c,this.ast,this.sort.cast(r).ast)))}negNoOverflow(){return new w(f(o.mk_bvneg_no_overflow(c,this.ast)))}}class Ue extends S{value(){return BigInt(this.asString())}asSignedValue(){let r=this.value();const m=BigInt(this.size());return r>=2n**(m-1n)&&(r=r-2n**m),r<(-2n)**(m-1n)&&(r=r+2n**m),r}asString(){return o.get_numeral_string(c,this.ast)}asBinaryString(){return o.get_numeral_binary_string(c,this.ast)}}class jt extends J{domain(){return et(f(o.get_array_sort_domain(c,this.ptr)))}domain_n(r){return et(f(o.get_array_sort_domain_n(c,this.ptr,r)))}range(){return et(f(o.get_array_sort_range(c,this.ptr)))}}class Yt extends H{domain(){return this.sort.domain()}domain_n(r){return this.sort.domain_n(r)}range(){return this.sort.range()}select(...r){return Ee(this,...r)}store(...r){return ye(this,...r)}}class tt extends H{elemSort(){return this.sort.domain()}union(...r){return Wr(this,...r)}intersect(...r){return Xr(this,...r)}diff(r){return Kr(this,r)}hasSize(r){return Jr(this,r)}add(r){return ve(this,r)}del(r){return t_(this,r)}complement(){return e_(this)}contains(r){return r_(r,this)}subsetOf(r){return __(this,r)}}class a_{constructor(r,m){this.constructors=[],this.ctx=r,this.name=m}declare(r,...m){return this.constructors.push([r,m]),this}create(){return o_(this)[0]}}class Ln extends J{numConstructors(){return o.get_datatype_sort_num_constructors(c,this.ptr)}constructorDecl(r){const m=o.get_datatype_sort_constructor(c,this.ptr,r);return new V(m)}recognizer(r){const m=o.get_datatype_sort_recognizer(c,this.ptr,r);return new V(m)}accessor(r,m){const O=o.get_datatype_sort_constructor_accessor(c,this.ptr,r,m);return new V(O)}cast(r){if(q(r))return(0,u.assert)(this.eqIdentity(r.sort),"Value cannot be converted to this datatype"),r;throw new Error("Cannot coerce value to datatype expression")}subsort(r){return y(r.ctx),this.eqIdentity(r)}}function o_(...n){if(n.length===0)throw new Error("At least one datatype must be provided");const r=n[0].ctx;for(const T of n)if(T.ctx!==r)throw new Error("All datatypes must be from the same context");const m=n.map(T=>T.name),O=[],A=[];try{for(const _t of n){const C=[];for(const[nt,lt]of _t.constructors){const Wt=[],ft=[],pt=[];for(const[St,Xt]of lt)if(Wt.push(St),Xt instanceof a_){const i_=n.indexOf(Xt);if(i_===-1)throw new Error(`Referenced datatype "${Xt.name}" not found in datatypes being created`);ft.push(null),pt.push(i_)}else ft.push(Xt.ptr),pt.push(0);const Zt=o.mk_constructor(c,o.mk_string_symbol(c,nt),o.mk_string_symbol(c,`is_${nt}`),Wt.map(St=>o.mk_string_symbol(c,St)),ft,pt);C.push(Zt),A.push(Zt)}const ke=o.mk_constructor_list(c,C);O.push(ke)}const T=m.map(_t=>o.mk_string_symbol(c,_t)),$t=o.mk_datatypes(c,T,O),Ht=[];for(let _t=0;_t<$t.length;_t++){const C=new Ln($t[_t]),ke=C.numConstructors();for(let nt=0;nt<ke;nt++){const lt=C.constructorDecl(nt),Wt=C.recognizer(nt),ft=lt.name().toString();lt.arity()===0?C[ft]=lt.call():C[ft]=lt,C[`is_${ft}`]=Wt;for(let pt=0;pt<lt.arity();pt++){const Zt=C.accessor(nt,pt),St=Zt.name().toString();C[St]=Zt}}Ht.push(C)}return Ht}finally{for(const T of A)o.del_constructor(c,T);for(const T of O)o.del_constructor_list(c,T)}}class Me extends H{is_forall(){return o.is_quantifier_forall(c,this.ast)}is_exists(){return o.is_quantifier_exists(c,this.ast)}is_lambda(){return o.is_lambda(c,this.ast)}weight(){return o.get_quantifier_weight(c,this.ast)}num_patterns(){return o.get_quantifier_num_patterns(c,this.ast)}pattern(r){return new Nn(f(o.get_quantifier_pattern_ast(c,this.ast,r)))}num_no_patterns(){return o.get_quantifier_num_no_patterns(c,this.ast)}no_pattern(r){return k(f(o.get_quantifier_no_pattern_ast(c,this.ast,r)))}body(){return k(f(o.get_quantifier_body(c,this.ast)))}num_vars(){return o.get_quantifier_num_bound(c,this.ast)}var_name(r){return Dt(o.get_quantifier_bound_name(c,this.ast,r))}var_sort(r){return et(f(o.get_quantifier_bound_sort(c,this.ast,r)))}children(){return[this.body()]}}class Fe extends Me{not(){return ge(this)}and(r){return he(this,r)}or(r){return Oe(this,r)}xor(r){return be(this,r)}implies(r){return fe(this,r)}iff(r){return pe(this,r)}}class u_ extends Me{domain(){return this.sort.domain()}domain_n(r){return this.sort.domain_n(r)}range(){return this.sort.range()}select(...r){return Ee(this,...r)}store(...r){return ye(this,...r)}}class rt{constructor(r=o.mk_ast_vector(c)){this.ptr=r,this.ctx=F,o.ast_vector_inc_ref(c,r),E.register(this,()=>o.ast_vector_dec_ref(c,r),this)}length(){return o.ast_vector_size(c,this.ptr)}[Symbol.iterator](){return this.values()}*entries(){const r=this.length();for(let m=0;m<r;m++)yield[m,this.get(m)]}*keys(){for(let[r]of this.entries())yield r}*values(){for(let[,r]of this.entries())yield r}get(r,m){const O=this.length();if(r<0&&(r+=O),r>=O)throw new RangeError(`expected from index ${r} to be less than length ${O}`);if(m===void 0)return ue(f(o.ast_vector_get(c,this.ptr,r)));if(m<0&&(m+=O),m>=O)throw new RangeError(`expected to index ${m} to be less than length ${O}`);const A=[];for(let T=r;T<m;T++)A.push(ue(f(o.ast_vector_get(c,this.ptr,T))));return A}set(r,m){if(y(m),r>=this.length())throw new RangeError(`expected index ${r} to be less than length ${this.length()}`);f(o.ast_vector_set(c,this.ptr,r,m.ast))}push(r){y(r),f(o.ast_vector_push(c,this.ptr,r.ast))}resize(r){f(o.ast_vector_resize(c,this.ptr,r))}has(r){y(r);for(const m of this.values())if(m.eqIdentity(r))return!0;return!1}sexpr(){return f(o.ast_vector_to_string(c,this.ptr))}}class xn{constructor(r=o.mk_ast_map(c)){this.ptr=r,this.ctx=F,o.ast_map_inc_ref(c,r),E.register(this,()=>o.ast_map_dec_ref(c,r),this)}[Symbol.iterator](){return this.entries()}get size(){return o.ast_map_size(c,this.ptr)}*entries(){for(const r of this.keys())yield[r,this.get(r)]}keys(){return new rt(o.ast_map_keys(c,this.ptr))}*values(){for(const[r,m]of this.entries())yield m}get(r){return ue(f(o.ast_map_find(c,this.ptr,r.ast)))}set(r,m){f(o.ast_map_insert(c,this.ptr,r.ast,m.ast))}delete(r){f(o.ast_map_erase(c,this.ptr,r.ast))}clear(){f(o.ast_map_reset(c,this.ptr))}has(r){return f(o.ast_map_contains(c,this.ptr,r.ast))}sexpr(){return f(o.ast_map_to_string(c,this.ptr))}}function dn(n,...r){y(n);const m=[],O=[];for(const[A,T]of r)y(A),y(T),m.push(A.ast),O.push(T.ast);return k(f(o.substitute(c,n.ast,m,O)))}function Un(n){const r=[],m=[],O=[],A=[],T=new rt(f(o.parse_smtlib2_string(c,n,r,m,O,A)));if(T.length()!==1)throw new Error("Expected exactly one AST. Instead got "+T.length()+": "+T.sexpr());return T.get(0)}const F={ptr:c,name:L,Solver:Zn,Optimize:Sn,Model:Gt,Tactic:Te,AstVector:rt,AstMap:xn,interrupt:U_,isModel:M_,isAst:Nr,isSort:Bt,isFuncDecl:Ot,isFuncInterp:Lr,isApp:it,isConst:K,isExpr:q,isVar:xr,isAppOf:$,isBool:Ct,isTrue:F_,isFalse:k_,isAnd:D_,isOr:q_,isImplies:B_,isNot:C_,isEq:z_,isDistinct:V_,isQuantifier:G_,isArith:vt,isArithSort:Q_,isInt:ie,isIntVal:j_,isIntSort:Pt,isReal:ce,isRealVal:Y_,isRealSort:me,isBitVecSort:zt,isBitVec:$_,isBitVecVal:H_,isArraySort:W_,isArray:X_,isConstArray:K_,isProbe:ct,isTactic:Rt,isAstVector:dr,eqIdentity:J_,getVarIndex:tn,from:D,solve:en,Sort:_n,Function:nn,RecFunc:sn,Bool:Q,Int:j,Real:z,BitVec:mt,Array:At,Set:Ur,Datatype:an,If:le,Distinct:on,Const:Mr,Consts:un,FreshConst:cn,Var:mn,Implies:fe,Iff:pe,Eq:ln,Xor:be,Not:ge,And:he,Or:Oe,PbEq:fn,PbGe:pn,PbLe:bn,ForAll:gn,Exists:hn,Lambda:On,ToReal:Pe,ToInt:Pn,IsInt:En,Sqrt:yn,Cbrt:vn,BV2Int:Rn,Int2BV:An,Concat:Tn,Cond:Fr,LT:kr,GT:Dr,LE:qr,GE:Br,ULT:Cr,UGT:zr,ULE:Vr,UGE:Gr,SLT:Qr,SGT:jr,SLE:Yr,SGE:$r,Sum:we,Sub:Ze,Product:Se,Div:Ie,BUDiv:s_,Neg:Ne,Mod:Le,Select:Ee,Store:ye,Extract:Hr,substitute:dn,simplify:rn,ast_from_string:Un,SetUnion:Wr,SetIntersect:Xr,SetDifference:Kr,SetHasSize:Jr,SetAdd:ve,SetDel:t_,SetComplement:e_,EmptySet:Re,FullSet:wn,isMember:r_,isSubset:__};return E.register(F,()=>o.del_context(c)),F}return{enableTrace:e,disableTrace:Z,getVersion:N,getVersionString:R,getFullVersion:x,openLog:s,appendLog:_,getParam:v,setParam:a,resetParams:h,Context:I}}return Nt}var wr;function L_(){return wr||(wr=1,(function(l){var i=ot&&ot.__createBinding||(Object.create?(function(u,b,g,p){p===void 0&&(p=g);var P=Object.getOwnPropertyDescriptor(b,g);(!P||("get"in P?!b.__esModule:P.writable||P.configurable))&&(P={enumerable:!0,get:function(){return b[g]}}),Object.defineProperty(u,p,P)}):(function(u,b,g,p){p===void 0&&(p=g),u[p]=b[g]})),t=ot&&ot.__exportStar||function(u,b){for(var g in u)g!=="default"&&!Object.prototype.hasOwnProperty.call(b,g)&&i(b,u,g)};Object.defineProperty(l,"__esModule",{value:!0}),t(N_(),l),t(se(),l)})(ot)),ot}var x_=L_();const d_=bt({__proto__:null},[x_]);return h_}));
+(function (bt, st) {
+  typeof exports == "object" && typeof module < "u"
+    ? (module.exports = st())
+    : typeof define == "function" && define.amd
+      ? define(st)
+      : ((bt = typeof globalThis < "u" ? globalThis : bt || self), (bt.JSRandomnessPredictor = st()));
+})(this, function () {
+  "use strict";
+  function bt(l, i) {
+    for (var t = 0; t < i.length; t++) {
+      const u = i[t];
+      if (typeof u != "string" && !Array.isArray(u)) {
+        for (const b in u)
+          if (b !== "default" && !(b in l)) {
+            const g = Object.getOwnPropertyDescriptor(u, b);
+            g && Object.defineProperty(l, b, g.get ? g : { enumerable: !0, get: () => u[b] });
+          }
+      }
+    }
+    return Object.freeze(Object.defineProperty(l, Symbol.toStringTag, { value: "Module" }));
+  }
+  let st;
+  async function Kt() {
+    if (st) return st;
+    if (!window.initZ3 || !window.Module)
+      throw new Error("Z3 not initialized properly! window.initZ3 and window.Module should be set via IIFE in entry!");
+    const l = window.initZ3,
+      i = async () => await l(window.Module),
+      t = await (await Promise.resolve().then(() => R_)).init(i),
+      { createApi: u } = await Promise.resolve().then(() => d_),
+      b = { ...t, ...u(t.Z3) };
+    return ((st = b), b);
+  }
+  class Jt extends Error {
+    constructor(i) {
+      ((i = i === void 0 ? "Cannot solve state. Unable to make accurate predictions." : i),
+        super(i),
+        (this.name = "UnsatError"),
+        Object.setPrototypeOf(this, new.target.prototype));
+    }
+  }
+  class c_ extends Error {
+    constructor(i) {
+      (super(i), (this.name = "InsufficientSequenceLengthError"), Object.setPrototypeOf(this, new.target.prototype));
+    }
+  }
+  function Y(l) {
+    return l & 0xffffffffffffffffn;
+  }
+  class W {
+    constructor() {}
+    static symbolic(i) {
+      let t = i[0];
+      ((t = t.xor(t.shl(23))), (t = t.xor(t.lshr(17))), (t = t.xor(i[1])), (t = t.xor(i[1].lshr(26))), (i[0] = i[1]), (i[1] = t));
+    }
+    static symbolicArithmeticShiftRight(i) {
+      let t = i[0];
+      ((t = t.xor(t.shl(23))), (t = t.xor(t.shr(17))), (t = t.xor(i[1])), (t = t.xor(i[1].shr(26))), (i[0] = i[1]), (i[1] = t));
+    }
+    static concreteBackwards(i) {
+      let t = i[1] ^ (i[0] >> 26n) ^ i[0];
+      ((t = Y(t ^ (t >> 17n) ^ (t >> 34n) ^ (t >> 51n))), (t = Y(t ^ (t << 23n) ^ (t << 46n))), (i[1] = i[0]), (i[0] = t));
+    }
+    static concrete(i) {
+      let t = i[0];
+      ((t ^= Y(t << 23n)), (t ^= Y(t >> 17n)), (t ^= i[1]), (t ^= Y(i[1] >> 26n)), (i[0] = i[1]), (i[1] = t));
+    }
+    static concreteArithmeticShiftRight(i) {
+      let t = Y(i[0]);
+      ((t ^= Y(t << 23n)), (t ^= this.#r(t, 17n)), (t ^= i[1]), (t ^= this.#r(i[1], 26n)), (i[0] = i[1]), (i[1] = Y(t)));
+    }
+    static #r(i, t) {
+      const u = Y(i >> t);
+      if ((i & (1n << 63n)) === 0n) return u;
+      const g = ((1n << t) - 1n) << (64n - t);
+      return u | g;
+    }
+  }
+  class m_ {
+    #r = Math.pow(2, 53);
+    #t = [0n, 0n];
+    constructor(i) {
+      this.sequence = i;
+    }
+    async predictNext() {
+      this.#t[0] === 0n && this.#t[1] === 0n && (await this.#e());
+      const i = this.#n(this.#t[0]);
+      return (W.concreteBackwards(this.#t), i);
+    }
+    async #e() {
+      try {
+        const { Context: i } = await Kt(),
+          t = i("main"),
+          u = new t.Solver(),
+          b = t.BitVec.const("ss0", 64),
+          g = t.BitVec.const("ss1", 64),
+          p = [b, g],
+          P = [...this.sequence].reverse();
+        for (const E of P) {
+          W.symbolic(p);
+          const e = this.#_(E);
+          u.add(p[0].lshr(11).eq(t.BitVec.val(e, 64)));
+        }
+        if ((await u.check()) !== "sat") throw new Jt();
+        const o = u.model();
+        this.#t = [o.get(b).value(), o.get(g).value()];
+      } catch (i) {
+        return Promise.reject(i);
+      }
+    }
+    #_(i) {
+      const t = Math.floor(i * this.#r);
+      return BigInt(t);
+    }
+    #n(i) {
+      return Number(i >> 11n) / this.#r;
+    }
+  }
+  class l_ {
+    #r = 0x1fffffffffffffn;
+    #t = Math.pow(2, 53);
+    #e = [0n, 0n];
+    constructor(i) {
+      this.sequence = i;
+    }
+    async predictNext() {
+      return (this.#e[0] === 0n && this.#e[1] === 0n && (await this.#_()), W.concrete(this.#e), this.#s(Y(this.#e[0] + this.#e[1])));
+    }
+    async #_() {
+      try {
+        const { Context: i } = await Kt(),
+          t = i("main"),
+          u = new t.Solver(),
+          b = t.BitVec.const("ss0", 64),
+          g = t.BitVec.const("ss1", 64),
+          p = [b, g];
+        for (const E of this.sequence) {
+          W.symbolic(p);
+          const e = this.#n(E),
+            Z = p[0].add(p[1]).and(t.BitVec.val(this.#r, 64));
+          u.add(Z.eq(t.BitVec.val(e, 64)));
+        }
+        if ((await u.check()) !== "sat") throw new Jt();
+        const P = u.model(),
+          o = [P.get(b).value(), P.get(g).value()];
+        for (const E of this.sequence) W.concrete(o);
+        this.#e = o;
+      } catch (i) {
+        return Promise.reject(i);
+      }
+    }
+    #n(i) {
+      return BigInt(Math.floor(i * this.#t));
+    }
+    #s(i) {
+      return Number(i & this.#r) / this.#t;
+    }
+  }
+  class f_ {
+    #r = 6;
+    #t = [0n, 0n];
+    #e;
+    #_;
+    #n = 0x1fffffffffffffn;
+    #s = Math.pow(2, 53);
+    constructor(i) {
+      if (i.length < this.#r) throw new c_(`sequence length must be >= 6 : got ${i.length}`);
+      ((this.#e = (t) => W.symbolicArithmeticShiftRight(t)), (this.#_ = (t) => W.concreteArithmeticShiftRight(t)), (this.sequence = i));
+    }
+    async predictNext() {
+      return (
+        this.#t[0] === 0n &&
+          this.#t[1] === 0n &&
+          (await this.#o(
+            () => this.#a(),
+            () => ((this.#e = (i) => W.symbolic(i)), (this.#_ = (i) => W.concrete(i)), this.#a()),
+          )),
+        this.#_(this.#t),
+        this.#i(Y(this.#t[0] + this.#t[1]))
+      );
+    }
+    async #o(i, t) {
+      try {
+        return await i();
+      } catch {
+        return await t();
+      }
+    }
+    async #a() {
+      try {
+        const { Context: i } = await Kt(),
+          t = i("main"),
+          u = new t.Solver(),
+          b = t.BitVec.const("ss0", 64),
+          g = t.BitVec.const("ss1", 64),
+          p = [b, g];
+        for (const E of this.sequence) {
+          this.#e(p);
+          const e = this.#u(E),
+            Z = p[0].add(p[1]).and(t.BitVec.val(this.#n, 64));
+          u.add(Z.eq(t.BitVec.val(e, 64)));
+        }
+        if ((await u.check()) !== "sat") throw new Jt();
+        const P = u.model(),
+          o = [P.get(b).value(), P.get(g).value()];
+        for (const E of this.sequence) this.#_(o);
+        this.#t = o;
+      } catch (i) {
+        return Promise.reject(i);
+      }
+    }
+    #u(i) {
+      return BigInt(Math.floor(i * this.#s));
+    }
+    #i(i) {
+      return Number(i & this.#n) / this.#s;
+    }
+  }
+  const te = { firefox: (l) => new l_(l), chrome: (l) => new m_(l), safari: (l) => new f_(l) },
+    p_ = te.firefox,
+    b_ = te.chrome,
+    g_ = te.safari;
+  (async () => {
+    try {
+      const [i, t] = await Promise.all([fetch("https://z3-tawny.vercel.app/z3-built.js"), fetch("https://z3-tawny.vercel.app/z3-built.wasm")]);
+      (!i.ok || !t.ok) && console.error("js-randomness-predictor Failed to fetch z3 files", { jsResponse: i.ok, wasmResponse: t.ok });
+      const u = await i.text(),
+        b = new Blob([u], { type: "text/javascript" });
+      let g = URL.createObjectURL(b);
+      var l = {
+        locateFile: (P, o) => (P.endsWith(".wasm") ? "https://z3-tawny.vercel.app/z3-built.wasm" : o + P),
+        wasmBinaryFile: "https://z3-tawny.vercel.app/z3-built.wasm",
+        mainScriptUrlOrBlob: g,
+        onRuntimeInitialized: () => {
+          console.log("js-randomness-predictor initialized.");
+        },
+      };
+      window.Module = l;
+      const p = document.createElement("script");
+      ((p.src = g),
+        (p.id = "z3-built-jsrp"),
+        document.body.appendChild(p),
+        (function P() {
+          try {
+            if (typeof initZ3 > "u") setTimeout(() => P(), 1e3);
+            else if (window.initZ3) {
+              window.initZ3 = initZ3;
+              return;
+            }
+          } catch (o) {
+            console.error("js-randomness-predictor something went wrong during initialize()", o);
+          }
+        })());
+    } catch (i) {
+      console.error("js-randomness-predictor an error occurred during loading:", i);
+    }
+  })();
+  const h_ = { firefox: p_, safari: g_, chrome: b_ };
+  var O_ = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
+  function P_(l) {
+    if (Object.prototype.hasOwnProperty.call(l, "__esModule")) return l;
+    var i = l.default;
+    if (typeof i == "function") {
+      var t = function u() {
+        var b = !1;
+        try {
+          b = this instanceof u;
+        } catch {}
+        return b ? Reflect.construct(i, arguments, this.constructor) : i.apply(this, arguments);
+      };
+      t.prototype = i.prototype;
+    } else t = {};
+    return (
+      Object.defineProperty(t, "__esModule", { value: !0 }),
+      Object.keys(l).forEach(function (u) {
+        var b = Object.getOwnPropertyDescriptor(l, u);
+        Object.defineProperty(
+          t,
+          u,
+          b.get
+            ? b
+            : {
+                enumerable: !0,
+                get: function () {
+                  return l[u];
+                },
+              },
+        );
+      }),
+      t
+    );
+  }
+  var at = {},
+    U = {},
+    De;
+  function E_() {
+    if (De) return U;
+    ((De = 1),
+      Object.defineProperty(U, "__esModule", { value: !0 }),
+      (U.Z3_goal_prec =
+        U.Z3_error_code =
+        U.Z3_ast_print_mode =
+        U.Z3_param_kind =
+        U.Z3_decl_kind =
+        U.Z3_ast_kind =
+        U.Z3_sort_kind =
+        U.Z3_parameter_kind =
+        U.Z3_symbol_kind =
+        U.Z3_lbool =
+          void 0));
+    var l;
+    (function (e) {
+      ((e[(e.Z3_L_FALSE = -1)] = "Z3_L_FALSE"), (e[(e.Z3_L_UNDEF = 0)] = "Z3_L_UNDEF"), (e[(e.Z3_L_TRUE = 1)] = "Z3_L_TRUE"));
+    })(l || (U.Z3_lbool = l = {}));
+    var i;
+    (function (e) {
+      ((e[(e.Z3_INT_SYMBOL = 0)] = "Z3_INT_SYMBOL"), (e[(e.Z3_STRING_SYMBOL = 1)] = "Z3_STRING_SYMBOL"));
+    })(i || (U.Z3_symbol_kind = i = {}));
+    var t;
+    (function (e) {
+      ((e[(e.Z3_PARAMETER_INT = 0)] = "Z3_PARAMETER_INT"),
+        (e[(e.Z3_PARAMETER_DOUBLE = 1)] = "Z3_PARAMETER_DOUBLE"),
+        (e[(e.Z3_PARAMETER_RATIONAL = 2)] = "Z3_PARAMETER_RATIONAL"),
+        (e[(e.Z3_PARAMETER_SYMBOL = 3)] = "Z3_PARAMETER_SYMBOL"),
+        (e[(e.Z3_PARAMETER_SORT = 4)] = "Z3_PARAMETER_SORT"),
+        (e[(e.Z3_PARAMETER_AST = 5)] = "Z3_PARAMETER_AST"),
+        (e[(e.Z3_PARAMETER_FUNC_DECL = 6)] = "Z3_PARAMETER_FUNC_DECL"),
+        (e[(e.Z3_PARAMETER_INTERNAL = 7)] = "Z3_PARAMETER_INTERNAL"),
+        (e[(e.Z3_PARAMETER_ZSTRING = 8)] = "Z3_PARAMETER_ZSTRING"));
+    })(t || (U.Z3_parameter_kind = t = {}));
+    var u;
+    (function (e) {
+      ((e[(e.Z3_UNINTERPRETED_SORT = 0)] = "Z3_UNINTERPRETED_SORT"),
+        (e[(e.Z3_BOOL_SORT = 1)] = "Z3_BOOL_SORT"),
+        (e[(e.Z3_INT_SORT = 2)] = "Z3_INT_SORT"),
+        (e[(e.Z3_REAL_SORT = 3)] = "Z3_REAL_SORT"),
+        (e[(e.Z3_BV_SORT = 4)] = "Z3_BV_SORT"),
+        (e[(e.Z3_ARRAY_SORT = 5)] = "Z3_ARRAY_SORT"),
+        (e[(e.Z3_DATATYPE_SORT = 6)] = "Z3_DATATYPE_SORT"),
+        (e[(e.Z3_RELATION_SORT = 7)] = "Z3_RELATION_SORT"),
+        (e[(e.Z3_FINITE_DOMAIN_SORT = 8)] = "Z3_FINITE_DOMAIN_SORT"),
+        (e[(e.Z3_FLOATING_POINT_SORT = 9)] = "Z3_FLOATING_POINT_SORT"),
+        (e[(e.Z3_ROUNDING_MODE_SORT = 10)] = "Z3_ROUNDING_MODE_SORT"),
+        (e[(e.Z3_SEQ_SORT = 11)] = "Z3_SEQ_SORT"),
+        (e[(e.Z3_RE_SORT = 12)] = "Z3_RE_SORT"),
+        (e[(e.Z3_CHAR_SORT = 13)] = "Z3_CHAR_SORT"),
+        (e[(e.Z3_TYPE_VAR = 14)] = "Z3_TYPE_VAR"),
+        (e[(e.Z3_UNKNOWN_SORT = 1e3)] = "Z3_UNKNOWN_SORT"));
+    })(u || (U.Z3_sort_kind = u = {}));
+    var b;
+    (function (e) {
+      ((e[(e.Z3_NUMERAL_AST = 0)] = "Z3_NUMERAL_AST"),
+        (e[(e.Z3_APP_AST = 1)] = "Z3_APP_AST"),
+        (e[(e.Z3_VAR_AST = 2)] = "Z3_VAR_AST"),
+        (e[(e.Z3_QUANTIFIER_AST = 3)] = "Z3_QUANTIFIER_AST"),
+        (e[(e.Z3_SORT_AST = 4)] = "Z3_SORT_AST"),
+        (e[(e.Z3_FUNC_DECL_AST = 5)] = "Z3_FUNC_DECL_AST"),
+        (e[(e.Z3_UNKNOWN_AST = 1e3)] = "Z3_UNKNOWN_AST"));
+    })(b || (U.Z3_ast_kind = b = {}));
+    var g;
+    (function (e) {
+      ((e[(e.Z3_OP_TRUE = 256)] = "Z3_OP_TRUE"),
+        (e[(e.Z3_OP_FALSE = 257)] = "Z3_OP_FALSE"),
+        (e[(e.Z3_OP_EQ = 258)] = "Z3_OP_EQ"),
+        (e[(e.Z3_OP_DISTINCT = 259)] = "Z3_OP_DISTINCT"),
+        (e[(e.Z3_OP_ITE = 260)] = "Z3_OP_ITE"),
+        (e[(e.Z3_OP_AND = 261)] = "Z3_OP_AND"),
+        (e[(e.Z3_OP_OR = 262)] = "Z3_OP_OR"),
+        (e[(e.Z3_OP_IFF = 263)] = "Z3_OP_IFF"),
+        (e[(e.Z3_OP_XOR = 264)] = "Z3_OP_XOR"),
+        (e[(e.Z3_OP_NOT = 265)] = "Z3_OP_NOT"),
+        (e[(e.Z3_OP_IMPLIES = 266)] = "Z3_OP_IMPLIES"),
+        (e[(e.Z3_OP_OEQ = 267)] = "Z3_OP_OEQ"),
+        (e[(e.Z3_OP_ANUM = 512)] = "Z3_OP_ANUM"),
+        (e[(e.Z3_OP_AGNUM = 513)] = "Z3_OP_AGNUM"),
+        (e[(e.Z3_OP_LE = 514)] = "Z3_OP_LE"),
+        (e[(e.Z3_OP_GE = 515)] = "Z3_OP_GE"),
+        (e[(e.Z3_OP_LT = 516)] = "Z3_OP_LT"),
+        (e[(e.Z3_OP_GT = 517)] = "Z3_OP_GT"),
+        (e[(e.Z3_OP_ADD = 518)] = "Z3_OP_ADD"),
+        (e[(e.Z3_OP_SUB = 519)] = "Z3_OP_SUB"),
+        (e[(e.Z3_OP_UMINUS = 520)] = "Z3_OP_UMINUS"),
+        (e[(e.Z3_OP_MUL = 521)] = "Z3_OP_MUL"),
+        (e[(e.Z3_OP_DIV = 522)] = "Z3_OP_DIV"),
+        (e[(e.Z3_OP_IDIV = 523)] = "Z3_OP_IDIV"),
+        (e[(e.Z3_OP_REM = 524)] = "Z3_OP_REM"),
+        (e[(e.Z3_OP_MOD = 525)] = "Z3_OP_MOD"),
+        (e[(e.Z3_OP_TO_REAL = 526)] = "Z3_OP_TO_REAL"),
+        (e[(e.Z3_OP_TO_INT = 527)] = "Z3_OP_TO_INT"),
+        (e[(e.Z3_OP_IS_INT = 528)] = "Z3_OP_IS_INT"),
+        (e[(e.Z3_OP_POWER = 529)] = "Z3_OP_POWER"),
+        (e[(e.Z3_OP_ABS = 530)] = "Z3_OP_ABS"),
+        (e[(e.Z3_OP_STORE = 768)] = "Z3_OP_STORE"),
+        (e[(e.Z3_OP_SELECT = 769)] = "Z3_OP_SELECT"),
+        (e[(e.Z3_OP_CONST_ARRAY = 770)] = "Z3_OP_CONST_ARRAY"),
+        (e[(e.Z3_OP_ARRAY_MAP = 771)] = "Z3_OP_ARRAY_MAP"),
+        (e[(e.Z3_OP_ARRAY_DEFAULT = 772)] = "Z3_OP_ARRAY_DEFAULT"),
+        (e[(e.Z3_OP_SET_UNION = 773)] = "Z3_OP_SET_UNION"),
+        (e[(e.Z3_OP_SET_INTERSECT = 774)] = "Z3_OP_SET_INTERSECT"),
+        (e[(e.Z3_OP_SET_DIFFERENCE = 775)] = "Z3_OP_SET_DIFFERENCE"),
+        (e[(e.Z3_OP_SET_COMPLEMENT = 776)] = "Z3_OP_SET_COMPLEMENT"),
+        (e[(e.Z3_OP_SET_SUBSET = 777)] = "Z3_OP_SET_SUBSET"),
+        (e[(e.Z3_OP_AS_ARRAY = 778)] = "Z3_OP_AS_ARRAY"),
+        (e[(e.Z3_OP_ARRAY_EXT = 779)] = "Z3_OP_ARRAY_EXT"),
+        (e[(e.Z3_OP_SET_HAS_SIZE = 780)] = "Z3_OP_SET_HAS_SIZE"),
+        (e[(e.Z3_OP_SET_CARD = 781)] = "Z3_OP_SET_CARD"),
+        (e[(e.Z3_OP_BNUM = 1024)] = "Z3_OP_BNUM"),
+        (e[(e.Z3_OP_BIT1 = 1025)] = "Z3_OP_BIT1"),
+        (e[(e.Z3_OP_BIT0 = 1026)] = "Z3_OP_BIT0"),
+        (e[(e.Z3_OP_BNEG = 1027)] = "Z3_OP_BNEG"),
+        (e[(e.Z3_OP_BADD = 1028)] = "Z3_OP_BADD"),
+        (e[(e.Z3_OP_BSUB = 1029)] = "Z3_OP_BSUB"),
+        (e[(e.Z3_OP_BMUL = 1030)] = "Z3_OP_BMUL"),
+        (e[(e.Z3_OP_BSDIV = 1031)] = "Z3_OP_BSDIV"),
+        (e[(e.Z3_OP_BUDIV = 1032)] = "Z3_OP_BUDIV"),
+        (e[(e.Z3_OP_BSREM = 1033)] = "Z3_OP_BSREM"),
+        (e[(e.Z3_OP_BUREM = 1034)] = "Z3_OP_BUREM"),
+        (e[(e.Z3_OP_BSMOD = 1035)] = "Z3_OP_BSMOD"),
+        (e[(e.Z3_OP_BSDIV0 = 1036)] = "Z3_OP_BSDIV0"),
+        (e[(e.Z3_OP_BUDIV0 = 1037)] = "Z3_OP_BUDIV0"),
+        (e[(e.Z3_OP_BSREM0 = 1038)] = "Z3_OP_BSREM0"),
+        (e[(e.Z3_OP_BUREM0 = 1039)] = "Z3_OP_BUREM0"),
+        (e[(e.Z3_OP_BSMOD0 = 1040)] = "Z3_OP_BSMOD0"),
+        (e[(e.Z3_OP_ULEQ = 1041)] = "Z3_OP_ULEQ"),
+        (e[(e.Z3_OP_SLEQ = 1042)] = "Z3_OP_SLEQ"),
+        (e[(e.Z3_OP_UGEQ = 1043)] = "Z3_OP_UGEQ"),
+        (e[(e.Z3_OP_SGEQ = 1044)] = "Z3_OP_SGEQ"),
+        (e[(e.Z3_OP_ULT = 1045)] = "Z3_OP_ULT"),
+        (e[(e.Z3_OP_SLT = 1046)] = "Z3_OP_SLT"),
+        (e[(e.Z3_OP_UGT = 1047)] = "Z3_OP_UGT"),
+        (e[(e.Z3_OP_SGT = 1048)] = "Z3_OP_SGT"),
+        (e[(e.Z3_OP_BAND = 1049)] = "Z3_OP_BAND"),
+        (e[(e.Z3_OP_BOR = 1050)] = "Z3_OP_BOR"),
+        (e[(e.Z3_OP_BNOT = 1051)] = "Z3_OP_BNOT"),
+        (e[(e.Z3_OP_BXOR = 1052)] = "Z3_OP_BXOR"),
+        (e[(e.Z3_OP_BNAND = 1053)] = "Z3_OP_BNAND"),
+        (e[(e.Z3_OP_BNOR = 1054)] = "Z3_OP_BNOR"),
+        (e[(e.Z3_OP_BXNOR = 1055)] = "Z3_OP_BXNOR"),
+        (e[(e.Z3_OP_CONCAT = 1056)] = "Z3_OP_CONCAT"),
+        (e[(e.Z3_OP_SIGN_EXT = 1057)] = "Z3_OP_SIGN_EXT"),
+        (e[(e.Z3_OP_ZERO_EXT = 1058)] = "Z3_OP_ZERO_EXT"),
+        (e[(e.Z3_OP_EXTRACT = 1059)] = "Z3_OP_EXTRACT"),
+        (e[(e.Z3_OP_REPEAT = 1060)] = "Z3_OP_REPEAT"),
+        (e[(e.Z3_OP_BREDOR = 1061)] = "Z3_OP_BREDOR"),
+        (e[(e.Z3_OP_BREDAND = 1062)] = "Z3_OP_BREDAND"),
+        (e[(e.Z3_OP_BCOMP = 1063)] = "Z3_OP_BCOMP"),
+        (e[(e.Z3_OP_BSHL = 1064)] = "Z3_OP_BSHL"),
+        (e[(e.Z3_OP_BLSHR = 1065)] = "Z3_OP_BLSHR"),
+        (e[(e.Z3_OP_BASHR = 1066)] = "Z3_OP_BASHR"),
+        (e[(e.Z3_OP_ROTATE_LEFT = 1067)] = "Z3_OP_ROTATE_LEFT"),
+        (e[(e.Z3_OP_ROTATE_RIGHT = 1068)] = "Z3_OP_ROTATE_RIGHT"),
+        (e[(e.Z3_OP_EXT_ROTATE_LEFT = 1069)] = "Z3_OP_EXT_ROTATE_LEFT"),
+        (e[(e.Z3_OP_EXT_ROTATE_RIGHT = 1070)] = "Z3_OP_EXT_ROTATE_RIGHT"),
+        (e[(e.Z3_OP_BIT2BOOL = 1071)] = "Z3_OP_BIT2BOOL"),
+        (e[(e.Z3_OP_INT2BV = 1072)] = "Z3_OP_INT2BV"),
+        (e[(e.Z3_OP_BV2INT = 1073)] = "Z3_OP_BV2INT"),
+        (e[(e.Z3_OP_SBV2INT = 1074)] = "Z3_OP_SBV2INT"),
+        (e[(e.Z3_OP_CARRY = 1075)] = "Z3_OP_CARRY"),
+        (e[(e.Z3_OP_XOR3 = 1076)] = "Z3_OP_XOR3"),
+        (e[(e.Z3_OP_BSMUL_NO_OVFL = 1077)] = "Z3_OP_BSMUL_NO_OVFL"),
+        (e[(e.Z3_OP_BUMUL_NO_OVFL = 1078)] = "Z3_OP_BUMUL_NO_OVFL"),
+        (e[(e.Z3_OP_BSMUL_NO_UDFL = 1079)] = "Z3_OP_BSMUL_NO_UDFL"),
+        (e[(e.Z3_OP_BSDIV_I = 1080)] = "Z3_OP_BSDIV_I"),
+        (e[(e.Z3_OP_BUDIV_I = 1081)] = "Z3_OP_BUDIV_I"),
+        (e[(e.Z3_OP_BSREM_I = 1082)] = "Z3_OP_BSREM_I"),
+        (e[(e.Z3_OP_BUREM_I = 1083)] = "Z3_OP_BUREM_I"),
+        (e[(e.Z3_OP_BSMOD_I = 1084)] = "Z3_OP_BSMOD_I"),
+        (e[(e.Z3_OP_PR_UNDEF = 1280)] = "Z3_OP_PR_UNDEF"),
+        (e[(e.Z3_OP_PR_TRUE = 1281)] = "Z3_OP_PR_TRUE"),
+        (e[(e.Z3_OP_PR_ASSERTED = 1282)] = "Z3_OP_PR_ASSERTED"),
+        (e[(e.Z3_OP_PR_GOAL = 1283)] = "Z3_OP_PR_GOAL"),
+        (e[(e.Z3_OP_PR_MODUS_PONENS = 1284)] = "Z3_OP_PR_MODUS_PONENS"),
+        (e[(e.Z3_OP_PR_REFLEXIVITY = 1285)] = "Z3_OP_PR_REFLEXIVITY"),
+        (e[(e.Z3_OP_PR_SYMMETRY = 1286)] = "Z3_OP_PR_SYMMETRY"),
+        (e[(e.Z3_OP_PR_TRANSITIVITY = 1287)] = "Z3_OP_PR_TRANSITIVITY"),
+        (e[(e.Z3_OP_PR_TRANSITIVITY_STAR = 1288)] = "Z3_OP_PR_TRANSITIVITY_STAR"),
+        (e[(e.Z3_OP_PR_MONOTONICITY = 1289)] = "Z3_OP_PR_MONOTONICITY"),
+        (e[(e.Z3_OP_PR_QUANT_INTRO = 1290)] = "Z3_OP_PR_QUANT_INTRO"),
+        (e[(e.Z3_OP_PR_BIND = 1291)] = "Z3_OP_PR_BIND"),
+        (e[(e.Z3_OP_PR_DISTRIBUTIVITY = 1292)] = "Z3_OP_PR_DISTRIBUTIVITY"),
+        (e[(e.Z3_OP_PR_AND_ELIM = 1293)] = "Z3_OP_PR_AND_ELIM"),
+        (e[(e.Z3_OP_PR_NOT_OR_ELIM = 1294)] = "Z3_OP_PR_NOT_OR_ELIM"),
+        (e[(e.Z3_OP_PR_REWRITE = 1295)] = "Z3_OP_PR_REWRITE"),
+        (e[(e.Z3_OP_PR_REWRITE_STAR = 1296)] = "Z3_OP_PR_REWRITE_STAR"),
+        (e[(e.Z3_OP_PR_PULL_QUANT = 1297)] = "Z3_OP_PR_PULL_QUANT"),
+        (e[(e.Z3_OP_PR_PUSH_QUANT = 1298)] = "Z3_OP_PR_PUSH_QUANT"),
+        (e[(e.Z3_OP_PR_ELIM_UNUSED_VARS = 1299)] = "Z3_OP_PR_ELIM_UNUSED_VARS"),
+        (e[(e.Z3_OP_PR_DER = 1300)] = "Z3_OP_PR_DER"),
+        (e[(e.Z3_OP_PR_QUANT_INST = 1301)] = "Z3_OP_PR_QUANT_INST"),
+        (e[(e.Z3_OP_PR_HYPOTHESIS = 1302)] = "Z3_OP_PR_HYPOTHESIS"),
+        (e[(e.Z3_OP_PR_LEMMA = 1303)] = "Z3_OP_PR_LEMMA"),
+        (e[(e.Z3_OP_PR_UNIT_RESOLUTION = 1304)] = "Z3_OP_PR_UNIT_RESOLUTION"),
+        (e[(e.Z3_OP_PR_IFF_TRUE = 1305)] = "Z3_OP_PR_IFF_TRUE"),
+        (e[(e.Z3_OP_PR_IFF_FALSE = 1306)] = "Z3_OP_PR_IFF_FALSE"),
+        (e[(e.Z3_OP_PR_COMMUTATIVITY = 1307)] = "Z3_OP_PR_COMMUTATIVITY"),
+        (e[(e.Z3_OP_PR_DEF_AXIOM = 1308)] = "Z3_OP_PR_DEF_AXIOM"),
+        (e[(e.Z3_OP_PR_ASSUMPTION_ADD = 1309)] = "Z3_OP_PR_ASSUMPTION_ADD"),
+        (e[(e.Z3_OP_PR_LEMMA_ADD = 1310)] = "Z3_OP_PR_LEMMA_ADD"),
+        (e[(e.Z3_OP_PR_REDUNDANT_DEL = 1311)] = "Z3_OP_PR_REDUNDANT_DEL"),
+        (e[(e.Z3_OP_PR_CLAUSE_TRAIL = 1312)] = "Z3_OP_PR_CLAUSE_TRAIL"),
+        (e[(e.Z3_OP_PR_DEF_INTRO = 1313)] = "Z3_OP_PR_DEF_INTRO"),
+        (e[(e.Z3_OP_PR_APPLY_DEF = 1314)] = "Z3_OP_PR_APPLY_DEF"),
+        (e[(e.Z3_OP_PR_IFF_OEQ = 1315)] = "Z3_OP_PR_IFF_OEQ"),
+        (e[(e.Z3_OP_PR_NNF_POS = 1316)] = "Z3_OP_PR_NNF_POS"),
+        (e[(e.Z3_OP_PR_NNF_NEG = 1317)] = "Z3_OP_PR_NNF_NEG"),
+        (e[(e.Z3_OP_PR_SKOLEMIZE = 1318)] = "Z3_OP_PR_SKOLEMIZE"),
+        (e[(e.Z3_OP_PR_MODUS_PONENS_OEQ = 1319)] = "Z3_OP_PR_MODUS_PONENS_OEQ"),
+        (e[(e.Z3_OP_PR_TH_LEMMA = 1320)] = "Z3_OP_PR_TH_LEMMA"),
+        (e[(e.Z3_OP_PR_HYPER_RESOLVE = 1321)] = "Z3_OP_PR_HYPER_RESOLVE"),
+        (e[(e.Z3_OP_RA_STORE = 1536)] = "Z3_OP_RA_STORE"),
+        (e[(e.Z3_OP_RA_EMPTY = 1537)] = "Z3_OP_RA_EMPTY"),
+        (e[(e.Z3_OP_RA_IS_EMPTY = 1538)] = "Z3_OP_RA_IS_EMPTY"),
+        (e[(e.Z3_OP_RA_JOIN = 1539)] = "Z3_OP_RA_JOIN"),
+        (e[(e.Z3_OP_RA_UNION = 1540)] = "Z3_OP_RA_UNION"),
+        (e[(e.Z3_OP_RA_WIDEN = 1541)] = "Z3_OP_RA_WIDEN"),
+        (e[(e.Z3_OP_RA_PROJECT = 1542)] = "Z3_OP_RA_PROJECT"),
+        (e[(e.Z3_OP_RA_FILTER = 1543)] = "Z3_OP_RA_FILTER"),
+        (e[(e.Z3_OP_RA_NEGATION_FILTER = 1544)] = "Z3_OP_RA_NEGATION_FILTER"),
+        (e[(e.Z3_OP_RA_RENAME = 1545)] = "Z3_OP_RA_RENAME"),
+        (e[(e.Z3_OP_RA_COMPLEMENT = 1546)] = "Z3_OP_RA_COMPLEMENT"),
+        (e[(e.Z3_OP_RA_SELECT = 1547)] = "Z3_OP_RA_SELECT"),
+        (e[(e.Z3_OP_RA_CLONE = 1548)] = "Z3_OP_RA_CLONE"),
+        (e[(e.Z3_OP_FD_CONSTANT = 1549)] = "Z3_OP_FD_CONSTANT"),
+        (e[(e.Z3_OP_FD_LT = 1550)] = "Z3_OP_FD_LT"),
+        (e[(e.Z3_OP_SEQ_UNIT = 1551)] = "Z3_OP_SEQ_UNIT"),
+        (e[(e.Z3_OP_SEQ_EMPTY = 1552)] = "Z3_OP_SEQ_EMPTY"),
+        (e[(e.Z3_OP_SEQ_CONCAT = 1553)] = "Z3_OP_SEQ_CONCAT"),
+        (e[(e.Z3_OP_SEQ_PREFIX = 1554)] = "Z3_OP_SEQ_PREFIX"),
+        (e[(e.Z3_OP_SEQ_SUFFIX = 1555)] = "Z3_OP_SEQ_SUFFIX"),
+        (e[(e.Z3_OP_SEQ_CONTAINS = 1556)] = "Z3_OP_SEQ_CONTAINS"),
+        (e[(e.Z3_OP_SEQ_EXTRACT = 1557)] = "Z3_OP_SEQ_EXTRACT"),
+        (e[(e.Z3_OP_SEQ_REPLACE = 1558)] = "Z3_OP_SEQ_REPLACE"),
+        (e[(e.Z3_OP_SEQ_REPLACE_RE = 1559)] = "Z3_OP_SEQ_REPLACE_RE"),
+        (e[(e.Z3_OP_SEQ_REPLACE_RE_ALL = 1560)] = "Z3_OP_SEQ_REPLACE_RE_ALL"),
+        (e[(e.Z3_OP_SEQ_REPLACE_ALL = 1561)] = "Z3_OP_SEQ_REPLACE_ALL"),
+        (e[(e.Z3_OP_SEQ_AT = 1562)] = "Z3_OP_SEQ_AT"),
+        (e[(e.Z3_OP_SEQ_NTH = 1563)] = "Z3_OP_SEQ_NTH"),
+        (e[(e.Z3_OP_SEQ_LENGTH = 1564)] = "Z3_OP_SEQ_LENGTH"),
+        (e[(e.Z3_OP_SEQ_INDEX = 1565)] = "Z3_OP_SEQ_INDEX"),
+        (e[(e.Z3_OP_SEQ_LAST_INDEX = 1566)] = "Z3_OP_SEQ_LAST_INDEX"),
+        (e[(e.Z3_OP_SEQ_TO_RE = 1567)] = "Z3_OP_SEQ_TO_RE"),
+        (e[(e.Z3_OP_SEQ_IN_RE = 1568)] = "Z3_OP_SEQ_IN_RE"),
+        (e[(e.Z3_OP_SEQ_MAP = 1569)] = "Z3_OP_SEQ_MAP"),
+        (e[(e.Z3_OP_SEQ_MAPI = 1570)] = "Z3_OP_SEQ_MAPI"),
+        (e[(e.Z3_OP_SEQ_FOLDL = 1571)] = "Z3_OP_SEQ_FOLDL"),
+        (e[(e.Z3_OP_SEQ_FOLDLI = 1572)] = "Z3_OP_SEQ_FOLDLI"),
+        (e[(e.Z3_OP_STR_TO_INT = 1573)] = "Z3_OP_STR_TO_INT"),
+        (e[(e.Z3_OP_INT_TO_STR = 1574)] = "Z3_OP_INT_TO_STR"),
+        (e[(e.Z3_OP_UBV_TO_STR = 1575)] = "Z3_OP_UBV_TO_STR"),
+        (e[(e.Z3_OP_SBV_TO_STR = 1576)] = "Z3_OP_SBV_TO_STR"),
+        (e[(e.Z3_OP_STR_TO_CODE = 1577)] = "Z3_OP_STR_TO_CODE"),
+        (e[(e.Z3_OP_STR_FROM_CODE = 1578)] = "Z3_OP_STR_FROM_CODE"),
+        (e[(e.Z3_OP_STRING_LT = 1579)] = "Z3_OP_STRING_LT"),
+        (e[(e.Z3_OP_STRING_LE = 1580)] = "Z3_OP_STRING_LE"),
+        (e[(e.Z3_OP_RE_PLUS = 1581)] = "Z3_OP_RE_PLUS"),
+        (e[(e.Z3_OP_RE_STAR = 1582)] = "Z3_OP_RE_STAR"),
+        (e[(e.Z3_OP_RE_OPTION = 1583)] = "Z3_OP_RE_OPTION"),
+        (e[(e.Z3_OP_RE_CONCAT = 1584)] = "Z3_OP_RE_CONCAT"),
+        (e[(e.Z3_OP_RE_UNION = 1585)] = "Z3_OP_RE_UNION"),
+        (e[(e.Z3_OP_RE_RANGE = 1586)] = "Z3_OP_RE_RANGE"),
+        (e[(e.Z3_OP_RE_DIFF = 1587)] = "Z3_OP_RE_DIFF"),
+        (e[(e.Z3_OP_RE_INTERSECT = 1588)] = "Z3_OP_RE_INTERSECT"),
+        (e[(e.Z3_OP_RE_LOOP = 1589)] = "Z3_OP_RE_LOOP"),
+        (e[(e.Z3_OP_RE_POWER = 1590)] = "Z3_OP_RE_POWER"),
+        (e[(e.Z3_OP_RE_COMPLEMENT = 1591)] = "Z3_OP_RE_COMPLEMENT"),
+        (e[(e.Z3_OP_RE_EMPTY_SET = 1592)] = "Z3_OP_RE_EMPTY_SET"),
+        (e[(e.Z3_OP_RE_FULL_SET = 1593)] = "Z3_OP_RE_FULL_SET"),
+        (e[(e.Z3_OP_RE_FULL_CHAR_SET = 1594)] = "Z3_OP_RE_FULL_CHAR_SET"),
+        (e[(e.Z3_OP_RE_OF_PRED = 1595)] = "Z3_OP_RE_OF_PRED"),
+        (e[(e.Z3_OP_RE_REVERSE = 1596)] = "Z3_OP_RE_REVERSE"),
+        (e[(e.Z3_OP_RE_DERIVATIVE = 1597)] = "Z3_OP_RE_DERIVATIVE"),
+        (e[(e.Z3_OP_CHAR_CONST = 1598)] = "Z3_OP_CHAR_CONST"),
+        (e[(e.Z3_OP_CHAR_LE = 1599)] = "Z3_OP_CHAR_LE"),
+        (e[(e.Z3_OP_CHAR_TO_INT = 1600)] = "Z3_OP_CHAR_TO_INT"),
+        (e[(e.Z3_OP_CHAR_TO_BV = 1601)] = "Z3_OP_CHAR_TO_BV"),
+        (e[(e.Z3_OP_CHAR_FROM_BV = 1602)] = "Z3_OP_CHAR_FROM_BV"),
+        (e[(e.Z3_OP_CHAR_IS_DIGIT = 1603)] = "Z3_OP_CHAR_IS_DIGIT"),
+        (e[(e.Z3_OP_LABEL = 1792)] = "Z3_OP_LABEL"),
+        (e[(e.Z3_OP_LABEL_LIT = 1793)] = "Z3_OP_LABEL_LIT"),
+        (e[(e.Z3_OP_DT_CONSTRUCTOR = 2048)] = "Z3_OP_DT_CONSTRUCTOR"),
+        (e[(e.Z3_OP_DT_RECOGNISER = 2049)] = "Z3_OP_DT_RECOGNISER"),
+        (e[(e.Z3_OP_DT_IS = 2050)] = "Z3_OP_DT_IS"),
+        (e[(e.Z3_OP_DT_ACCESSOR = 2051)] = "Z3_OP_DT_ACCESSOR"),
+        (e[(e.Z3_OP_DT_UPDATE_FIELD = 2052)] = "Z3_OP_DT_UPDATE_FIELD"),
+        (e[(e.Z3_OP_PB_AT_MOST = 2304)] = "Z3_OP_PB_AT_MOST"),
+        (e[(e.Z3_OP_PB_AT_LEAST = 2305)] = "Z3_OP_PB_AT_LEAST"),
+        (e[(e.Z3_OP_PB_LE = 2306)] = "Z3_OP_PB_LE"),
+        (e[(e.Z3_OP_PB_GE = 2307)] = "Z3_OP_PB_GE"),
+        (e[(e.Z3_OP_PB_EQ = 2308)] = "Z3_OP_PB_EQ"),
+        (e[(e.Z3_OP_SPECIAL_RELATION_LO = 40960)] = "Z3_OP_SPECIAL_RELATION_LO"),
+        (e[(e.Z3_OP_SPECIAL_RELATION_PO = 40961)] = "Z3_OP_SPECIAL_RELATION_PO"),
+        (e[(e.Z3_OP_SPECIAL_RELATION_PLO = 40962)] = "Z3_OP_SPECIAL_RELATION_PLO"),
+        (e[(e.Z3_OP_SPECIAL_RELATION_TO = 40963)] = "Z3_OP_SPECIAL_RELATION_TO"),
+        (e[(e.Z3_OP_SPECIAL_RELATION_TC = 40964)] = "Z3_OP_SPECIAL_RELATION_TC"),
+        (e[(e.Z3_OP_SPECIAL_RELATION_TRC = 40965)] = "Z3_OP_SPECIAL_RELATION_TRC"),
+        (e[(e.Z3_OP_FPA_RM_NEAREST_TIES_TO_EVEN = 45056)] = "Z3_OP_FPA_RM_NEAREST_TIES_TO_EVEN"),
+        (e[(e.Z3_OP_FPA_RM_NEAREST_TIES_TO_AWAY = 45057)] = "Z3_OP_FPA_RM_NEAREST_TIES_TO_AWAY"),
+        (e[(e.Z3_OP_FPA_RM_TOWARD_POSITIVE = 45058)] = "Z3_OP_FPA_RM_TOWARD_POSITIVE"),
+        (e[(e.Z3_OP_FPA_RM_TOWARD_NEGATIVE = 45059)] = "Z3_OP_FPA_RM_TOWARD_NEGATIVE"),
+        (e[(e.Z3_OP_FPA_RM_TOWARD_ZERO = 45060)] = "Z3_OP_FPA_RM_TOWARD_ZERO"),
+        (e[(e.Z3_OP_FPA_NUM = 45061)] = "Z3_OP_FPA_NUM"),
+        (e[(e.Z3_OP_FPA_PLUS_INF = 45062)] = "Z3_OP_FPA_PLUS_INF"),
+        (e[(e.Z3_OP_FPA_MINUS_INF = 45063)] = "Z3_OP_FPA_MINUS_INF"),
+        (e[(e.Z3_OP_FPA_NAN = 45064)] = "Z3_OP_FPA_NAN"),
+        (e[(e.Z3_OP_FPA_PLUS_ZERO = 45065)] = "Z3_OP_FPA_PLUS_ZERO"),
+        (e[(e.Z3_OP_FPA_MINUS_ZERO = 45066)] = "Z3_OP_FPA_MINUS_ZERO"),
+        (e[(e.Z3_OP_FPA_ADD = 45067)] = "Z3_OP_FPA_ADD"),
+        (e[(e.Z3_OP_FPA_SUB = 45068)] = "Z3_OP_FPA_SUB"),
+        (e[(e.Z3_OP_FPA_NEG = 45069)] = "Z3_OP_FPA_NEG"),
+        (e[(e.Z3_OP_FPA_MUL = 45070)] = "Z3_OP_FPA_MUL"),
+        (e[(e.Z3_OP_FPA_DIV = 45071)] = "Z3_OP_FPA_DIV"),
+        (e[(e.Z3_OP_FPA_REM = 45072)] = "Z3_OP_FPA_REM"),
+        (e[(e.Z3_OP_FPA_ABS = 45073)] = "Z3_OP_FPA_ABS"),
+        (e[(e.Z3_OP_FPA_MIN = 45074)] = "Z3_OP_FPA_MIN"),
+        (e[(e.Z3_OP_FPA_MAX = 45075)] = "Z3_OP_FPA_MAX"),
+        (e[(e.Z3_OP_FPA_FMA = 45076)] = "Z3_OP_FPA_FMA"),
+        (e[(e.Z3_OP_FPA_SQRT = 45077)] = "Z3_OP_FPA_SQRT"),
+        (e[(e.Z3_OP_FPA_ROUND_TO_INTEGRAL = 45078)] = "Z3_OP_FPA_ROUND_TO_INTEGRAL"),
+        (e[(e.Z3_OP_FPA_EQ = 45079)] = "Z3_OP_FPA_EQ"),
+        (e[(e.Z3_OP_FPA_LT = 45080)] = "Z3_OP_FPA_LT"),
+        (e[(e.Z3_OP_FPA_GT = 45081)] = "Z3_OP_FPA_GT"),
+        (e[(e.Z3_OP_FPA_LE = 45082)] = "Z3_OP_FPA_LE"),
+        (e[(e.Z3_OP_FPA_GE = 45083)] = "Z3_OP_FPA_GE"),
+        (e[(e.Z3_OP_FPA_IS_NAN = 45084)] = "Z3_OP_FPA_IS_NAN"),
+        (e[(e.Z3_OP_FPA_IS_INF = 45085)] = "Z3_OP_FPA_IS_INF"),
+        (e[(e.Z3_OP_FPA_IS_ZERO = 45086)] = "Z3_OP_FPA_IS_ZERO"),
+        (e[(e.Z3_OP_FPA_IS_NORMAL = 45087)] = "Z3_OP_FPA_IS_NORMAL"),
+        (e[(e.Z3_OP_FPA_IS_SUBNORMAL = 45088)] = "Z3_OP_FPA_IS_SUBNORMAL"),
+        (e[(e.Z3_OP_FPA_IS_NEGATIVE = 45089)] = "Z3_OP_FPA_IS_NEGATIVE"),
+        (e[(e.Z3_OP_FPA_IS_POSITIVE = 45090)] = "Z3_OP_FPA_IS_POSITIVE"),
+        (e[(e.Z3_OP_FPA_FP = 45091)] = "Z3_OP_FPA_FP"),
+        (e[(e.Z3_OP_FPA_TO_FP = 45092)] = "Z3_OP_FPA_TO_FP"),
+        (e[(e.Z3_OP_FPA_TO_FP_UNSIGNED = 45093)] = "Z3_OP_FPA_TO_FP_UNSIGNED"),
+        (e[(e.Z3_OP_FPA_TO_UBV = 45094)] = "Z3_OP_FPA_TO_UBV"),
+        (e[(e.Z3_OP_FPA_TO_SBV = 45095)] = "Z3_OP_FPA_TO_SBV"),
+        (e[(e.Z3_OP_FPA_TO_REAL = 45096)] = "Z3_OP_FPA_TO_REAL"),
+        (e[(e.Z3_OP_FPA_TO_IEEE_BV = 45097)] = "Z3_OP_FPA_TO_IEEE_BV"),
+        (e[(e.Z3_OP_FPA_BVWRAP = 45098)] = "Z3_OP_FPA_BVWRAP"),
+        (e[(e.Z3_OP_FPA_BV2RM = 45099)] = "Z3_OP_FPA_BV2RM"),
+        (e[(e.Z3_OP_INTERNAL = 45100)] = "Z3_OP_INTERNAL"),
+        (e[(e.Z3_OP_RECURSIVE = 45101)] = "Z3_OP_RECURSIVE"),
+        (e[(e.Z3_OP_UNINTERPRETED = 45102)] = "Z3_OP_UNINTERPRETED"));
+    })(g || (U.Z3_decl_kind = g = {}));
+    var p;
+    (function (e) {
+      ((e[(e.Z3_PK_UINT = 0)] = "Z3_PK_UINT"),
+        (e[(e.Z3_PK_BOOL = 1)] = "Z3_PK_BOOL"),
+        (e[(e.Z3_PK_DOUBLE = 2)] = "Z3_PK_DOUBLE"),
+        (e[(e.Z3_PK_SYMBOL = 3)] = "Z3_PK_SYMBOL"),
+        (e[(e.Z3_PK_STRING = 4)] = "Z3_PK_STRING"),
+        (e[(e.Z3_PK_OTHER = 5)] = "Z3_PK_OTHER"),
+        (e[(e.Z3_PK_INVALID = 6)] = "Z3_PK_INVALID"));
+    })(p || (U.Z3_param_kind = p = {}));
+    var P;
+    (function (e) {
+      ((e[(e.Z3_PRINT_SMTLIB_FULL = 0)] = "Z3_PRINT_SMTLIB_FULL"),
+        (e[(e.Z3_PRINT_LOW_LEVEL = 1)] = "Z3_PRINT_LOW_LEVEL"),
+        (e[(e.Z3_PRINT_SMTLIB2_COMPLIANT = 2)] = "Z3_PRINT_SMTLIB2_COMPLIANT"));
+    })(P || (U.Z3_ast_print_mode = P = {}));
+    var o;
+    (function (e) {
+      ((e[(e.Z3_OK = 0)] = "Z3_OK"),
+        (e[(e.Z3_SORT_ERROR = 1)] = "Z3_SORT_ERROR"),
+        (e[(e.Z3_IOB = 2)] = "Z3_IOB"),
+        (e[(e.Z3_INVALID_ARG = 3)] = "Z3_INVALID_ARG"),
+        (e[(e.Z3_PARSER_ERROR = 4)] = "Z3_PARSER_ERROR"),
+        (e[(e.Z3_NO_PARSER = 5)] = "Z3_NO_PARSER"),
+        (e[(e.Z3_INVALID_PATTERN = 6)] = "Z3_INVALID_PATTERN"),
+        (e[(e.Z3_MEMOUT_FAIL = 7)] = "Z3_MEMOUT_FAIL"),
+        (e[(e.Z3_FILE_ACCESS_ERROR = 8)] = "Z3_FILE_ACCESS_ERROR"),
+        (e[(e.Z3_INTERNAL_FATAL = 9)] = "Z3_INTERNAL_FATAL"),
+        (e[(e.Z3_INVALID_USAGE = 10)] = "Z3_INVALID_USAGE"),
+        (e[(e.Z3_DEC_REF_ERROR = 11)] = "Z3_DEC_REF_ERROR"),
+        (e[(e.Z3_EXCEPTION = 12)] = "Z3_EXCEPTION"));
+    })(o || (U.Z3_error_code = o = {}));
+    var E;
+    return (
+      (function (e) {
+        ((e[(e.Z3_GOAL_PRECISE = 0)] = "Z3_GOAL_PRECISE"),
+          (e[(e.Z3_GOAL_UNDER = 1)] = "Z3_GOAL_UNDER"),
+          (e[(e.Z3_GOAL_OVER = 2)] = "Z3_GOAL_OVER"),
+          (e[(e.Z3_GOAL_UNDER_OVER = 3)] = "Z3_GOAL_UNDER_OVER"));
+      })(E || (U.Z3_goal_prec = E = {})),
+      U
+    );
+  }
+  var It = {},
+    qe;
+  function y_() {
+    if (qe) return It;
+    ((qe = 1), Object.defineProperty(It, "__esModule", { value: !0 }), (It.init = l));
+    async function l(i) {
+      let t = await i();
+      function u(s) {
+        return new Uint8Array(new Uint32Array(s).buffer);
+      }
+      function b(s) {
+        return s.map((_) => (_ ? 1 : 0));
+      }
+      function g(s, _) {
+        return Array.from(new Uint32Array(t.HEAPU32.buffer, s, _));
+      }
+      let p = t._malloc(24),
+        P = new Uint32Array(t.HEAPU32.buffer, p, 4),
+        o = (s) => P[s],
+        E = new Int32Array(t.HEAPU32.buffer, p, 4),
+        e = (s) => E[s],
+        Z = new BigUint64Array(t.HEAPU32.buffer, p, 2),
+        N = (s) => Z[s],
+        R = new BigInt64Array(t.HEAPU32.buffer, p, 2),
+        x = (s) => R[s];
+      return {
+        em: t,
+        Z3: {
+          mk_context: function (s) {
+            let _ = t._Z3_mk_context(s);
+            return (t._set_noop_error_handler(_), _);
+          },
+          mk_context_rc: function (s) {
+            let _ = t._Z3_mk_context_rc(s);
+            return (t._set_noop_error_handler(_), _);
+          },
+          global_param_set: function (s, _) {
+            return t.ccall("Z3_global_param_set", "void", ["string", "string"], [s, _]);
+          },
+          global_param_reset_all: t._Z3_global_param_reset_all,
+          global_param_get: function (s) {
+            return t.ccall("Z3_global_param_get", "boolean", ["string", "number"], [s, p]) ? t.UTF8ToString(o(0)) : null;
+          },
+          mk_config: t._Z3_mk_config,
+          del_config: t._Z3_del_config,
+          set_param_value: function (s, _, a) {
+            return t.ccall("Z3_set_param_value", "void", ["number", "string", "string"], [s, _, a]);
+          },
+          del_context: t._Z3_del_context,
+          inc_ref: t._Z3_inc_ref,
+          dec_ref: t._Z3_dec_ref,
+          update_param_value: function (s, _, a) {
+            return t.ccall("Z3_update_param_value", "void", ["number", "string", "string"], [s, _, a]);
+          },
+          get_global_param_descrs: t._Z3_get_global_param_descrs,
+          interrupt: t._Z3_interrupt,
+          enable_concurrent_dec_ref: t._Z3_enable_concurrent_dec_ref,
+          mk_params: t._Z3_mk_params,
+          params_inc_ref: t._Z3_params_inc_ref,
+          params_dec_ref: t._Z3_params_dec_ref,
+          params_set_bool: t._Z3_params_set_bool,
+          params_set_uint: t._Z3_params_set_uint,
+          params_set_double: t._Z3_params_set_double,
+          params_set_symbol: t._Z3_params_set_symbol,
+          params_to_string: function (s, _) {
+            return t.ccall("Z3_params_to_string", "string", ["number", "number"], [s, _]);
+          },
+          params_validate: t._Z3_params_validate,
+          param_descrs_inc_ref: t._Z3_param_descrs_inc_ref,
+          param_descrs_dec_ref: t._Z3_param_descrs_dec_ref,
+          param_descrs_get_kind: t._Z3_param_descrs_get_kind,
+          param_descrs_size: function (s, _) {
+            let a = t.ccall("Z3_param_descrs_size", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          param_descrs_get_name: t._Z3_param_descrs_get_name,
+          param_descrs_get_documentation: function (s, _, a) {
+            return t.ccall("Z3_param_descrs_get_documentation", "string", ["number", "number", "number"], [s, _, a]);
+          },
+          param_descrs_to_string: function (s, _) {
+            return t.ccall("Z3_param_descrs_to_string", "string", ["number", "number"], [s, _]);
+          },
+          mk_int_symbol: t._Z3_mk_int_symbol,
+          mk_string_symbol: function (s, _) {
+            return t.ccall("Z3_mk_string_symbol", "number", ["number", "string"], [s, _]);
+          },
+          mk_uninterpreted_sort: t._Z3_mk_uninterpreted_sort,
+          mk_type_variable: t._Z3_mk_type_variable,
+          mk_bool_sort: t._Z3_mk_bool_sort,
+          mk_int_sort: t._Z3_mk_int_sort,
+          mk_real_sort: t._Z3_mk_real_sort,
+          mk_bv_sort: t._Z3_mk_bv_sort,
+          mk_finite_domain_sort: t._Z3_mk_finite_domain_sort,
+          mk_array_sort: t._Z3_mk_array_sort,
+          mk_array_sort_n: function (s, _, a) {
+            return t.ccall("Z3_mk_array_sort_n", "number", ["number", "number", "array", "number"], [s, _.length, u(_), a]);
+          },
+          mk_tuple_sort: function (s, _, a, h) {
+            if (a.length !== h.length)
+              throw new TypeError(`field_names and field_sorts must be the same length (got ${a.length} and {field_sorts.length})`);
+            let v = t._malloc(4 * a.length);
+            try {
+              return {
+                rv: t.ccall(
+                  "Z3_mk_tuple_sort",
+                  "number",
+                  ["number", "number", "number", "array", "array", "number", "number"],
+                  [s, _, a.length, u(a), u(h), p, v],
+                ),
+                mk_tuple_decl: o(0),
+                proj_decl: g(v, a.length),
+              };
+            } finally {
+              t._free(v);
+            }
+          },
+          mk_enumeration_sort: function (s, _, a) {
+            let h = t._malloc(4 * a.length);
+            try {
+              let v = t._malloc(4 * a.length);
+              try {
+                return {
+                  rv: t.ccall(
+                    "Z3_mk_enumeration_sort",
+                    "number",
+                    ["number", "number", "number", "array", "number", "number"],
+                    [s, _, a.length, u(a), h, v],
+                  ),
+                  enum_consts: g(h, a.length),
+                  enum_testers: g(v, a.length),
+                };
+              } finally {
+                t._free(v);
+              }
+            } finally {
+              t._free(h);
+            }
+          },
+          mk_list_sort: function (s, _, a) {
+            return {
+              rv: t.ccall(
+                "Z3_mk_list_sort",
+                "number",
+                ["number", "number", "number", "number", "number", "number", "number", "number", "number"],
+                [s, _, a, p, p + 4, p + 8, p + 12, p + 16, p + 20],
+              ),
+              nil_decl: o(0),
+              is_nil_decl: o(1),
+              cons_decl: o(2),
+              is_cons_decl: o(3),
+              head_decl: o(4),
+              tail_decl: o(5),
+            };
+          },
+          mk_constructor: function (s, _, a, h, v, I) {
+            if (h.length !== v.length) throw new TypeError(`field_names and sorts must be the same length (got ${h.length} and {sorts.length})`);
+            if (h.length !== I.length)
+              throw new TypeError(`field_names and sort_refs must be the same length (got ${h.length} and {sort_refs.length})`);
+            return t.ccall(
+              "Z3_mk_constructor",
+              "number",
+              ["number", "number", "number", "number", "array", "array", "array"],
+              [s, _, a, h.length, u(h), u(v), u(I)],
+            );
+          },
+          constructor_num_fields: function (s, _) {
+            let a = t.ccall("Z3_constructor_num_fields", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          del_constructor: t._Z3_del_constructor,
+          mk_datatype: function (s, _, a) {
+            return t.ccall("Z3_mk_datatype", "number", ["number", "number", "number", "array"], [s, _, a.length, u(a)]);
+          },
+          mk_datatype_sort: t._Z3_mk_datatype_sort,
+          mk_constructor_list: function (s, _) {
+            return t.ccall("Z3_mk_constructor_list", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          del_constructor_list: t._Z3_del_constructor_list,
+          mk_datatypes: function (s, _, a) {
+            if (_.length !== a.length)
+              throw new TypeError(`sort_names and constructor_lists must be the same length (got ${_.length} and {constructor_lists.length})`);
+            let h = t._malloc(4 * _.length);
+            try {
+              let v = t.ccall("Z3_mk_datatypes", "void", ["number", "number", "array", "number", "array"], [s, _.length, u(_), h, u(a)]);
+              return g(h, _.length);
+            } finally {
+              t._free(h);
+            }
+          },
+          query_constructor: function (s, _, a) {
+            let h = t._malloc(4 * a);
+            try {
+              let v = t.ccall("Z3_query_constructor", "void", ["number", "number", "number", "number", "number", "number"], [s, _, a, p, p + 4, h]);
+              return { constructor: o(0), tester: o(1), accessors: g(h, a) };
+            } finally {
+              t._free(h);
+            }
+          },
+          mk_func_decl: function (s, _, a, h) {
+            return t.ccall("Z3_mk_func_decl", "number", ["number", "number", "number", "array", "number"], [s, _, a.length, u(a), h]);
+          },
+          mk_app: function (s, _, a) {
+            return t.ccall("Z3_mk_app", "number", ["number", "number", "number", "array"], [s, _, a.length, u(a)]);
+          },
+          mk_const: t._Z3_mk_const,
+          mk_fresh_func_decl: function (s, _, a, h) {
+            return t.ccall("Z3_mk_fresh_func_decl", "number", ["number", "string", "number", "array", "number"], [s, _, a.length, u(a), h]);
+          },
+          mk_fresh_const: function (s, _, a) {
+            return t.ccall("Z3_mk_fresh_const", "number", ["number", "string", "number"], [s, _, a]);
+          },
+          mk_rec_func_decl: function (s, _, a, h) {
+            return t.ccall("Z3_mk_rec_func_decl", "number", ["number", "number", "number", "array", "number"], [s, _, a.length, u(a), h]);
+          },
+          add_rec_def: function (s, _, a, h) {
+            return t.ccall("Z3_add_rec_def", "void", ["number", "number", "number", "array", "number"], [s, _, a.length, u(a), h]);
+          },
+          mk_true: t._Z3_mk_true,
+          mk_false: t._Z3_mk_false,
+          mk_eq: t._Z3_mk_eq,
+          mk_distinct: function (s, _) {
+            return t.ccall("Z3_mk_distinct", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_not: t._Z3_mk_not,
+          mk_ite: t._Z3_mk_ite,
+          mk_iff: t._Z3_mk_iff,
+          mk_implies: t._Z3_mk_implies,
+          mk_xor: t._Z3_mk_xor,
+          mk_and: function (s, _) {
+            return t.ccall("Z3_mk_and", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_or: function (s, _) {
+            return t.ccall("Z3_mk_or", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_add: function (s, _) {
+            return t.ccall("Z3_mk_add", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_mul: function (s, _) {
+            return t.ccall("Z3_mk_mul", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_sub: function (s, _) {
+            return t.ccall("Z3_mk_sub", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_unary_minus: t._Z3_mk_unary_minus,
+          mk_div: t._Z3_mk_div,
+          mk_mod: t._Z3_mk_mod,
+          mk_rem: t._Z3_mk_rem,
+          mk_power: t._Z3_mk_power,
+          mk_abs: t._Z3_mk_abs,
+          mk_lt: t._Z3_mk_lt,
+          mk_le: t._Z3_mk_le,
+          mk_gt: t._Z3_mk_gt,
+          mk_ge: t._Z3_mk_ge,
+          mk_divides: t._Z3_mk_divides,
+          mk_int2real: t._Z3_mk_int2real,
+          mk_real2int: t._Z3_mk_real2int,
+          mk_is_int: t._Z3_mk_is_int,
+          mk_bvnot: t._Z3_mk_bvnot,
+          mk_bvredand: t._Z3_mk_bvredand,
+          mk_bvredor: t._Z3_mk_bvredor,
+          mk_bvand: t._Z3_mk_bvand,
+          mk_bvor: t._Z3_mk_bvor,
+          mk_bvxor: t._Z3_mk_bvxor,
+          mk_bvnand: t._Z3_mk_bvnand,
+          mk_bvnor: t._Z3_mk_bvnor,
+          mk_bvxnor: t._Z3_mk_bvxnor,
+          mk_bvneg: t._Z3_mk_bvneg,
+          mk_bvadd: t._Z3_mk_bvadd,
+          mk_bvsub: t._Z3_mk_bvsub,
+          mk_bvmul: t._Z3_mk_bvmul,
+          mk_bvudiv: t._Z3_mk_bvudiv,
+          mk_bvsdiv: t._Z3_mk_bvsdiv,
+          mk_bvurem: t._Z3_mk_bvurem,
+          mk_bvsrem: t._Z3_mk_bvsrem,
+          mk_bvsmod: t._Z3_mk_bvsmod,
+          mk_bvult: t._Z3_mk_bvult,
+          mk_bvslt: t._Z3_mk_bvslt,
+          mk_bvule: t._Z3_mk_bvule,
+          mk_bvsle: t._Z3_mk_bvsle,
+          mk_bvuge: t._Z3_mk_bvuge,
+          mk_bvsge: t._Z3_mk_bvsge,
+          mk_bvugt: t._Z3_mk_bvugt,
+          mk_bvsgt: t._Z3_mk_bvsgt,
+          mk_concat: t._Z3_mk_concat,
+          mk_extract: t._Z3_mk_extract,
+          mk_sign_ext: t._Z3_mk_sign_ext,
+          mk_zero_ext: t._Z3_mk_zero_ext,
+          mk_repeat: t._Z3_mk_repeat,
+          mk_bit2bool: t._Z3_mk_bit2bool,
+          mk_bvshl: t._Z3_mk_bvshl,
+          mk_bvlshr: t._Z3_mk_bvlshr,
+          mk_bvashr: t._Z3_mk_bvashr,
+          mk_rotate_left: t._Z3_mk_rotate_left,
+          mk_rotate_right: t._Z3_mk_rotate_right,
+          mk_ext_rotate_left: t._Z3_mk_ext_rotate_left,
+          mk_ext_rotate_right: t._Z3_mk_ext_rotate_right,
+          mk_int2bv: t._Z3_mk_int2bv,
+          mk_bv2int: t._Z3_mk_bv2int,
+          mk_bvadd_no_overflow: t._Z3_mk_bvadd_no_overflow,
+          mk_bvadd_no_underflow: t._Z3_mk_bvadd_no_underflow,
+          mk_bvsub_no_overflow: t._Z3_mk_bvsub_no_overflow,
+          mk_bvsub_no_underflow: t._Z3_mk_bvsub_no_underflow,
+          mk_bvsdiv_no_overflow: t._Z3_mk_bvsdiv_no_overflow,
+          mk_bvneg_no_overflow: t._Z3_mk_bvneg_no_overflow,
+          mk_bvmul_no_overflow: t._Z3_mk_bvmul_no_overflow,
+          mk_bvmul_no_underflow: t._Z3_mk_bvmul_no_underflow,
+          mk_select: t._Z3_mk_select,
+          mk_select_n: function (s, _, a) {
+            return t.ccall("Z3_mk_select_n", "number", ["number", "number", "number", "array"], [s, _, a.length, u(a)]);
+          },
+          mk_store: t._Z3_mk_store,
+          mk_store_n: function (s, _, a, h) {
+            return t.ccall("Z3_mk_store_n", "number", ["number", "number", "number", "array", "number"], [s, _, a.length, u(a), h]);
+          },
+          mk_const_array: t._Z3_mk_const_array,
+          mk_map: function (s, _, a) {
+            return t.ccall("Z3_mk_map", "number", ["number", "number", "number", "array"], [s, _, a.length, u(a)]);
+          },
+          mk_array_default: t._Z3_mk_array_default,
+          mk_as_array: t._Z3_mk_as_array,
+          mk_set_has_size: t._Z3_mk_set_has_size,
+          mk_set_sort: t._Z3_mk_set_sort,
+          mk_empty_set: t._Z3_mk_empty_set,
+          mk_full_set: t._Z3_mk_full_set,
+          mk_set_add: t._Z3_mk_set_add,
+          mk_set_del: t._Z3_mk_set_del,
+          mk_set_union: function (s, _) {
+            return t.ccall("Z3_mk_set_union", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_set_intersect: function (s, _) {
+            return t.ccall("Z3_mk_set_intersect", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_set_difference: t._Z3_mk_set_difference,
+          mk_set_complement: t._Z3_mk_set_complement,
+          mk_set_member: t._Z3_mk_set_member,
+          mk_set_subset: t._Z3_mk_set_subset,
+          mk_array_ext: t._Z3_mk_array_ext,
+          mk_numeral: function (s, _, a) {
+            return t.ccall("Z3_mk_numeral", "number", ["number", "string", "number"], [s, _, a]);
+          },
+          mk_real: t._Z3_mk_real,
+          mk_real_int64: t._Z3_mk_real_int64,
+          mk_int: t._Z3_mk_int,
+          mk_unsigned_int: t._Z3_mk_unsigned_int,
+          mk_int64: t._Z3_mk_int64,
+          mk_unsigned_int64: t._Z3_mk_unsigned_int64,
+          mk_bv_numeral: function (s, _) {
+            return t.ccall("Z3_mk_bv_numeral", "number", ["number", "number", "array"], [s, _.length, b(_)]);
+          },
+          mk_seq_sort: t._Z3_mk_seq_sort,
+          is_seq_sort: function (s, _) {
+            return t.ccall("Z3_is_seq_sort", "boolean", ["number", "number"], [s, _]);
+          },
+          get_seq_sort_basis: t._Z3_get_seq_sort_basis,
+          mk_re_sort: t._Z3_mk_re_sort,
+          is_re_sort: function (s, _) {
+            return t.ccall("Z3_is_re_sort", "boolean", ["number", "number"], [s, _]);
+          },
+          get_re_sort_basis: t._Z3_get_re_sort_basis,
+          mk_string_sort: t._Z3_mk_string_sort,
+          mk_char_sort: t._Z3_mk_char_sort,
+          is_string_sort: function (s, _) {
+            return t.ccall("Z3_is_string_sort", "boolean", ["number", "number"], [s, _]);
+          },
+          is_char_sort: function (s, _) {
+            return t.ccall("Z3_is_char_sort", "boolean", ["number", "number"], [s, _]);
+          },
+          mk_string: function (s, _) {
+            return t.ccall("Z3_mk_string", "number", ["number", "string"], [s, _]);
+          },
+          mk_lstring: function (s, _, a) {
+            return t.ccall("Z3_mk_lstring", "number", ["number", "number", "string"], [s, _, a]);
+          },
+          mk_u32string: function (s, _) {
+            return t.ccall("Z3_mk_u32string", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          is_string: function (s, _) {
+            return t.ccall("Z3_is_string", "boolean", ["number", "number"], [s, _]);
+          },
+          get_string: function (s, _) {
+            return t.ccall("Z3_get_string", "string", ["number", "number"], [s, _]);
+          },
+          get_string_length: function (s, _) {
+            let a = t.ccall("Z3_get_string_length", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_string_contents: function (s, _, a) {
+            let h = t._malloc(4 * a);
+            try {
+              let v = t.ccall("Z3_get_string_contents", "void", ["number", "number", "number", "number"], [s, _, a, h]);
+              return g(h, a);
+            } finally {
+              t._free(h);
+            }
+          },
+          mk_seq_empty: t._Z3_mk_seq_empty,
+          mk_seq_unit: t._Z3_mk_seq_unit,
+          mk_seq_concat: function (s, _) {
+            return t.ccall("Z3_mk_seq_concat", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_seq_prefix: t._Z3_mk_seq_prefix,
+          mk_seq_suffix: t._Z3_mk_seq_suffix,
+          mk_seq_contains: t._Z3_mk_seq_contains,
+          mk_str_lt: t._Z3_mk_str_lt,
+          mk_str_le: t._Z3_mk_str_le,
+          mk_seq_extract: t._Z3_mk_seq_extract,
+          mk_seq_replace: t._Z3_mk_seq_replace,
+          mk_seq_at: t._Z3_mk_seq_at,
+          mk_seq_nth: t._Z3_mk_seq_nth,
+          mk_seq_length: t._Z3_mk_seq_length,
+          mk_seq_index: t._Z3_mk_seq_index,
+          mk_seq_last_index: t._Z3_mk_seq_last_index,
+          mk_seq_map: t._Z3_mk_seq_map,
+          mk_seq_mapi: t._Z3_mk_seq_mapi,
+          mk_seq_foldl: t._Z3_mk_seq_foldl,
+          mk_seq_foldli: t._Z3_mk_seq_foldli,
+          mk_str_to_int: t._Z3_mk_str_to_int,
+          mk_int_to_str: t._Z3_mk_int_to_str,
+          mk_string_to_code: t._Z3_mk_string_to_code,
+          mk_string_from_code: t._Z3_mk_string_from_code,
+          mk_ubv_to_str: t._Z3_mk_ubv_to_str,
+          mk_sbv_to_str: t._Z3_mk_sbv_to_str,
+          mk_seq_to_re: t._Z3_mk_seq_to_re,
+          mk_seq_in_re: t._Z3_mk_seq_in_re,
+          mk_re_plus: t._Z3_mk_re_plus,
+          mk_re_star: t._Z3_mk_re_star,
+          mk_re_option: t._Z3_mk_re_option,
+          mk_re_union: function (s, _) {
+            return t.ccall("Z3_mk_re_union", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_re_concat: function (s, _) {
+            return t.ccall("Z3_mk_re_concat", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_re_range: t._Z3_mk_re_range,
+          mk_re_allchar: t._Z3_mk_re_allchar,
+          mk_re_loop: t._Z3_mk_re_loop,
+          mk_re_power: t._Z3_mk_re_power,
+          mk_re_intersect: function (s, _) {
+            return t.ccall("Z3_mk_re_intersect", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_re_complement: t._Z3_mk_re_complement,
+          mk_re_diff: t._Z3_mk_re_diff,
+          mk_re_empty: t._Z3_mk_re_empty,
+          mk_re_full: t._Z3_mk_re_full,
+          mk_char: t._Z3_mk_char,
+          mk_char_le: t._Z3_mk_char_le,
+          mk_char_to_int: t._Z3_mk_char_to_int,
+          mk_char_to_bv: t._Z3_mk_char_to_bv,
+          mk_char_from_bv: t._Z3_mk_char_from_bv,
+          mk_char_is_digit: t._Z3_mk_char_is_digit,
+          mk_linear_order: t._Z3_mk_linear_order,
+          mk_partial_order: t._Z3_mk_partial_order,
+          mk_piecewise_linear_order: t._Z3_mk_piecewise_linear_order,
+          mk_tree_order: t._Z3_mk_tree_order,
+          mk_transitive_closure: t._Z3_mk_transitive_closure,
+          mk_pattern: function (s, _) {
+            return t.ccall("Z3_mk_pattern", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          mk_bound: t._Z3_mk_bound,
+          mk_forall: function (s, _, a, h, v, I) {
+            if (h.length !== v.length) throw new TypeError(`sorts and decl_names must be the same length (got ${h.length} and {decl_names.length})`);
+            return t.ccall(
+              "Z3_mk_forall",
+              "number",
+              ["number", "number", "number", "array", "number", "array", "array", "number"],
+              [s, _, a.length, u(a), h.length, u(h), u(v), I],
+            );
+          },
+          mk_exists: function (s, _, a, h, v, I) {
+            if (h.length !== v.length) throw new TypeError(`sorts and decl_names must be the same length (got ${h.length} and {decl_names.length})`);
+            return t.ccall(
+              "Z3_mk_exists",
+              "number",
+              ["number", "number", "number", "array", "number", "array", "array", "number"],
+              [s, _, a.length, u(a), h.length, u(h), u(v), I],
+            );
+          },
+          mk_quantifier: function (s, _, a, h, v, I, L) {
+            if (v.length !== I.length) throw new TypeError(`sorts and decl_names must be the same length (got ${v.length} and {decl_names.length})`);
+            return t.ccall(
+              "Z3_mk_quantifier",
+              "number",
+              ["number", "boolean", "number", "number", "array", "number", "array", "array", "number"],
+              [s, _, a, h.length, u(h), v.length, u(v), u(I), L],
+            );
+          },
+          mk_quantifier_ex: function (s, _, a, h, v, I, L, B, G, c) {
+            if (B.length !== G.length) throw new TypeError(`sorts and decl_names must be the same length (got ${B.length} and {decl_names.length})`);
+            return t.ccall(
+              "Z3_mk_quantifier_ex",
+              "number",
+              ["number", "boolean", "number", "number", "number", "number", "array", "number", "array", "number", "array", "array", "number"],
+              [s, _, a, h, v, I.length, u(I), L.length, u(L), B.length, u(B), u(G), c],
+            );
+          },
+          mk_forall_const: function (s, _, a, h, v) {
+            return t.ccall(
+              "Z3_mk_forall_const",
+              "number",
+              ["number", "number", "number", "array", "number", "array", "number"],
+              [s, _, a.length, u(a), h.length, u(h), v],
+            );
+          },
+          mk_exists_const: function (s, _, a, h, v) {
+            return t.ccall(
+              "Z3_mk_exists_const",
+              "number",
+              ["number", "number", "number", "array", "number", "array", "number"],
+              [s, _, a.length, u(a), h.length, u(h), v],
+            );
+          },
+          mk_quantifier_const: function (s, _, a, h, v, I) {
+            return t.ccall(
+              "Z3_mk_quantifier_const",
+              "number",
+              ["number", "boolean", "number", "number", "array", "number", "array", "number"],
+              [s, _, a, h.length, u(h), v.length, u(v), I],
+            );
+          },
+          mk_quantifier_const_ex: function (s, _, a, h, v, I, L, B, G) {
+            return t.ccall(
+              "Z3_mk_quantifier_const_ex",
+              "number",
+              ["number", "boolean", "number", "number", "number", "number", "array", "number", "array", "number", "array", "number"],
+              [s, _, a, h, v, I.length, u(I), L.length, u(L), B.length, u(B), G],
+            );
+          },
+          mk_lambda: function (s, _, a, h) {
+            if (_.length !== a.length) throw new TypeError(`sorts and decl_names must be the same length (got ${_.length} and {decl_names.length})`);
+            return t.ccall("Z3_mk_lambda", "number", ["number", "number", "array", "array", "number"], [s, _.length, u(_), u(a), h]);
+          },
+          mk_lambda_const: function (s, _, a) {
+            return t.ccall("Z3_mk_lambda_const", "number", ["number", "number", "array", "number"], [s, _.length, u(_), a]);
+          },
+          get_symbol_kind: t._Z3_get_symbol_kind,
+          get_symbol_int: t._Z3_get_symbol_int,
+          get_symbol_string: function (s, _) {
+            return t.ccall("Z3_get_symbol_string", "string", ["number", "number"], [s, _]);
+          },
+          get_sort_name: t._Z3_get_sort_name,
+          get_sort_id: function (s, _) {
+            let a = t.ccall("Z3_get_sort_id", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          sort_to_ast: t._Z3_sort_to_ast,
+          is_eq_sort: function (s, _, a) {
+            return t.ccall("Z3_is_eq_sort", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          get_sort_kind: t._Z3_get_sort_kind,
+          get_bv_sort_size: function (s, _) {
+            let a = t.ccall("Z3_get_bv_sort_size", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_finite_domain_sort_size: function (s, _) {
+            return t.ccall("Z3_get_finite_domain_sort_size", "boolean", ["number", "number", "number"], [s, _, p]) ? N(0) : null;
+          },
+          get_array_arity: function (s, _) {
+            let a = t.ccall("Z3_get_array_arity", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_array_sort_domain: t._Z3_get_array_sort_domain,
+          get_array_sort_domain_n: t._Z3_get_array_sort_domain_n,
+          get_array_sort_range: t._Z3_get_array_sort_range,
+          get_tuple_sort_mk_decl: t._Z3_get_tuple_sort_mk_decl,
+          get_tuple_sort_num_fields: function (s, _) {
+            let a = t.ccall("Z3_get_tuple_sort_num_fields", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_tuple_sort_field_decl: t._Z3_get_tuple_sort_field_decl,
+          is_recursive_datatype_sort: function (s, _) {
+            return t.ccall("Z3_is_recursive_datatype_sort", "boolean", ["number", "number"], [s, _]);
+          },
+          get_datatype_sort_num_constructors: function (s, _) {
+            let a = t.ccall("Z3_get_datatype_sort_num_constructors", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_datatype_sort_constructor: t._Z3_get_datatype_sort_constructor,
+          get_datatype_sort_recognizer: t._Z3_get_datatype_sort_recognizer,
+          get_datatype_sort_constructor_accessor: t._Z3_get_datatype_sort_constructor_accessor,
+          datatype_update_field: t._Z3_datatype_update_field,
+          get_relation_arity: function (s, _) {
+            let a = t.ccall("Z3_get_relation_arity", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_relation_column: t._Z3_get_relation_column,
+          mk_atmost: function (s, _, a) {
+            return t.ccall("Z3_mk_atmost", "number", ["number", "number", "array", "number"], [s, _.length, u(_), a]);
+          },
+          mk_atleast: function (s, _, a) {
+            return t.ccall("Z3_mk_atleast", "number", ["number", "number", "array", "number"], [s, _.length, u(_), a]);
+          },
+          mk_pble: function (s, _, a, h) {
+            if (_.length !== a.length) throw new TypeError(`args and coeffs must be the same length (got ${_.length} and {coeffs.length})`);
+            return t.ccall("Z3_mk_pble", "number", ["number", "number", "array", "array", "number"], [s, _.length, u(_), u(a), h]);
+          },
+          mk_pbge: function (s, _, a, h) {
+            if (_.length !== a.length) throw new TypeError(`args and coeffs must be the same length (got ${_.length} and {coeffs.length})`);
+            return t.ccall("Z3_mk_pbge", "number", ["number", "number", "array", "array", "number"], [s, _.length, u(_), u(a), h]);
+          },
+          mk_pbeq: function (s, _, a, h) {
+            if (_.length !== a.length) throw new TypeError(`args and coeffs must be the same length (got ${_.length} and {coeffs.length})`);
+            return t.ccall("Z3_mk_pbeq", "number", ["number", "number", "array", "array", "number"], [s, _.length, u(_), u(a), h]);
+          },
+          func_decl_to_ast: t._Z3_func_decl_to_ast,
+          is_eq_func_decl: function (s, _, a) {
+            return t.ccall("Z3_is_eq_func_decl", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          get_func_decl_id: function (s, _) {
+            let a = t.ccall("Z3_get_func_decl_id", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_decl_name: t._Z3_get_decl_name,
+          get_decl_kind: t._Z3_get_decl_kind,
+          get_domain_size: function (s, _) {
+            let a = t.ccall("Z3_get_domain_size", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_arity: function (s, _) {
+            let a = t.ccall("Z3_get_arity", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_domain: t._Z3_get_domain,
+          get_range: t._Z3_get_range,
+          get_decl_num_parameters: function (s, _) {
+            let a = t.ccall("Z3_get_decl_num_parameters", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_decl_parameter_kind: t._Z3_get_decl_parameter_kind,
+          get_decl_int_parameter: t._Z3_get_decl_int_parameter,
+          get_decl_double_parameter: t._Z3_get_decl_double_parameter,
+          get_decl_symbol_parameter: t._Z3_get_decl_symbol_parameter,
+          get_decl_sort_parameter: t._Z3_get_decl_sort_parameter,
+          get_decl_ast_parameter: t._Z3_get_decl_ast_parameter,
+          get_decl_func_decl_parameter: t._Z3_get_decl_func_decl_parameter,
+          get_decl_rational_parameter: function (s, _, a) {
+            return t.ccall("Z3_get_decl_rational_parameter", "string", ["number", "number", "number"], [s, _, a]);
+          },
+          app_to_ast: t._Z3_app_to_ast,
+          get_app_decl: t._Z3_get_app_decl,
+          get_app_num_args: function (s, _) {
+            let a = t.ccall("Z3_get_app_num_args", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_app_arg: t._Z3_get_app_arg,
+          is_eq_ast: function (s, _, a) {
+            return t.ccall("Z3_is_eq_ast", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          get_ast_id: function (s, _) {
+            let a = t.ccall("Z3_get_ast_id", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_ast_hash: function (s, _) {
+            let a = t.ccall("Z3_get_ast_hash", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_sort: t._Z3_get_sort,
+          is_well_sorted: function (s, _) {
+            return t.ccall("Z3_is_well_sorted", "boolean", ["number", "number"], [s, _]);
+          },
+          get_bool_value: t._Z3_get_bool_value,
+          get_ast_kind: t._Z3_get_ast_kind,
+          is_app: function (s, _) {
+            return t.ccall("Z3_is_app", "boolean", ["number", "number"], [s, _]);
+          },
+          is_ground: function (s, _) {
+            return t.ccall("Z3_is_ground", "boolean", ["number", "number"], [s, _]);
+          },
+          get_depth: function (s, _) {
+            let a = t.ccall("Z3_get_depth", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          is_numeral_ast: function (s, _) {
+            return t.ccall("Z3_is_numeral_ast", "boolean", ["number", "number"], [s, _]);
+          },
+          is_algebraic_number: function (s, _) {
+            return t.ccall("Z3_is_algebraic_number", "boolean", ["number", "number"], [s, _]);
+          },
+          to_app: t._Z3_to_app,
+          to_func_decl: t._Z3_to_func_decl,
+          get_numeral_string: function (s, _) {
+            return t.ccall("Z3_get_numeral_string", "string", ["number", "number"], [s, _]);
+          },
+          get_numeral_binary_string: function (s, _) {
+            return t.ccall("Z3_get_numeral_binary_string", "string", ["number", "number"], [s, _]);
+          },
+          get_numeral_decimal_string: function (s, _, a) {
+            return t.ccall("Z3_get_numeral_decimal_string", "string", ["number", "number", "number"], [s, _, a]);
+          },
+          get_numeral_double: t._Z3_get_numeral_double,
+          get_numerator: t._Z3_get_numerator,
+          get_denominator: t._Z3_get_denominator,
+          get_numeral_small: function (s, _) {
+            return t.ccall("Z3_get_numeral_small", "boolean", ["number", "number", "number", "number"], [s, _, p, p + 8])
+              ? { num: x(0), den: x(1) }
+              : null;
+          },
+          get_numeral_int: function (s, _) {
+            return t.ccall("Z3_get_numeral_int", "boolean", ["number", "number", "number"], [s, _, p]) ? e(0) : null;
+          },
+          get_numeral_uint: function (s, _) {
+            return t.ccall("Z3_get_numeral_uint", "boolean", ["number", "number", "number"], [s, _, p]) ? o(0) : null;
+          },
+          get_numeral_uint64: function (s, _) {
+            return t.ccall("Z3_get_numeral_uint64", "boolean", ["number", "number", "number"], [s, _, p]) ? N(0) : null;
+          },
+          get_numeral_int64: function (s, _) {
+            return t.ccall("Z3_get_numeral_int64", "boolean", ["number", "number", "number"], [s, _, p]) ? x(0) : null;
+          },
+          get_numeral_rational_int64: function (s, _) {
+            return t.ccall("Z3_get_numeral_rational_int64", "boolean", ["number", "number", "number", "number"], [s, _, p, p + 8])
+              ? { num: x(0), den: x(1) }
+              : null;
+          },
+          get_algebraic_number_lower: t._Z3_get_algebraic_number_lower,
+          get_algebraic_number_upper: t._Z3_get_algebraic_number_upper,
+          pattern_to_ast: t._Z3_pattern_to_ast,
+          get_pattern_num_terms: function (s, _) {
+            let a = t.ccall("Z3_get_pattern_num_terms", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_pattern: t._Z3_get_pattern,
+          get_index_value: function (s, _) {
+            let a = t.ccall("Z3_get_index_value", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          is_quantifier_forall: function (s, _) {
+            return t.ccall("Z3_is_quantifier_forall", "boolean", ["number", "number"], [s, _]);
+          },
+          is_quantifier_exists: function (s, _) {
+            return t.ccall("Z3_is_quantifier_exists", "boolean", ["number", "number"], [s, _]);
+          },
+          is_lambda: function (s, _) {
+            return t.ccall("Z3_is_lambda", "boolean", ["number", "number"], [s, _]);
+          },
+          get_quantifier_weight: function (s, _) {
+            let a = t.ccall("Z3_get_quantifier_weight", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_quantifier_skolem_id: t._Z3_get_quantifier_skolem_id,
+          get_quantifier_id: t._Z3_get_quantifier_id,
+          get_quantifier_num_patterns: function (s, _) {
+            let a = t.ccall("Z3_get_quantifier_num_patterns", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_quantifier_pattern_ast: t._Z3_get_quantifier_pattern_ast,
+          get_quantifier_num_no_patterns: function (s, _) {
+            let a = t.ccall("Z3_get_quantifier_num_no_patterns", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_quantifier_no_pattern_ast: t._Z3_get_quantifier_no_pattern_ast,
+          get_quantifier_num_bound: function (s, _) {
+            let a = t.ccall("Z3_get_quantifier_num_bound", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          get_quantifier_bound_name: t._Z3_get_quantifier_bound_name,
+          get_quantifier_bound_sort: t._Z3_get_quantifier_bound_sort,
+          get_quantifier_body: t._Z3_get_quantifier_body,
+          simplify: function (s, _) {
+            return t.async_call(t._async_Z3_simplify, s, _);
+          },
+          simplify_ex: function (s, _, a) {
+            return t.async_call(t._async_Z3_simplify_ex, s, _, a);
+          },
+          simplify_get_help: function (s) {
+            return t.ccall("Z3_simplify_get_help", "string", ["number"], [s]);
+          },
+          simplify_get_param_descrs: t._Z3_simplify_get_param_descrs,
+          update_term: function (s, _, a) {
+            return t.ccall("Z3_update_term", "number", ["number", "number", "number", "array"], [s, _, a.length, u(a)]);
+          },
+          substitute: function (s, _, a, h) {
+            if (a.length !== h.length) throw new TypeError(`from and to must be the same length (got ${a.length} and {to.length})`);
+            return t.ccall("Z3_substitute", "number", ["number", "number", "number", "array", "array"], [s, _, a.length, u(a), u(h)]);
+          },
+          substitute_vars: function (s, _, a) {
+            return t.ccall("Z3_substitute_vars", "number", ["number", "number", "number", "array"], [s, _, a.length, u(a)]);
+          },
+          substitute_funs: function (s, _, a, h) {
+            if (a.length !== h.length) throw new TypeError(`from and to must be the same length (got ${a.length} and {to.length})`);
+            return t.ccall("Z3_substitute_funs", "number", ["number", "number", "number", "array", "array"], [s, _, a.length, u(a), u(h)]);
+          },
+          translate: t._Z3_translate,
+          mk_model: t._Z3_mk_model,
+          model_inc_ref: t._Z3_model_inc_ref,
+          model_dec_ref: t._Z3_model_dec_ref,
+          model_eval: function (s, _, a, h) {
+            return t.ccall("Z3_model_eval", "boolean", ["number", "number", "number", "boolean", "number"], [s, _, a, h, p]) ? o(0) : null;
+          },
+          model_get_const_interp: t._Z3_model_get_const_interp,
+          model_has_interp: function (s, _, a) {
+            return t.ccall("Z3_model_has_interp", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          model_get_func_interp: t._Z3_model_get_func_interp,
+          model_get_num_consts: function (s, _) {
+            let a = t.ccall("Z3_model_get_num_consts", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          model_get_const_decl: t._Z3_model_get_const_decl,
+          model_get_num_funcs: function (s, _) {
+            let a = t.ccall("Z3_model_get_num_funcs", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          model_get_func_decl: t._Z3_model_get_func_decl,
+          model_get_num_sorts: function (s, _) {
+            let a = t.ccall("Z3_model_get_num_sorts", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          model_get_sort: t._Z3_model_get_sort,
+          model_get_sort_universe: t._Z3_model_get_sort_universe,
+          model_translate: t._Z3_model_translate,
+          is_as_array: function (s, _) {
+            return t.ccall("Z3_is_as_array", "boolean", ["number", "number"], [s, _]);
+          },
+          get_as_array_func_decl: t._Z3_get_as_array_func_decl,
+          add_func_interp: t._Z3_add_func_interp,
+          add_const_interp: t._Z3_add_const_interp,
+          func_interp_inc_ref: t._Z3_func_interp_inc_ref,
+          func_interp_dec_ref: t._Z3_func_interp_dec_ref,
+          func_interp_get_num_entries: function (s, _) {
+            let a = t.ccall("Z3_func_interp_get_num_entries", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          func_interp_get_entry: t._Z3_func_interp_get_entry,
+          func_interp_get_else: t._Z3_func_interp_get_else,
+          func_interp_set_else: t._Z3_func_interp_set_else,
+          func_interp_get_arity: function (s, _) {
+            let a = t.ccall("Z3_func_interp_get_arity", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          func_interp_add_entry: t._Z3_func_interp_add_entry,
+          func_entry_inc_ref: t._Z3_func_entry_inc_ref,
+          func_entry_dec_ref: t._Z3_func_entry_dec_ref,
+          func_entry_get_value: t._Z3_func_entry_get_value,
+          func_entry_get_num_args: function (s, _) {
+            let a = t.ccall("Z3_func_entry_get_num_args", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          func_entry_get_arg: t._Z3_func_entry_get_arg,
+          open_log: function (s) {
+            return t.ccall("Z3_open_log", "boolean", ["string"], [s]);
+          },
+          append_log: function (s) {
+            return t.ccall("Z3_append_log", "void", ["string"], [s]);
+          },
+          close_log: t._Z3_close_log,
+          toggle_warning_messages: t._Z3_toggle_warning_messages,
+          set_ast_print_mode: t._Z3_set_ast_print_mode,
+          ast_to_string: function (s, _) {
+            return t.ccall("Z3_ast_to_string", "string", ["number", "number"], [s, _]);
+          },
+          pattern_to_string: function (s, _) {
+            return t.ccall("Z3_pattern_to_string", "string", ["number", "number"], [s, _]);
+          },
+          sort_to_string: function (s, _) {
+            return t.ccall("Z3_sort_to_string", "string", ["number", "number"], [s, _]);
+          },
+          func_decl_to_string: function (s, _) {
+            return t.ccall("Z3_func_decl_to_string", "string", ["number", "number"], [s, _]);
+          },
+          model_to_string: function (s, _) {
+            return t.ccall("Z3_model_to_string", "string", ["number", "number"], [s, _]);
+          },
+          benchmark_to_smtlib_string: function (s, _, a, h, v, I, L) {
+            return t.ccall(
+              "Z3_benchmark_to_smtlib_string",
+              "string",
+              ["number", "string", "string", "string", "string", "number", "array", "number"],
+              [s, _, a, h, v, I.length, u(I), L],
+            );
+          },
+          parse_smtlib2_string: function (s, _, a, h, v, I) {
+            if (a.length !== h.length) throw new TypeError(`sort_names and sorts must be the same length (got ${a.length} and {sorts.length})`);
+            if (v.length !== I.length) throw new TypeError(`decl_names and decls must be the same length (got ${v.length} and {decls.length})`);
+            return t.ccall(
+              "Z3_parse_smtlib2_string",
+              "number",
+              ["number", "string", "number", "array", "array", "number", "array", "array"],
+              [s, _, a.length, u(a), u(h), v.length, u(v), u(I)],
+            );
+          },
+          parse_smtlib2_file: function (s, _, a, h, v, I) {
+            if (a.length !== h.length) throw new TypeError(`sort_names and sorts must be the same length (got ${a.length} and {sorts.length})`);
+            if (v.length !== I.length) throw new TypeError(`decl_names and decls must be the same length (got ${v.length} and {decls.length})`);
+            return t.ccall(
+              "Z3_parse_smtlib2_file",
+              "number",
+              ["number", "string", "number", "array", "array", "number", "array", "array"],
+              [s, _, a.length, u(a), u(h), v.length, u(v), u(I)],
+            );
+          },
+          eval_smtlib2_string: async function (s, _) {
+            return await t.async_call(() => t.ccall("async_Z3_eval_smtlib2_string", "void", ["number", "string"], [s, _]));
+          },
+          mk_parser_context: t._Z3_mk_parser_context,
+          parser_context_inc_ref: t._Z3_parser_context_inc_ref,
+          parser_context_dec_ref: t._Z3_parser_context_dec_ref,
+          parser_context_add_sort: t._Z3_parser_context_add_sort,
+          parser_context_add_decl: t._Z3_parser_context_add_decl,
+          parser_context_from_string: function (s, _, a) {
+            return t.ccall("Z3_parser_context_from_string", "number", ["number", "number", "string"], [s, _, a]);
+          },
+          get_error_code: t._Z3_get_error_code,
+          set_error: t._Z3_set_error,
+          get_error_msg: function (s, _) {
+            return t.ccall("Z3_get_error_msg", "string", ["number", "number"], [s, _]);
+          },
+          get_version: function () {
+            return (
+              t.ccall("Z3_get_version", "void", ["number", "number", "number", "number"], [p, p + 4, p + 8, p + 12]),
+              { major: o(0), minor: o(1), build_number: o(2), revision_number: o(3) }
+            );
+          },
+          get_full_version: function () {
+            return t.ccall("Z3_get_full_version", "string", [], []);
+          },
+          enable_trace: function (s) {
+            return t.ccall("Z3_enable_trace", "void", ["string"], [s]);
+          },
+          disable_trace: function (s) {
+            return t.ccall("Z3_disable_trace", "void", ["string"], [s]);
+          },
+          reset_memory: t._Z3_reset_memory,
+          finalize_memory: t._Z3_finalize_memory,
+          mk_goal: t._Z3_mk_goal,
+          goal_inc_ref: t._Z3_goal_inc_ref,
+          goal_dec_ref: t._Z3_goal_dec_ref,
+          goal_precision: t._Z3_goal_precision,
+          goal_assert: t._Z3_goal_assert,
+          goal_inconsistent: function (s, _) {
+            return t.ccall("Z3_goal_inconsistent", "boolean", ["number", "number"], [s, _]);
+          },
+          goal_depth: function (s, _) {
+            let a = t.ccall("Z3_goal_depth", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          goal_reset: t._Z3_goal_reset,
+          goal_size: function (s, _) {
+            let a = t.ccall("Z3_goal_size", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          goal_formula: t._Z3_goal_formula,
+          goal_num_exprs: function (s, _) {
+            let a = t.ccall("Z3_goal_num_exprs", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          goal_is_decided_sat: function (s, _) {
+            return t.ccall("Z3_goal_is_decided_sat", "boolean", ["number", "number"], [s, _]);
+          },
+          goal_is_decided_unsat: function (s, _) {
+            return t.ccall("Z3_goal_is_decided_unsat", "boolean", ["number", "number"], [s, _]);
+          },
+          goal_translate: t._Z3_goal_translate,
+          goal_convert_model: t._Z3_goal_convert_model,
+          goal_to_string: function (s, _) {
+            return t.ccall("Z3_goal_to_string", "string", ["number", "number"], [s, _]);
+          },
+          goal_to_dimacs_string: function (s, _, a) {
+            return t.ccall("Z3_goal_to_dimacs_string", "string", ["number", "number", "boolean"], [s, _, a]);
+          },
+          mk_tactic: function (s, _) {
+            return t.ccall("Z3_mk_tactic", "number", ["number", "string"], [s, _]);
+          },
+          tactic_inc_ref: t._Z3_tactic_inc_ref,
+          tactic_dec_ref: t._Z3_tactic_dec_ref,
+          mk_probe: function (s, _) {
+            return t.ccall("Z3_mk_probe", "number", ["number", "string"], [s, _]);
+          },
+          probe_inc_ref: t._Z3_probe_inc_ref,
+          probe_dec_ref: t._Z3_probe_dec_ref,
+          tactic_and_then: t._Z3_tactic_and_then,
+          tactic_or_else: t._Z3_tactic_or_else,
+          tactic_par_or: function (s, _) {
+            return t.ccall("Z3_tactic_par_or", "number", ["number", "number", "array"], [s, _.length, u(_)]);
+          },
+          tactic_par_and_then: t._Z3_tactic_par_and_then,
+          tactic_try_for: t._Z3_tactic_try_for,
+          tactic_when: t._Z3_tactic_when,
+          tactic_cond: t._Z3_tactic_cond,
+          tactic_repeat: t._Z3_tactic_repeat,
+          tactic_skip: t._Z3_tactic_skip,
+          tactic_fail: t._Z3_tactic_fail,
+          tactic_fail_if: t._Z3_tactic_fail_if,
+          tactic_fail_if_not_decided: t._Z3_tactic_fail_if_not_decided,
+          tactic_using_params: t._Z3_tactic_using_params,
+          mk_simplifier: function (s, _) {
+            return t.ccall("Z3_mk_simplifier", "number", ["number", "string"], [s, _]);
+          },
+          simplifier_inc_ref: t._Z3_simplifier_inc_ref,
+          simplifier_dec_ref: t._Z3_simplifier_dec_ref,
+          solver_add_simplifier: t._Z3_solver_add_simplifier,
+          simplifier_and_then: t._Z3_simplifier_and_then,
+          simplifier_using_params: t._Z3_simplifier_using_params,
+          get_num_simplifiers: function (s) {
+            let _ = t.ccall("Z3_get_num_simplifiers", "number", ["number"], [s]);
+            return ((_ = new Uint32Array([_])[0]), _);
+          },
+          get_simplifier_name: function (s, _) {
+            return t.ccall("Z3_get_simplifier_name", "string", ["number", "number"], [s, _]);
+          },
+          simplifier_get_help: function (s, _) {
+            return t.ccall("Z3_simplifier_get_help", "string", ["number", "number"], [s, _]);
+          },
+          simplifier_get_param_descrs: t._Z3_simplifier_get_param_descrs,
+          simplifier_get_descr: function (s, _) {
+            return t.ccall("Z3_simplifier_get_descr", "string", ["number", "string"], [s, _]);
+          },
+          probe_const: t._Z3_probe_const,
+          probe_lt: t._Z3_probe_lt,
+          probe_gt: t._Z3_probe_gt,
+          probe_le: t._Z3_probe_le,
+          probe_ge: t._Z3_probe_ge,
+          probe_eq: t._Z3_probe_eq,
+          probe_and: t._Z3_probe_and,
+          probe_or: t._Z3_probe_or,
+          probe_not: t._Z3_probe_not,
+          get_num_tactics: function (s) {
+            let _ = t.ccall("Z3_get_num_tactics", "number", ["number"], [s]);
+            return ((_ = new Uint32Array([_])[0]), _);
+          },
+          get_tactic_name: function (s, _) {
+            return t.ccall("Z3_get_tactic_name", "string", ["number", "number"], [s, _]);
+          },
+          get_num_probes: function (s) {
+            let _ = t.ccall("Z3_get_num_probes", "number", ["number"], [s]);
+            return ((_ = new Uint32Array([_])[0]), _);
+          },
+          get_probe_name: function (s, _) {
+            return t.ccall("Z3_get_probe_name", "string", ["number", "number"], [s, _]);
+          },
+          tactic_get_help: function (s, _) {
+            return t.ccall("Z3_tactic_get_help", "string", ["number", "number"], [s, _]);
+          },
+          tactic_get_param_descrs: t._Z3_tactic_get_param_descrs,
+          tactic_get_descr: function (s, _) {
+            return t.ccall("Z3_tactic_get_descr", "string", ["number", "string"], [s, _]);
+          },
+          probe_get_descr: function (s, _) {
+            return t.ccall("Z3_probe_get_descr", "string", ["number", "string"], [s, _]);
+          },
+          probe_apply: t._Z3_probe_apply,
+          tactic_apply: function (s, _, a) {
+            return t.async_call(t._async_Z3_tactic_apply, s, _, a);
+          },
+          tactic_apply_ex: function (s, _, a, h) {
+            return t.async_call(t._async_Z3_tactic_apply_ex, s, _, a, h);
+          },
+          apply_result_inc_ref: t._Z3_apply_result_inc_ref,
+          apply_result_dec_ref: t._Z3_apply_result_dec_ref,
+          apply_result_to_string: function (s, _) {
+            return t.ccall("Z3_apply_result_to_string", "string", ["number", "number"], [s, _]);
+          },
+          apply_result_get_num_subgoals: function (s, _) {
+            let a = t.ccall("Z3_apply_result_get_num_subgoals", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          apply_result_get_subgoal: t._Z3_apply_result_get_subgoal,
+          mk_solver: t._Z3_mk_solver,
+          mk_simple_solver: t._Z3_mk_simple_solver,
+          mk_solver_for_logic: t._Z3_mk_solver_for_logic,
+          mk_solver_from_tactic: t._Z3_mk_solver_from_tactic,
+          solver_translate: t._Z3_solver_translate,
+          solver_import_model_converter: t._Z3_solver_import_model_converter,
+          solver_get_help: function (s, _) {
+            return t.ccall("Z3_solver_get_help", "string", ["number", "number"], [s, _]);
+          },
+          solver_get_param_descrs: t._Z3_solver_get_param_descrs,
+          solver_set_params: t._Z3_solver_set_params,
+          solver_inc_ref: t._Z3_solver_inc_ref,
+          solver_dec_ref: t._Z3_solver_dec_ref,
+          solver_interrupt: t._Z3_solver_interrupt,
+          solver_push: t._Z3_solver_push,
+          solver_pop: t._Z3_solver_pop,
+          solver_reset: t._Z3_solver_reset,
+          solver_get_num_scopes: function (s, _) {
+            let a = t.ccall("Z3_solver_get_num_scopes", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          solver_assert: t._Z3_solver_assert,
+          solver_assert_and_track: t._Z3_solver_assert_and_track,
+          solver_from_file: function (s, _, a) {
+            return t.ccall("Z3_solver_from_file", "void", ["number", "number", "string"], [s, _, a]);
+          },
+          solver_from_string: function (s, _, a) {
+            return t.ccall("Z3_solver_from_string", "void", ["number", "number", "string"], [s, _, a]);
+          },
+          solver_get_assertions: t._Z3_solver_get_assertions,
+          solver_get_units: t._Z3_solver_get_units,
+          solver_get_trail: t._Z3_solver_get_trail,
+          solver_get_non_units: t._Z3_solver_get_non_units,
+          solver_get_levels: function (s, _, a, h) {
+            return t.ccall("Z3_solver_get_levels", "void", ["number", "number", "number", "number", "array"], [s, _, a, h.length, u(h)]);
+          },
+          solver_congruence_root: t._Z3_solver_congruence_root,
+          solver_congruence_next: t._Z3_solver_congruence_next,
+          solver_congruence_explain: t._Z3_solver_congruence_explain,
+          solver_solve_for: t._Z3_solver_solve_for,
+          solver_next_split: function (s, _, a, h, v) {
+            return t.ccall("Z3_solver_next_split", "boolean", ["number", "number", "number", "number", "number"], [s, _, a, h, v]);
+          },
+          solver_propagate_declare: function (s, _, a, h) {
+            return t.ccall("Z3_solver_propagate_declare", "number", ["number", "number", "number", "array", "number"], [s, _, a.length, u(a), h]);
+          },
+          solver_propagate_register: t._Z3_solver_propagate_register,
+          solver_propagate_register_cb: t._Z3_solver_propagate_register_cb,
+          solver_propagate_consequence: function (s, _, a, h, v, I) {
+            if (h.length !== v.length) throw new TypeError(`eq_lhs and eq_rhs must be the same length (got ${h.length} and {eq_rhs.length})`);
+            return t.ccall(
+              "Z3_solver_propagate_consequence",
+              "boolean",
+              ["number", "number", "number", "array", "number", "array", "array", "number"],
+              [s, _, a.length, u(a), h.length, u(h), u(v), I],
+            );
+          },
+          solver_set_initial_value: t._Z3_solver_set_initial_value,
+          solver_check: function (s, _) {
+            return t.async_call(t._async_Z3_solver_check, s, _);
+          },
+          solver_check_assumptions: async function (s, _, a) {
+            return await t.async_call(() =>
+              t.ccall("async_Z3_solver_check_assumptions", "void", ["number", "number", "number", "array"], [s, _, a.length, u(a)]),
+            );
+          },
+          get_implied_equalities: function (s, _, a) {
+            let h = t._malloc(4 * a.length);
+            try {
+              return {
+                rv: t.ccall("Z3_get_implied_equalities", "number", ["number", "number", "number", "array", "number"], [s, _, a.length, u(a), h]),
+                class_ids: g(h, a.length),
+              };
+            } finally {
+              t._free(h);
+            }
+          },
+          solver_get_consequences: function (s, _, a, h, v) {
+            return t.async_call(t._async_Z3_solver_get_consequences, s, _, a, h, v);
+          },
+          solver_cube: function (s, _, a, h) {
+            return t.async_call(t._async_Z3_solver_cube, s, _, a, h);
+          },
+          solver_get_model: t._Z3_solver_get_model,
+          solver_get_proof: t._Z3_solver_get_proof,
+          solver_get_unsat_core: t._Z3_solver_get_unsat_core,
+          solver_get_reason_unknown: function (s, _) {
+            return t.ccall("Z3_solver_get_reason_unknown", "string", ["number", "number"], [s, _]);
+          },
+          solver_get_statistics: t._Z3_solver_get_statistics,
+          solver_to_string: function (s, _) {
+            return t.ccall("Z3_solver_to_string", "string", ["number", "number"], [s, _]);
+          },
+          solver_to_dimacs_string: function (s, _, a) {
+            return t.ccall("Z3_solver_to_dimacs_string", "string", ["number", "number", "boolean"], [s, _, a]);
+          },
+          stats_to_string: function (s, _) {
+            return t.ccall("Z3_stats_to_string", "string", ["number", "number"], [s, _]);
+          },
+          stats_inc_ref: t._Z3_stats_inc_ref,
+          stats_dec_ref: t._Z3_stats_dec_ref,
+          stats_size: function (s, _) {
+            let a = t.ccall("Z3_stats_size", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          stats_get_key: function (s, _, a) {
+            return t.ccall("Z3_stats_get_key", "string", ["number", "number", "number"], [s, _, a]);
+          },
+          stats_is_uint: function (s, _, a) {
+            return t.ccall("Z3_stats_is_uint", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          stats_is_double: function (s, _, a) {
+            return t.ccall("Z3_stats_is_double", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          stats_get_uint_value: function (s, _, a) {
+            let h = t.ccall("Z3_stats_get_uint_value", "number", ["number", "number", "number"], [s, _, a]);
+            return ((h = new Uint32Array([h])[0]), h);
+          },
+          stats_get_double_value: t._Z3_stats_get_double_value,
+          get_estimated_alloc_size: t._Z3_get_estimated_alloc_size,
+          algebraic_is_value: function (s, _) {
+            return t.ccall("Z3_algebraic_is_value", "boolean", ["number", "number"], [s, _]);
+          },
+          algebraic_is_pos: function (s, _) {
+            return t.ccall("Z3_algebraic_is_pos", "boolean", ["number", "number"], [s, _]);
+          },
+          algebraic_is_neg: function (s, _) {
+            return t.ccall("Z3_algebraic_is_neg", "boolean", ["number", "number"], [s, _]);
+          },
+          algebraic_is_zero: function (s, _) {
+            return t.ccall("Z3_algebraic_is_zero", "boolean", ["number", "number"], [s, _]);
+          },
+          algebraic_sign: t._Z3_algebraic_sign,
+          algebraic_add: t._Z3_algebraic_add,
+          algebraic_sub: t._Z3_algebraic_sub,
+          algebraic_mul: t._Z3_algebraic_mul,
+          algebraic_div: t._Z3_algebraic_div,
+          algebraic_root: t._Z3_algebraic_root,
+          algebraic_power: t._Z3_algebraic_power,
+          algebraic_lt: function (s, _, a) {
+            return t.ccall("Z3_algebraic_lt", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          algebraic_gt: function (s, _, a) {
+            return t.ccall("Z3_algebraic_gt", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          algebraic_le: function (s, _, a) {
+            return t.ccall("Z3_algebraic_le", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          algebraic_ge: function (s, _, a) {
+            return t.ccall("Z3_algebraic_ge", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          algebraic_eq: function (s, _, a) {
+            return t.ccall("Z3_algebraic_eq", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          algebraic_neq: function (s, _, a) {
+            return t.ccall("Z3_algebraic_neq", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          algebraic_roots: async function (s, _, a) {
+            return await t.async_call(() =>
+              t.ccall("async_Z3_algebraic_roots", "void", ["number", "number", "number", "array"], [s, _, a.length, u(a)]),
+            );
+          },
+          algebraic_eval: async function (s, _, a) {
+            return await t.async_call(() =>
+              t.ccall("async_Z3_algebraic_eval", "void", ["number", "number", "number", "array"], [s, _, a.length, u(a)]),
+            );
+          },
+          algebraic_get_poly: t._Z3_algebraic_get_poly,
+          algebraic_get_i: function (s, _) {
+            let a = t.ccall("Z3_algebraic_get_i", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          mk_ast_vector: t._Z3_mk_ast_vector,
+          ast_vector_inc_ref: t._Z3_ast_vector_inc_ref,
+          ast_vector_dec_ref: t._Z3_ast_vector_dec_ref,
+          ast_vector_size: function (s, _) {
+            let a = t.ccall("Z3_ast_vector_size", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          ast_vector_get: t._Z3_ast_vector_get,
+          ast_vector_set: t._Z3_ast_vector_set,
+          ast_vector_resize: t._Z3_ast_vector_resize,
+          ast_vector_push: t._Z3_ast_vector_push,
+          ast_vector_translate: t._Z3_ast_vector_translate,
+          ast_vector_to_string: function (s, _) {
+            return t.ccall("Z3_ast_vector_to_string", "string", ["number", "number"], [s, _]);
+          },
+          mk_ast_map: t._Z3_mk_ast_map,
+          ast_map_inc_ref: t._Z3_ast_map_inc_ref,
+          ast_map_dec_ref: t._Z3_ast_map_dec_ref,
+          ast_map_contains: function (s, _, a) {
+            return t.ccall("Z3_ast_map_contains", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          ast_map_find: t._Z3_ast_map_find,
+          ast_map_insert: t._Z3_ast_map_insert,
+          ast_map_erase: t._Z3_ast_map_erase,
+          ast_map_reset: t._Z3_ast_map_reset,
+          ast_map_size: function (s, _) {
+            let a = t.ccall("Z3_ast_map_size", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          ast_map_keys: t._Z3_ast_map_keys,
+          ast_map_to_string: function (s, _) {
+            return t.ccall("Z3_ast_map_to_string", "string", ["number", "number"], [s, _]);
+          },
+          mk_fixedpoint: t._Z3_mk_fixedpoint,
+          fixedpoint_inc_ref: t._Z3_fixedpoint_inc_ref,
+          fixedpoint_dec_ref: t._Z3_fixedpoint_dec_ref,
+          fixedpoint_add_rule: t._Z3_fixedpoint_add_rule,
+          fixedpoint_add_fact: function (s, _, a, h) {
+            return t.ccall("Z3_fixedpoint_add_fact", "void", ["number", "number", "number", "number", "array"], [s, _, a, h.length, u(h)]);
+          },
+          fixedpoint_assert: t._Z3_fixedpoint_assert,
+          fixedpoint_query: function (s, _, a) {
+            return t.async_call(t._async_Z3_fixedpoint_query, s, _, a);
+          },
+          fixedpoint_query_relations: async function (s, _, a) {
+            return await t.async_call(() =>
+              t.ccall("async_Z3_fixedpoint_query_relations", "void", ["number", "number", "number", "array"], [s, _, a.length, u(a)]),
+            );
+          },
+          fixedpoint_get_answer: t._Z3_fixedpoint_get_answer,
+          fixedpoint_get_reason_unknown: function (s, _) {
+            return t.ccall("Z3_fixedpoint_get_reason_unknown", "string", ["number", "number"], [s, _]);
+          },
+          fixedpoint_update_rule: t._Z3_fixedpoint_update_rule,
+          fixedpoint_get_num_levels: function (s, _, a) {
+            let h = t.ccall("Z3_fixedpoint_get_num_levels", "number", ["number", "number", "number"], [s, _, a]);
+            return ((h = new Uint32Array([h])[0]), h);
+          },
+          fixedpoint_get_cover_delta: t._Z3_fixedpoint_get_cover_delta,
+          fixedpoint_add_cover: t._Z3_fixedpoint_add_cover,
+          fixedpoint_get_statistics: t._Z3_fixedpoint_get_statistics,
+          fixedpoint_register_relation: t._Z3_fixedpoint_register_relation,
+          fixedpoint_set_predicate_representation: function (s, _, a, h) {
+            return t.ccall(
+              "Z3_fixedpoint_set_predicate_representation",
+              "void",
+              ["number", "number", "number", "number", "array"],
+              [s, _, a, h.length, u(h)],
+            );
+          },
+          fixedpoint_get_rules: t._Z3_fixedpoint_get_rules,
+          fixedpoint_get_assertions: t._Z3_fixedpoint_get_assertions,
+          fixedpoint_set_params: t._Z3_fixedpoint_set_params,
+          fixedpoint_get_help: function (s, _) {
+            return t.ccall("Z3_fixedpoint_get_help", "string", ["number", "number"], [s, _]);
+          },
+          fixedpoint_get_param_descrs: t._Z3_fixedpoint_get_param_descrs,
+          fixedpoint_to_string: function (s, _, a) {
+            return t.ccall("Z3_fixedpoint_to_string", "string", ["number", "number", "number", "array"], [s, _, a.length, u(a)]);
+          },
+          fixedpoint_from_string: function (s, _, a) {
+            return t.ccall("Z3_fixedpoint_from_string", "number", ["number", "number", "string"], [s, _, a]);
+          },
+          fixedpoint_from_file: function (s, _, a) {
+            return t.ccall("Z3_fixedpoint_from_file", "number", ["number", "number", "string"], [s, _, a]);
+          },
+          mk_fpa_rounding_mode_sort: t._Z3_mk_fpa_rounding_mode_sort,
+          mk_fpa_round_nearest_ties_to_even: t._Z3_mk_fpa_round_nearest_ties_to_even,
+          mk_fpa_rne: t._Z3_mk_fpa_rne,
+          mk_fpa_round_nearest_ties_to_away: t._Z3_mk_fpa_round_nearest_ties_to_away,
+          mk_fpa_rna: t._Z3_mk_fpa_rna,
+          mk_fpa_round_toward_positive: t._Z3_mk_fpa_round_toward_positive,
+          mk_fpa_rtp: t._Z3_mk_fpa_rtp,
+          mk_fpa_round_toward_negative: t._Z3_mk_fpa_round_toward_negative,
+          mk_fpa_rtn: t._Z3_mk_fpa_rtn,
+          mk_fpa_round_toward_zero: t._Z3_mk_fpa_round_toward_zero,
+          mk_fpa_rtz: t._Z3_mk_fpa_rtz,
+          mk_fpa_sort: t._Z3_mk_fpa_sort,
+          mk_fpa_sort_half: t._Z3_mk_fpa_sort_half,
+          mk_fpa_sort_16: t._Z3_mk_fpa_sort_16,
+          mk_fpa_sort_single: t._Z3_mk_fpa_sort_single,
+          mk_fpa_sort_32: t._Z3_mk_fpa_sort_32,
+          mk_fpa_sort_double: t._Z3_mk_fpa_sort_double,
+          mk_fpa_sort_64: t._Z3_mk_fpa_sort_64,
+          mk_fpa_sort_quadruple: t._Z3_mk_fpa_sort_quadruple,
+          mk_fpa_sort_128: t._Z3_mk_fpa_sort_128,
+          mk_fpa_nan: t._Z3_mk_fpa_nan,
+          mk_fpa_inf: t._Z3_mk_fpa_inf,
+          mk_fpa_zero: t._Z3_mk_fpa_zero,
+          mk_fpa_fp: t._Z3_mk_fpa_fp,
+          mk_fpa_numeral_float: t._Z3_mk_fpa_numeral_float,
+          mk_fpa_numeral_double: t._Z3_mk_fpa_numeral_double,
+          mk_fpa_numeral_int: t._Z3_mk_fpa_numeral_int,
+          mk_fpa_numeral_int_uint: t._Z3_mk_fpa_numeral_int_uint,
+          mk_fpa_numeral_int64_uint64: t._Z3_mk_fpa_numeral_int64_uint64,
+          mk_fpa_abs: t._Z3_mk_fpa_abs,
+          mk_fpa_neg: t._Z3_mk_fpa_neg,
+          mk_fpa_add: t._Z3_mk_fpa_add,
+          mk_fpa_sub: t._Z3_mk_fpa_sub,
+          mk_fpa_mul: t._Z3_mk_fpa_mul,
+          mk_fpa_div: t._Z3_mk_fpa_div,
+          mk_fpa_fma: t._Z3_mk_fpa_fma,
+          mk_fpa_sqrt: t._Z3_mk_fpa_sqrt,
+          mk_fpa_rem: t._Z3_mk_fpa_rem,
+          mk_fpa_round_to_integral: t._Z3_mk_fpa_round_to_integral,
+          mk_fpa_min: t._Z3_mk_fpa_min,
+          mk_fpa_max: t._Z3_mk_fpa_max,
+          mk_fpa_leq: t._Z3_mk_fpa_leq,
+          mk_fpa_lt: t._Z3_mk_fpa_lt,
+          mk_fpa_geq: t._Z3_mk_fpa_geq,
+          mk_fpa_gt: t._Z3_mk_fpa_gt,
+          mk_fpa_eq: t._Z3_mk_fpa_eq,
+          mk_fpa_is_normal: t._Z3_mk_fpa_is_normal,
+          mk_fpa_is_subnormal: t._Z3_mk_fpa_is_subnormal,
+          mk_fpa_is_zero: t._Z3_mk_fpa_is_zero,
+          mk_fpa_is_infinite: t._Z3_mk_fpa_is_infinite,
+          mk_fpa_is_nan: t._Z3_mk_fpa_is_nan,
+          mk_fpa_is_negative: t._Z3_mk_fpa_is_negative,
+          mk_fpa_is_positive: t._Z3_mk_fpa_is_positive,
+          mk_fpa_to_fp_bv: t._Z3_mk_fpa_to_fp_bv,
+          mk_fpa_to_fp_float: t._Z3_mk_fpa_to_fp_float,
+          mk_fpa_to_fp_real: t._Z3_mk_fpa_to_fp_real,
+          mk_fpa_to_fp_signed: t._Z3_mk_fpa_to_fp_signed,
+          mk_fpa_to_fp_unsigned: t._Z3_mk_fpa_to_fp_unsigned,
+          mk_fpa_to_ubv: t._Z3_mk_fpa_to_ubv,
+          mk_fpa_to_sbv: t._Z3_mk_fpa_to_sbv,
+          mk_fpa_to_real: t._Z3_mk_fpa_to_real,
+          fpa_get_ebits: function (s, _) {
+            let a = t.ccall("Z3_fpa_get_ebits", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          fpa_get_sbits: function (s, _) {
+            let a = t.ccall("Z3_fpa_get_sbits", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          fpa_is_numeral_nan: function (s, _) {
+            return t.ccall("Z3_fpa_is_numeral_nan", "boolean", ["number", "number"], [s, _]);
+          },
+          fpa_is_numeral_inf: function (s, _) {
+            return t.ccall("Z3_fpa_is_numeral_inf", "boolean", ["number", "number"], [s, _]);
+          },
+          fpa_is_numeral_zero: function (s, _) {
+            return t.ccall("Z3_fpa_is_numeral_zero", "boolean", ["number", "number"], [s, _]);
+          },
+          fpa_is_numeral_normal: function (s, _) {
+            return t.ccall("Z3_fpa_is_numeral_normal", "boolean", ["number", "number"], [s, _]);
+          },
+          fpa_is_numeral_subnormal: function (s, _) {
+            return t.ccall("Z3_fpa_is_numeral_subnormal", "boolean", ["number", "number"], [s, _]);
+          },
+          fpa_is_numeral_positive: function (s, _) {
+            return t.ccall("Z3_fpa_is_numeral_positive", "boolean", ["number", "number"], [s, _]);
+          },
+          fpa_is_numeral_negative: function (s, _) {
+            return t.ccall("Z3_fpa_is_numeral_negative", "boolean", ["number", "number"], [s, _]);
+          },
+          fpa_get_numeral_sign_bv: t._Z3_fpa_get_numeral_sign_bv,
+          fpa_get_numeral_significand_bv: t._Z3_fpa_get_numeral_significand_bv,
+          fpa_get_numeral_sign: function (s, _) {
+            return t.ccall("Z3_fpa_get_numeral_sign", "boolean", ["number", "number", "number"], [s, _, p]) ? e(0) : null;
+          },
+          fpa_get_numeral_significand_string: function (s, _) {
+            return t.ccall("Z3_fpa_get_numeral_significand_string", "string", ["number", "number"], [s, _]);
+          },
+          fpa_get_numeral_significand_uint64: function (s, _) {
+            return t.ccall("Z3_fpa_get_numeral_significand_uint64", "boolean", ["number", "number", "number"], [s, _, p]) ? N(0) : null;
+          },
+          fpa_get_numeral_exponent_string: function (s, _, a) {
+            return t.ccall("Z3_fpa_get_numeral_exponent_string", "string", ["number", "number", "boolean"], [s, _, a]);
+          },
+          fpa_get_numeral_exponent_int64: function (s, _, a) {
+            return t.ccall("Z3_fpa_get_numeral_exponent_int64", "boolean", ["number", "number", "number", "boolean"], [s, _, p, a]) ? x(0) : null;
+          },
+          fpa_get_numeral_exponent_bv: t._Z3_fpa_get_numeral_exponent_bv,
+          mk_fpa_to_ieee_bv: t._Z3_mk_fpa_to_ieee_bv,
+          mk_fpa_to_fp_int_real: t._Z3_mk_fpa_to_fp_int_real,
+          mk_optimize: t._Z3_mk_optimize,
+          optimize_inc_ref: t._Z3_optimize_inc_ref,
+          optimize_dec_ref: t._Z3_optimize_dec_ref,
+          optimize_assert: t._Z3_optimize_assert,
+          optimize_assert_and_track: t._Z3_optimize_assert_and_track,
+          optimize_assert_soft: function (s, _, a, h, v) {
+            let I = t.ccall("Z3_optimize_assert_soft", "number", ["number", "number", "number", "string", "number"], [s, _, a, h, v]);
+            return ((I = new Uint32Array([I])[0]), I);
+          },
+          optimize_maximize: function (s, _, a) {
+            let h = t.ccall("Z3_optimize_maximize", "number", ["number", "number", "number"], [s, _, a]);
+            return ((h = new Uint32Array([h])[0]), h);
+          },
+          optimize_minimize: function (s, _, a) {
+            let h = t.ccall("Z3_optimize_minimize", "number", ["number", "number", "number"], [s, _, a]);
+            return ((h = new Uint32Array([h])[0]), h);
+          },
+          optimize_push: t._Z3_optimize_push,
+          optimize_pop: t._Z3_optimize_pop,
+          optimize_set_initial_value: t._Z3_optimize_set_initial_value,
+          optimize_check: async function (s, _, a) {
+            return await t.async_call(() =>
+              t.ccall("async_Z3_optimize_check", "void", ["number", "number", "number", "array"], [s, _, a.length, u(a)]),
+            );
+          },
+          optimize_get_reason_unknown: function (s, _) {
+            return t.ccall("Z3_optimize_get_reason_unknown", "string", ["number", "number"], [s, _]);
+          },
+          optimize_get_model: t._Z3_optimize_get_model,
+          optimize_get_unsat_core: t._Z3_optimize_get_unsat_core,
+          optimize_set_params: t._Z3_optimize_set_params,
+          optimize_get_param_descrs: t._Z3_optimize_get_param_descrs,
+          optimize_get_lower: t._Z3_optimize_get_lower,
+          optimize_get_upper: t._Z3_optimize_get_upper,
+          optimize_get_lower_as_vector: t._Z3_optimize_get_lower_as_vector,
+          optimize_get_upper_as_vector: t._Z3_optimize_get_upper_as_vector,
+          optimize_to_string: function (s, _) {
+            return t.ccall("Z3_optimize_to_string", "string", ["number", "number"], [s, _]);
+          },
+          optimize_from_string: function (s, _, a) {
+            return t.ccall("Z3_optimize_from_string", "void", ["number", "number", "string"], [s, _, a]);
+          },
+          optimize_from_file: function (s, _, a) {
+            return t.ccall("Z3_optimize_from_file", "void", ["number", "number", "string"], [s, _, a]);
+          },
+          optimize_get_help: function (s, _) {
+            return t.ccall("Z3_optimize_get_help", "string", ["number", "number"], [s, _]);
+          },
+          optimize_get_statistics: t._Z3_optimize_get_statistics,
+          optimize_get_assertions: t._Z3_optimize_get_assertions,
+          optimize_get_objectives: t._Z3_optimize_get_objectives,
+          polynomial_subresultants: function (s, _, a, h) {
+            return t.async_call(t._async_Z3_polynomial_subresultants, s, _, a, h);
+          },
+          rcf_del: t._Z3_rcf_del,
+          rcf_mk_rational: function (s, _) {
+            return t.ccall("Z3_rcf_mk_rational", "number", ["number", "string"], [s, _]);
+          },
+          rcf_mk_small_int: t._Z3_rcf_mk_small_int,
+          rcf_mk_pi: t._Z3_rcf_mk_pi,
+          rcf_mk_e: t._Z3_rcf_mk_e,
+          rcf_mk_infinitesimal: t._Z3_rcf_mk_infinitesimal,
+          rcf_mk_roots: function (s, _) {
+            let a = t._malloc(4 * _.length);
+            try {
+              let h = t.ccall("Z3_rcf_mk_roots", "number", ["number", "number", "array", "number"], [s, _.length, u(_), a]);
+              return ((h = new Uint32Array([h])[0]), { rv: h, roots: g(a, _.length) });
+            } finally {
+              t._free(a);
+            }
+          },
+          rcf_add: t._Z3_rcf_add,
+          rcf_sub: t._Z3_rcf_sub,
+          rcf_mul: t._Z3_rcf_mul,
+          rcf_div: t._Z3_rcf_div,
+          rcf_neg: t._Z3_rcf_neg,
+          rcf_inv: t._Z3_rcf_inv,
+          rcf_power: t._Z3_rcf_power,
+          rcf_lt: function (s, _, a) {
+            return t.ccall("Z3_rcf_lt", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          rcf_gt: function (s, _, a) {
+            return t.ccall("Z3_rcf_gt", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          rcf_le: function (s, _, a) {
+            return t.ccall("Z3_rcf_le", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          rcf_ge: function (s, _, a) {
+            return t.ccall("Z3_rcf_ge", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          rcf_eq: function (s, _, a) {
+            return t.ccall("Z3_rcf_eq", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          rcf_neq: function (s, _, a) {
+            return t.ccall("Z3_rcf_neq", "boolean", ["number", "number", "number"], [s, _, a]);
+          },
+          rcf_num_to_string: function (s, _, a, h) {
+            return t.ccall("Z3_rcf_num_to_string", "string", ["number", "number", "boolean", "boolean"], [s, _, a, h]);
+          },
+          rcf_num_to_decimal_string: function (s, _, a) {
+            return t.ccall("Z3_rcf_num_to_decimal_string", "string", ["number", "number", "number"], [s, _, a]);
+          },
+          rcf_get_numerator_denominator: function (s, _) {
+            return (
+              t.ccall("Z3_rcf_get_numerator_denominator", "void", ["number", "number", "number", "number"], [s, _, p, p + 4]),
+              { n: o(0), d: o(1) }
+            );
+          },
+          rcf_is_rational: function (s, _) {
+            return t.ccall("Z3_rcf_is_rational", "boolean", ["number", "number"], [s, _]);
+          },
+          rcf_is_algebraic: function (s, _) {
+            return t.ccall("Z3_rcf_is_algebraic", "boolean", ["number", "number"], [s, _]);
+          },
+          rcf_is_infinitesimal: function (s, _) {
+            return t.ccall("Z3_rcf_is_infinitesimal", "boolean", ["number", "number"], [s, _]);
+          },
+          rcf_is_transcendental: function (s, _) {
+            return t.ccall("Z3_rcf_is_transcendental", "boolean", ["number", "number"], [s, _]);
+          },
+          rcf_extension_index: function (s, _) {
+            let a = t.ccall("Z3_rcf_extension_index", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          rcf_transcendental_name: t._Z3_rcf_transcendental_name,
+          rcf_infinitesimal_name: t._Z3_rcf_infinitesimal_name,
+          rcf_num_coefficients: function (s, _) {
+            let a = t.ccall("Z3_rcf_num_coefficients", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          rcf_coefficient: t._Z3_rcf_coefficient,
+          rcf_num_sign_conditions: function (s, _) {
+            let a = t.ccall("Z3_rcf_num_sign_conditions", "number", ["number", "number"], [s, _]);
+            return ((a = new Uint32Array([a])[0]), a);
+          },
+          rcf_sign_condition_sign: t._Z3_rcf_sign_condition_sign,
+          rcf_num_sign_condition_coefficients: function (s, _, a) {
+            let h = t.ccall("Z3_rcf_num_sign_condition_coefficients", "number", ["number", "number", "number"], [s, _, a]);
+            return ((h = new Uint32Array([h])[0]), h);
+          },
+          rcf_sign_condition_coefficient: t._Z3_rcf_sign_condition_coefficient,
+          fixedpoint_query_from_lvl: function (s, _, a, h) {
+            return t.async_call(t._async_Z3_fixedpoint_query_from_lvl, s, _, a, h);
+          },
+          fixedpoint_get_ground_sat_answer: t._Z3_fixedpoint_get_ground_sat_answer,
+          fixedpoint_get_rules_along_trace: t._Z3_fixedpoint_get_rules_along_trace,
+          fixedpoint_get_rule_names_along_trace: t._Z3_fixedpoint_get_rule_names_along_trace,
+          fixedpoint_add_invariant: t._Z3_fixedpoint_add_invariant,
+          fixedpoint_get_reachable: t._Z3_fixedpoint_get_reachable,
+          qe_model_project: function (s, _, a, h) {
+            return t.ccall("Z3_qe_model_project", "number", ["number", "number", "number", "array", "number"], [s, _, a.length, u(a), h]);
+          },
+          qe_model_project_skolem: function (s, _, a, h, v) {
+            return t.ccall(
+              "Z3_qe_model_project_skolem",
+              "number",
+              ["number", "number", "number", "array", "number", "number"],
+              [s, _, a.length, u(a), h, v],
+            );
+          },
+          qe_model_project_with_witness: function (s, _, a, h, v) {
+            return t.ccall(
+              "Z3_qe_model_project_with_witness",
+              "number",
+              ["number", "number", "number", "array", "number", "number"],
+              [s, _, a.length, u(a), h, v],
+            );
+          },
+          model_extrapolate: t._Z3_model_extrapolate,
+          qe_lite: t._Z3_qe_lite,
+        },
+      };
+    }
+    return It;
+  }
+  var Be;
+  function Ce() {
+    return (
+      Be ||
+        ((Be = 1),
+        (function (l) {
+          var i =
+              (at && at.__createBinding) ||
+              (Object.create
+                ? function (u, b, g, p) {
+                    p === void 0 && (p = g);
+                    var P = Object.getOwnPropertyDescriptor(b, g);
+                    ((!P || ("get" in P ? !b.__esModule : P.writable || P.configurable)) &&
+                      (P = {
+                        enumerable: !0,
+                        get: function () {
+                          return b[g];
+                        },
+                      }),
+                      Object.defineProperty(u, p, P));
+                  }
+                : function (u, b, g, p) {
+                    (p === void 0 && (p = g), (u[p] = b[g]));
+                  }),
+            t =
+              (at && at.__exportStar) ||
+              function (u, b) {
+                for (var g in u) g !== "default" && !Object.prototype.hasOwnProperty.call(b, g) && i(b, u, g);
+              };
+          (Object.defineProperty(l, "__esModule", { value: !0 }), t(E_(), l), t(y_(), l));
+        })(at)),
+      at
+    );
+  }
+  var v_ = Ce();
+  const R_ = bt({ __proto__: null }, [v_]);
+  var ot = {},
+    Nt = {},
+    ee = {},
+    re = function (l, i) {
+      return (
+        (re =
+          Object.setPrototypeOf ||
+          ({ __proto__: [] } instanceof Array &&
+            function (t, u) {
+              t.__proto__ = u;
+            }) ||
+          function (t, u) {
+            for (var b in u) Object.prototype.hasOwnProperty.call(u, b) && (t[b] = u[b]);
+          }),
+        re(l, i)
+      );
+    };
+  function ze(l, i) {
+    if (typeof i != "function" && i !== null) throw new TypeError("Class extends value " + String(i) + " is not a constructor or null");
+    re(l, i);
+    function t() {
+      this.constructor = l;
+    }
+    l.prototype = i === null ? Object.create(i) : ((t.prototype = i.prototype), new t());
+  }
+  var Lt = function () {
+    return (
+      (Lt =
+        Object.assign ||
+        function (i) {
+          for (var t, u = 1, b = arguments.length; u < b; u++) {
+            t = arguments[u];
+            for (var g in t) Object.prototype.hasOwnProperty.call(t, g) && (i[g] = t[g]);
+          }
+          return i;
+        }),
+      Lt.apply(this, arguments)
+    );
+  };
+  function Ve(l, i) {
+    var t = {};
+    for (var u in l) Object.prototype.hasOwnProperty.call(l, u) && i.indexOf(u) < 0 && (t[u] = l[u]);
+    if (l != null && typeof Object.getOwnPropertySymbols == "function")
+      for (var b = 0, u = Object.getOwnPropertySymbols(l); b < u.length; b++)
+        i.indexOf(u[b]) < 0 && Object.prototype.propertyIsEnumerable.call(l, u[b]) && (t[u[b]] = l[u[b]]);
+    return t;
+  }
+  function Ge(l, i, t, u) {
+    var b = arguments.length,
+      g = b < 3 ? i : u === null ? (u = Object.getOwnPropertyDescriptor(i, t)) : u,
+      p;
+    if (typeof Reflect == "object" && typeof Reflect.decorate == "function") g = Reflect.decorate(l, i, t, u);
+    else for (var P = l.length - 1; P >= 0; P--) (p = l[P]) && (g = (b < 3 ? p(g) : b > 3 ? p(i, t, g) : p(i, t)) || g);
+    return (b > 3 && g && Object.defineProperty(i, t, g), g);
+  }
+  function Qe(l, i) {
+    return function (t, u) {
+      i(t, u, l);
+    };
+  }
+  function je(l, i, t, u, b, g) {
+    function p(a) {
+      if (a !== void 0 && typeof a != "function") throw new TypeError("Function expected");
+      return a;
+    }
+    for (
+      var P = u.kind,
+        o = P === "getter" ? "get" : P === "setter" ? "set" : "value",
+        E = !i && l ? (u.static ? l : l.prototype) : null,
+        e = i || (E ? Object.getOwnPropertyDescriptor(E, u.name) : {}),
+        Z,
+        N = !1,
+        R = t.length - 1;
+      R >= 0;
+      R--
+    ) {
+      var x = {};
+      for (var s in u) x[s] = s === "access" ? {} : u[s];
+      for (var s in u.access) x.access[s] = u.access[s];
+      x.addInitializer = function (a) {
+        if (N) throw new TypeError("Cannot add initializers after decoration has completed");
+        g.push(p(a || null));
+      };
+      var _ = (0, t[R])(P === "accessor" ? { get: e.get, set: e.set } : e[o], x);
+      if (P === "accessor") {
+        if (_ === void 0) continue;
+        if (_ === null || typeof _ != "object") throw new TypeError("Object expected");
+        ((Z = p(_.get)) && (e.get = Z), (Z = p(_.set)) && (e.set = Z), (Z = p(_.init)) && b.unshift(Z));
+      } else (Z = p(_)) && (P === "field" ? b.unshift(Z) : (e[o] = Z));
+    }
+    (E && Object.defineProperty(E, u.name, e), (N = !0));
+  }
+  function Ye(l, i, t) {
+    for (var u = arguments.length > 2, b = 0; b < i.length; b++) t = u ? i[b].call(l, t) : i[b].call(l);
+    return u ? t : void 0;
+  }
+  function $e(l) {
+    return typeof l == "symbol" ? l : "".concat(l);
+  }
+  function He(l, i, t) {
+    return (
+      typeof i == "symbol" && (i = i.description ? "[".concat(i.description, "]") : ""),
+      Object.defineProperty(l, "name", { configurable: !0, value: t ? "".concat(t, " ", i) : i })
+    );
+  }
+  function We(l, i) {
+    if (typeof Reflect == "object" && typeof Reflect.metadata == "function") return Reflect.metadata(l, i);
+  }
+  function Xe(l, i, t, u) {
+    function b(g) {
+      return g instanceof t
+        ? g
+        : new t(function (p) {
+            p(g);
+          });
+    }
+    return new (t || (t = Promise))(function (g, p) {
+      function P(e) {
+        try {
+          E(u.next(e));
+        } catch (Z) {
+          p(Z);
+        }
+      }
+      function o(e) {
+        try {
+          E(u.throw(e));
+        } catch (Z) {
+          p(Z);
+        }
+      }
+      function E(e) {
+        e.done ? g(e.value) : b(e.value).then(P, o);
+      }
+      E((u = u.apply(l, i || [])).next());
+    });
+  }
+  function Ke(l, i) {
+    var t = {
+        label: 0,
+        sent: function () {
+          if (g[0] & 1) throw g[1];
+          return g[1];
+        },
+        trys: [],
+        ops: [],
+      },
+      u,
+      b,
+      g,
+      p = Object.create((typeof Iterator == "function" ? Iterator : Object).prototype);
+    return (
+      (p.next = P(0)),
+      (p.throw = P(1)),
+      (p.return = P(2)),
+      typeof Symbol == "function" &&
+        (p[Symbol.iterator] = function () {
+          return this;
+        }),
+      p
+    );
+    function P(E) {
+      return function (e) {
+        return o([E, e]);
+      };
+    }
+    function o(E) {
+      if (u) throw new TypeError("Generator is already executing.");
+      for (; p && ((p = 0), E[0] && (t = 0)), t; )
+        try {
+          if (((u = 1), b && (g = E[0] & 2 ? b.return : E[0] ? b.throw || ((g = b.return) && g.call(b), 0) : b.next) && !(g = g.call(b, E[1])).done))
+            return g;
+          switch (((b = 0), g && (E = [E[0] & 2, g.value]), E[0])) {
+            case 0:
+            case 1:
+              g = E;
+              break;
+            case 4:
+              return (t.label++, { value: E[1], done: !1 });
+            case 5:
+              (t.label++, (b = E[1]), (E = [0]));
+              continue;
+            case 7:
+              ((E = t.ops.pop()), t.trys.pop());
+              continue;
+            default:
+              if (((g = t.trys), !(g = g.length > 0 && g[g.length - 1]) && (E[0] === 6 || E[0] === 2))) {
+                t = 0;
+                continue;
+              }
+              if (E[0] === 3 && (!g || (E[1] > g[0] && E[1] < g[3]))) {
+                t.label = E[1];
+                break;
+              }
+              if (E[0] === 6 && t.label < g[1]) {
+                ((t.label = g[1]), (g = E));
+                break;
+              }
+              if (g && t.label < g[2]) {
+                ((t.label = g[2]), t.ops.push(E));
+                break;
+              }
+              (g[2] && t.ops.pop(), t.trys.pop());
+              continue;
+          }
+          E = i.call(l, t);
+        } catch (e) {
+          ((E = [6, e]), (b = 0));
+        } finally {
+          u = g = 0;
+        }
+      if (E[0] & 5) throw E[1];
+      return { value: E[0] ? E[1] : void 0, done: !0 };
+    }
+  }
+  var xt = Object.create
+    ? function (l, i, t, u) {
+        u === void 0 && (u = t);
+        var b = Object.getOwnPropertyDescriptor(i, t);
+        ((!b || ("get" in b ? !i.__esModule : b.writable || b.configurable)) &&
+          (b = {
+            enumerable: !0,
+            get: function () {
+              return i[t];
+            },
+          }),
+          Object.defineProperty(l, u, b));
+      }
+    : function (l, i, t, u) {
+        (u === void 0 && (u = t), (l[u] = i[t]));
+      };
+  function Je(l, i) {
+    for (var t in l) t !== "default" && !Object.prototype.hasOwnProperty.call(i, t) && xt(i, l, t);
+  }
+  function dt(l) {
+    var i = typeof Symbol == "function" && Symbol.iterator,
+      t = i && l[i],
+      u = 0;
+    if (t) return t.call(l);
+    if (l && typeof l.length == "number")
+      return {
+        next: function () {
+          return (l && u >= l.length && (l = void 0), { value: l && l[u++], done: !l });
+        },
+      };
+    throw new TypeError(i ? "Object is not iterable." : "Symbol.iterator is not defined.");
+  }
+  function _e(l, i) {
+    var t = typeof Symbol == "function" && l[Symbol.iterator];
+    if (!t) return l;
+    var u = t.call(l),
+      b,
+      g = [],
+      p;
+    try {
+      for (; (i === void 0 || i-- > 0) && !(b = u.next()).done; ) g.push(b.value);
+    } catch (P) {
+      p = { error: P };
+    } finally {
+      try {
+        b && !b.done && (t = u.return) && t.call(u);
+      } finally {
+        if (p) throw p.error;
+      }
+    }
+    return g;
+  }
+  function tr() {
+    for (var l = [], i = 0; i < arguments.length; i++) l = l.concat(_e(arguments[i]));
+    return l;
+  }
+  function er() {
+    for (var l = 0, i = 0, t = arguments.length; i < t; i++) l += arguments[i].length;
+    for (var u = Array(l), b = 0, i = 0; i < t; i++) for (var g = arguments[i], p = 0, P = g.length; p < P; p++, b++) u[b] = g[p];
+    return u;
+  }
+  function rr(l, i, t) {
+    if (t || arguments.length === 2)
+      for (var u = 0, b = i.length, g; u < b; u++) (g || !(u in i)) && (g || (g = Array.prototype.slice.call(i, 0, u)), (g[u] = i[u]));
+    return l.concat(g || Array.prototype.slice.call(i));
+  }
+  function gt(l) {
+    return this instanceof gt ? ((this.v = l), this) : new gt(l);
+  }
+  function _r(l, i, t) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var u = t.apply(l, i || []),
+      b,
+      g = [];
+    return (
+      (b = Object.create((typeof AsyncIterator == "function" ? AsyncIterator : Object).prototype)),
+      P("next"),
+      P("throw"),
+      P("return", p),
+      (b[Symbol.asyncIterator] = function () {
+        return this;
+      }),
+      b
+    );
+    function p(R) {
+      return function (x) {
+        return Promise.resolve(x).then(R, Z);
+      };
+    }
+    function P(R, x) {
+      u[R] &&
+        ((b[R] = function (s) {
+          return new Promise(function (_, a) {
+            g.push([R, s, _, a]) > 1 || o(R, s);
+          });
+        }),
+        x && (b[R] = x(b[R])));
+    }
+    function o(R, x) {
+      try {
+        E(u[R](x));
+      } catch (s) {
+        N(g[0][3], s);
+      }
+    }
+    function E(R) {
+      R.value instanceof gt ? Promise.resolve(R.value.v).then(e, Z) : N(g[0][2], R);
+    }
+    function e(R) {
+      o("next", R);
+    }
+    function Z(R) {
+      o("throw", R);
+    }
+    function N(R, x) {
+      (R(x), g.shift(), g.length && o(g[0][0], g[0][1]));
+    }
+  }
+  function nr(l) {
+    var i, t;
+    return (
+      (i = {}),
+      u("next"),
+      u("throw", function (b) {
+        throw b;
+      }),
+      u("return"),
+      (i[Symbol.iterator] = function () {
+        return this;
+      }),
+      i
+    );
+    function u(b, g) {
+      i[b] = l[b]
+        ? function (p) {
+            return (t = !t) ? { value: gt(l[b](p)), done: !1 } : g ? g(p) : p;
+          }
+        : g;
+    }
+  }
+  function sr(l) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var i = l[Symbol.asyncIterator],
+      t;
+    return i
+      ? i.call(l)
+      : ((l = typeof dt == "function" ? dt(l) : l[Symbol.iterator]()),
+        (t = {}),
+        u("next"),
+        u("throw"),
+        u("return"),
+        (t[Symbol.asyncIterator] = function () {
+          return this;
+        }),
+        t);
+    function u(g) {
+      t[g] =
+        l[g] &&
+        function (p) {
+          return new Promise(function (P, o) {
+            ((p = l[g](p)), b(P, o, p.done, p.value));
+          });
+        };
+    }
+    function b(g, p, P, o) {
+      Promise.resolve(o).then(function (E) {
+        g({ value: E, done: P });
+      }, p);
+    }
+  }
+  function ar(l, i) {
+    return (Object.defineProperty ? Object.defineProperty(l, "raw", { value: i }) : (l.raw = i), l);
+  }
+  var A_ = Object.create
+      ? function (l, i) {
+          Object.defineProperty(l, "default", { enumerable: !0, value: i });
+        }
+      : function (l, i) {
+          l.default = i;
+        },
+    ne = function (l) {
+      return (
+        (ne =
+          Object.getOwnPropertyNames ||
+          function (i) {
+            var t = [];
+            for (var u in i) Object.prototype.hasOwnProperty.call(i, u) && (t[t.length] = u);
+            return t;
+          }),
+        ne(l)
+      );
+    };
+  function or(l) {
+    if (l && l.__esModule) return l;
+    var i = {};
+    if (l != null) for (var t = ne(l), u = 0; u < t.length; u++) t[u] !== "default" && xt(i, l, t[u]);
+    return (A_(i, l), i);
+  }
+  function ur(l) {
+    return l && l.__esModule ? l : { default: l };
+  }
+  function ir(l, i, t, u) {
+    if (t === "a" && !u) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof i == "function" ? l !== i || !u : !i.has(l))
+      throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return t === "m" ? u : t === "a" ? u.call(l) : u ? u.value : i.get(l);
+  }
+  function cr(l, i, t, u, b) {
+    if (u === "m") throw new TypeError("Private method is not writable");
+    if (u === "a" && !b) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof i == "function" ? l !== i || !b : !i.has(l))
+      throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (u === "a" ? b.call(l, t) : b ? (b.value = t) : i.set(l, t), t);
+  }
+  function mr(l, i) {
+    if (i === null || (typeof i != "object" && typeof i != "function")) throw new TypeError("Cannot use 'in' operator on non-object");
+    return typeof l == "function" ? i === l : l.has(i);
+  }
+  function lr(l, i, t) {
+    if (i != null) {
+      if (typeof i != "object" && typeof i != "function") throw new TypeError("Object expected.");
+      var u, b;
+      if (t) {
+        if (!Symbol.asyncDispose) throw new TypeError("Symbol.asyncDispose is not defined.");
+        u = i[Symbol.asyncDispose];
+      }
+      if (u === void 0) {
+        if (!Symbol.dispose) throw new TypeError("Symbol.dispose is not defined.");
+        ((u = i[Symbol.dispose]), t && (b = u));
+      }
+      if (typeof u != "function") throw new TypeError("Object not disposable.");
+      (b &&
+        (u = function () {
+          try {
+            b.call(this);
+          } catch (g) {
+            return Promise.reject(g);
+          }
+        }),
+        l.stack.push({ value: i, dispose: u, async: t }));
+    } else t && l.stack.push({ async: !0 });
+    return i;
+  }
+  var T_ =
+    typeof SuppressedError == "function"
+      ? SuppressedError
+      : function (l, i, t) {
+          var u = new Error(t);
+          return ((u.name = "SuppressedError"), (u.error = l), (u.suppressed = i), u);
+        };
+  function fr(l) {
+    function i(g) {
+      ((l.error = l.hasError ? new T_(g, l.error, "An error was suppressed during disposal.") : g), (l.hasError = !0));
+    }
+    var t,
+      u = 0;
+    function b() {
+      for (; (t = l.stack.pop()); )
+        try {
+          if (!t.async && u === 1) return ((u = 0), l.stack.push(t), Promise.resolve().then(b));
+          if (t.dispose) {
+            var g = t.dispose.call(t.value);
+            if (t.async)
+              return (
+                (u |= 2),
+                Promise.resolve(g).then(b, function (p) {
+                  return (i(p), b());
+                })
+              );
+          } else u |= 1;
+        } catch (p) {
+          i(p);
+        }
+      if (u === 1) return l.hasError ? Promise.reject(l.error) : Promise.resolve();
+      if (l.hasError) throw l.error;
+    }
+    return b();
+  }
+  function pr(l, i) {
+    return typeof l == "string" && /^\.\.?\//.test(l)
+      ? l.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function (t, u, b, g, p) {
+          return u ? (i ? ".jsx" : ".js") : b && (!g || !p) ? t : b + g + "." + p.toLowerCase() + "js";
+        })
+      : l;
+  }
+  const Ut = P_(
+    Object.freeze(
+      Object.defineProperty(
+        {
+          __proto__: null,
+          __addDisposableResource: lr,
+          get __assign() {
+            return Lt;
+          },
+          __asyncDelegator: nr,
+          __asyncGenerator: _r,
+          __asyncValues: sr,
+          __await: gt,
+          __awaiter: Xe,
+          __classPrivateFieldGet: ir,
+          __classPrivateFieldIn: mr,
+          __classPrivateFieldSet: cr,
+          __createBinding: xt,
+          __decorate: Ge,
+          __disposeResources: fr,
+          __esDecorate: je,
+          __exportStar: Je,
+          __extends: ze,
+          __generator: Ke,
+          __importDefault: ur,
+          __importStar: or,
+          __makeTemplateObject: ar,
+          __metadata: We,
+          __param: Qe,
+          __propKey: $e,
+          __read: _e,
+          __rest: Ve,
+          __rewriteRelativeImportExtension: pr,
+          __runInitializers: Ye,
+          __setFunctionName: He,
+          __spread: tr,
+          __spreadArray: rr,
+          __spreadArrays: er,
+          __values: dt,
+          default: {
+            __extends: ze,
+            __assign: Lt,
+            __rest: Ve,
+            __decorate: Ge,
+            __param: Qe,
+            __esDecorate: je,
+            __runInitializers: Ye,
+            __propKey: $e,
+            __setFunctionName: He,
+            __metadata: We,
+            __awaiter: Xe,
+            __generator: Ke,
+            __createBinding: xt,
+            __exportStar: Je,
+            __values: dt,
+            __read: _e,
+            __spread: tr,
+            __spreadArrays: er,
+            __spreadArray: rr,
+            __await: gt,
+            __asyncGenerator: _r,
+            __asyncDelegator: nr,
+            __asyncValues: sr,
+            __makeTemplateObject: ar,
+            __importStar: or,
+            __importDefault: ur,
+            __classPrivateFieldGet: ir,
+            __classPrivateFieldSet: cr,
+            __classPrivateFieldIn: mr,
+            __addDisposableResource: lr,
+            __disposeResources: fr,
+            __rewriteRelativeImportExtension: pr,
+          },
+        },
+        Symbol.toStringTag,
+        { value: "Module" },
+      ),
+    ),
+  );
+  var Mt = {},
+    Ft = {},
+    X = {},
+    br;
+  function kt() {
+    return (
+      br ||
+        ((br = 1),
+        Object.defineProperty(X, "__esModule", { value: !0 }),
+        (X.E_CANCELED = X.E_ALREADY_LOCKED = X.E_TIMEOUT = void 0),
+        (X.E_TIMEOUT = new Error("timeout while waiting for mutex to become available")),
+        (X.E_ALREADY_LOCKED = new Error("mutex already locked")),
+        (X.E_CANCELED = new Error("request for lock canceled"))),
+      X
+    );
+  }
+  var gr;
+  function hr() {
+    if (gr) return Ft;
+    ((gr = 1), Object.defineProperty(Ft, "__esModule", { value: !0 }));
+    var l = Ut,
+      i = kt(),
+      t = (function () {
+        function g(p, P) {
+          (P === void 0 && (P = i.E_CANCELED), (this._value = p), (this._cancelError = P), (this._queue = []), (this._weightedWaiters = []));
+        }
+        return (
+          (g.prototype.acquire = function (p, P) {
+            var o = this;
+            if ((p === void 0 && (p = 1), P === void 0 && (P = 0), p <= 0)) throw new Error("invalid weight ".concat(p, ": must be positive"));
+            return new Promise(function (E, e) {
+              var Z = { resolve: E, reject: e, weight: p, priority: P },
+                N = b(o._queue, function (R) {
+                  return P <= R.priority;
+                });
+              N === -1 && p <= o._value ? o._dispatchItem(Z) : o._queue.splice(N + 1, 0, Z);
+            });
+          }),
+          (g.prototype.runExclusive = function (p) {
+            return l.__awaiter(this, arguments, void 0, function (P, o, E) {
+              var e, Z, N;
+              return (
+                o === void 0 && (o = 1),
+                E === void 0 && (E = 0),
+                l.__generator(this, function (R) {
+                  switch (R.label) {
+                    case 0:
+                      return [4, this.acquire(o, E)];
+                    case 1:
+                      ((e = R.sent()), (Z = e[0]), (N = e[1]), (R.label = 2));
+                    case 2:
+                      return (R.trys.push([2, , 4, 5]), [4, P(Z)]);
+                    case 3:
+                      return [2, R.sent()];
+                    case 4:
+                      return (N(), [7]);
+                    case 5:
+                      return [2];
+                  }
+                })
+              );
+            });
+          }),
+          (g.prototype.waitForUnlock = function (p, P) {
+            var o = this;
+            if ((p === void 0 && (p = 1), P === void 0 && (P = 0), p <= 0)) throw new Error("invalid weight ".concat(p, ": must be positive"));
+            return this._couldLockImmediately(p, P)
+              ? Promise.resolve()
+              : new Promise(function (E) {
+                  (o._weightedWaiters[p - 1] || (o._weightedWaiters[p - 1] = []), u(o._weightedWaiters[p - 1], { resolve: E, priority: P }));
+                });
+          }),
+          (g.prototype.isLocked = function () {
+            return this._value <= 0;
+          }),
+          (g.prototype.getValue = function () {
+            return this._value;
+          }),
+          (g.prototype.setValue = function (p) {
+            ((this._value = p), this._dispatchQueue());
+          }),
+          (g.prototype.release = function (p) {
+            if ((p === void 0 && (p = 1), p <= 0)) throw new Error("invalid weight ".concat(p, ": must be positive"));
+            ((this._value += p), this._dispatchQueue());
+          }),
+          (g.prototype.cancel = function () {
+            var p = this;
+            (this._queue.forEach(function (P) {
+              return P.reject(p._cancelError);
+            }),
+              (this._queue = []));
+          }),
+          (g.prototype._dispatchQueue = function () {
+            for (this._drainUnlockWaiters(); this._queue.length > 0 && this._queue[0].weight <= this._value; )
+              (this._dispatchItem(this._queue.shift()), this._drainUnlockWaiters());
+          }),
+          (g.prototype._dispatchItem = function (p) {
+            var P = this._value;
+            ((this._value -= p.weight), p.resolve([P, this._newReleaser(p.weight)]));
+          }),
+          (g.prototype._newReleaser = function (p) {
+            var P = this,
+              o = !1;
+            return function () {
+              o || ((o = !0), P.release(p));
+            };
+          }),
+          (g.prototype._drainUnlockWaiters = function () {
+            if (this._queue.length === 0)
+              for (var p = this._value; p > 0; p--) {
+                var P = this._weightedWaiters[p - 1];
+                P &&
+                  (P.forEach(function (e) {
+                    return e.resolve();
+                  }),
+                  (this._weightedWaiters[p - 1] = []));
+              }
+            else
+              for (var o = this._queue[0].priority, p = this._value; p > 0; p--) {
+                var P = this._weightedWaiters[p - 1];
+                if (P) {
+                  var E = P.findIndex(function (N) {
+                    return N.priority <= o;
+                  });
+                  (E === -1 ? P : P.splice(0, E)).forEach(function (N) {
+                    return N.resolve();
+                  });
+                }
+              }
+          }),
+          (g.prototype._couldLockImmediately = function (p, P) {
+            return (this._queue.length === 0 || this._queue[0].priority < P) && p <= this._value;
+          }),
+          g
+        );
+      })();
+    function u(g, p) {
+      var P = b(g, function (o) {
+        return p.priority <= o.priority;
+      });
+      g.splice(P + 1, 0, p);
+    }
+    function b(g, p) {
+      for (var P = g.length - 1; P >= 0; P--) if (p(g[P])) return P;
+      return -1;
+    }
+    return ((Ft.default = t), Ft);
+  }
+  var Or;
+  function w_() {
+    if (Or) return Mt;
+    ((Or = 1), Object.defineProperty(Mt, "__esModule", { value: !0 }));
+    var l = Ut,
+      i = hr(),
+      t = (function () {
+        function u(b) {
+          this._semaphore = new i.default(1, b);
+        }
+        return (
+          (u.prototype.acquire = function () {
+            return l.__awaiter(this, arguments, void 0, function (b) {
+              var g, p;
+              return (
+                b === void 0 && (b = 0),
+                l.__generator(this, function (P) {
+                  switch (P.label) {
+                    case 0:
+                      return [4, this._semaphore.acquire(1, b)];
+                    case 1:
+                      return ((g = P.sent()), (p = g[1]), [2, p]);
+                  }
+                })
+              );
+            });
+          }),
+          (u.prototype.runExclusive = function (b, g) {
+            return (
+              g === void 0 && (g = 0),
+              this._semaphore.runExclusive(
+                function () {
+                  return b();
+                },
+                1,
+                g,
+              )
+            );
+          }),
+          (u.prototype.isLocked = function () {
+            return this._semaphore.isLocked();
+          }),
+          (u.prototype.waitForUnlock = function (b) {
+            return (b === void 0 && (b = 0), this._semaphore.waitForUnlock(1, b));
+          }),
+          (u.prototype.release = function () {
+            this._semaphore.isLocked() && this._semaphore.release();
+          }),
+          (u.prototype.cancel = function () {
+            return this._semaphore.cancel();
+          }),
+          u
+        );
+      })();
+    return ((Mt.default = t), Mt);
+  }
+  var Et = {},
+    Pr;
+  function Er() {
+    if (Pr) return Et;
+    ((Pr = 1), Object.defineProperty(Et, "__esModule", { value: !0 }), (Et.withTimeout = void 0));
+    var l = Ut,
+      i = kt();
+    function t(b, g, p) {
+      var P = this;
+      return (
+        p === void 0 && (p = i.E_TIMEOUT),
+        {
+          acquire: function (o, E) {
+            var e;
+            if ((u(b) ? (e = o) : ((e = void 0), (E = o)), e !== void 0 && e <= 0))
+              throw new Error("invalid weight ".concat(e, ": must be positive"));
+            return new Promise(function (Z, N) {
+              return l.__awaiter(P, void 0, void 0, function () {
+                var R, x, s, _, a;
+                return l.__generator(this, function (h) {
+                  switch (h.label) {
+                    case 0:
+                      ((R = !1),
+                        (x = setTimeout(function () {
+                          ((R = !0), N(p));
+                        }, g)),
+                        (h.label = 1));
+                    case 1:
+                      return (h.trys.push([1, 3, , 4]), [4, u(b) ? b.acquire(e, E) : b.acquire(E)]);
+                    case 2:
+                      return ((s = h.sent()), R ? ((_ = Array.isArray(s) ? s[1] : s), _()) : (clearTimeout(x), Z(s)), [3, 4]);
+                    case 3:
+                      return ((a = h.sent()), R || (clearTimeout(x), N(a)), [3, 4]);
+                    case 4:
+                      return [2];
+                  }
+                });
+              });
+            });
+          },
+          runExclusive: function (o, E, e) {
+            return l.__awaiter(this, void 0, void 0, function () {
+              var Z, N;
+              return l.__generator(this, function (R) {
+                switch (R.label) {
+                  case 0:
+                    ((Z = function () {}), (R.label = 1));
+                  case 1:
+                    return (R.trys.push([1, , 7, 8]), [4, this.acquire(E, e)]);
+                  case 2:
+                    return ((N = R.sent()), Array.isArray(N) ? ((Z = N[1]), [4, o(N[0])]) : [3, 4]);
+                  case 3:
+                    return [2, R.sent()];
+                  case 4:
+                    return ((Z = N), [4, o()]);
+                  case 5:
+                    return [2, R.sent()];
+                  case 6:
+                    return [3, 8];
+                  case 7:
+                    return (Z(), [7]);
+                  case 8:
+                    return [2];
+                }
+              });
+            });
+          },
+          release: function (o) {
+            b.release(o);
+          },
+          cancel: function () {
+            return b.cancel();
+          },
+          waitForUnlock: function (o, E) {
+            var e;
+            if ((u(b) ? (e = o) : ((e = void 0), (E = o)), e !== void 0 && e <= 0))
+              throw new Error("invalid weight ".concat(e, ": must be positive"));
+            return new Promise(function (Z, N) {
+              var R = setTimeout(function () {
+                return N(p);
+              }, g);
+              (u(b) ? b.waitForUnlock(e, E) : b.waitForUnlock(E)).then(function () {
+                (clearTimeout(R), Z());
+              });
+            });
+          },
+          isLocked: function () {
+            return b.isLocked();
+          },
+          getValue: function () {
+            return b.getValue();
+          },
+          setValue: function (o) {
+            return b.setValue(o);
+          },
+        }
+      );
+    }
+    Et.withTimeout = t;
+    function u(b) {
+      return b.getValue !== void 0;
+    }
+    return Et;
+  }
+  var yt = {},
+    yr;
+  function Z_() {
+    if (yr) return yt;
+    ((yr = 1), Object.defineProperty(yt, "__esModule", { value: !0 }), (yt.tryAcquire = void 0));
+    var l = kt(),
+      i = Er();
+    function t(u, b) {
+      return (b === void 0 && (b = l.E_ALREADY_LOCKED), (0, i.withTimeout)(u, 0, b));
+    }
+    return ((yt.tryAcquire = t), yt);
+  }
+  var vr;
+  function S_() {
+    return (
+      vr ||
+        ((vr = 1),
+        (function (l) {
+          (Object.defineProperty(l, "__esModule", { value: !0 }), (l.tryAcquire = l.withTimeout = l.Semaphore = l.Mutex = void 0));
+          var i = Ut,
+            t = w_();
+          Object.defineProperty(l, "Mutex", {
+            enumerable: !0,
+            get: function () {
+              return t.default;
+            },
+          });
+          var u = hr();
+          Object.defineProperty(l, "Semaphore", {
+            enumerable: !0,
+            get: function () {
+              return u.default;
+            },
+          });
+          var b = Er();
+          Object.defineProperty(l, "withTimeout", {
+            enumerable: !0,
+            get: function () {
+              return b.withTimeout;
+            },
+          });
+          var g = Z_();
+          (Object.defineProperty(l, "tryAcquire", {
+            enumerable: !0,
+            get: function () {
+              return g.tryAcquire;
+            },
+          }),
+            i.__exportStar(kt(), l));
+        })(ee)),
+      ee
+    );
+  }
+  var ut = {},
+    Rr;
+  function se() {
+    if (Rr) return ut;
+    ((Rr = 1), Object.defineProperty(ut, "__esModule", { value: !0 }), (ut.Z3AssertionError = ut.Z3Error = void 0));
+    class l extends Error {}
+    ut.Z3Error = l;
+    class i extends l {}
+    return ((ut.Z3AssertionError = i), ut);
+  }
+  var ht = {},
+    Ar;
+  function I_() {
+    if (Ar) return ht;
+    ((Ar = 1), Object.defineProperty(ht, "__esModule", { value: !0 }), (ht.assertExhaustive = i), (ht.assert = t), (ht.allSatisfy = u));
+    const l = se();
+    function i(b) {
+      throw new Error("Unexpected code execution detected, should be caught at compile time");
+    }
+    function t(b, g) {
+      if (!b) throw new l.Z3AssertionError(g ?? "Assertion failed");
+    }
+    function u(b, g) {
+      let p = !1;
+      for (const P of b) if (((p = !0), !g(P))) return !1;
+      return p === !0 ? !0 : null;
+    }
+    return ht;
+  }
+  var Tr;
+  function N_() {
+    if (Tr) return Nt;
+    ((Tr = 1), Object.defineProperty(Nt, "__esModule", { value: !0 }), (Nt.createApi = P));
+    const l = S_(),
+      i = Ce(),
+      t = se(),
+      u = I_(),
+      b = 17,
+      g = new l.Mutex();
+    function p(o) {
+      const E =
+        o !== null &&
+        (typeof o == "object" || typeof o == "function") &&
+        o.numerator !== null &&
+        (typeof o.numerator == "number" || typeof o.numerator == "bigint") &&
+        o.denominator !== null &&
+        (typeof o.denominator == "number" || typeof o.denominator == "bigint");
+      return (
+        E &&
+          (0, u.assert)(
+            (typeof o.numerator != "number" || Number.isSafeInteger(o.numerator)) &&
+              (typeof o.denominator != "number" || Number.isSafeInteger(o.denominator)),
+            "Fraction numerator and denominator must be integers",
+          ),
+        E
+      );
+    }
+    function P(o) {
+      const E = new FinalizationRegistry((L) => L());
+      function e(L) {
+        o.enable_trace(L);
+      }
+      function Z(L) {
+        o.disable_trace(L);
+      }
+      function N() {
+        return o.get_version();
+      }
+      function R() {
+        const { major: L, minor: B, build_number: G } = o.get_version();
+        return `${L}.${B}.${G}`;
+      }
+      function x() {
+        return o.get_full_version();
+      }
+      function s(L) {
+        return o.open_log(L);
+      }
+      function _(L) {
+        o.append_log(L);
+      }
+      function a(L, B) {
+        typeof L == "string"
+          ? o.global_param_set(L, B.toString())
+          : ((0, u.assert)(B === void 0, "Can't provide a Record and second parameter to set_param at the same time"),
+            Object.entries(L).forEach(([G, c]) => a(G, c)));
+      }
+      function h() {
+        o.global_param_reset_all();
+      }
+      function v(L) {
+        return o.global_param_get(L);
+      }
+      function I(L, B) {
+        const G = o.mk_config();
+        B != null && Object.entries(B).forEach(([n, r]) => f(o.set_param_value(G, n, r.toString())));
+        const c = o.mk_context_rc(G);
+        (o.set_ast_print_mode(c, i.Z3_ast_print_mode.Z3_PRINT_SMTLIB2_COMPLIANT), o.del_config(G));
+        function y(...n) {
+          n.forEach((r) => (0, u.assert)("ctx" in r ? F === r.ctx : F === r, "Context mismatch"));
+        }
+        function ae(n) {
+          if (n == null) throw new TypeError("Expected non-null pointer");
+        }
+        function oe() {
+          if (o.get_error_code(c) !== i.Z3_error_code.Z3_OK) throw new Error(o.get_error_msg(F.ptr, o.get_error_code(F.ptr)));
+        }
+        function f(n) {
+          return (oe(), n);
+        }
+        function M(n) {
+          return f(typeof n == "number" ? o.mk_int_symbol(c, n) : o.mk_string_symbol(c, n));
+        }
+        function Dt(n) {
+          const r = f(o.get_symbol_kind(c, n));
+          switch (r) {
+            case i.Z3_symbol_kind.Z3_INT_SYMBOL:
+              return o.get_symbol_int(c, n);
+            case i.Z3_symbol_kind.Z3_STRING_SYMBOL:
+              return o.get_symbol_string(c, n);
+            default:
+              (0, u.assertExhaustive)(r);
+          }
+        }
+        function Zr(n, r) {
+          const m = o.mk_params(c);
+          return (
+            o.params_inc_ref(c, m),
+            typeof r == "boolean"
+              ? o.params_set_bool(c, m, M(n), r)
+              : typeof r == "number"
+                ? Number.isInteger(r)
+                  ? f(o.params_set_uint(c, m, M(n), r))
+                  : f(o.params_set_double(c, m, M(n), r))
+                : typeof r == "string" && f(o.params_set_symbol(c, m, M(n), M(r))),
+            m
+          );
+        }
+        function ue(n) {
+          switch (f(o.get_ast_kind(c, n))) {
+            case i.Z3_ast_kind.Z3_SORT_AST:
+              return et(n);
+            case i.Z3_ast_kind.Z3_FUNC_DECL_AST:
+              return new V(n);
+            default:
+              return k(n);
+          }
+        }
+        function et(n) {
+          switch (f(o.get_sort_kind(c, n))) {
+            case i.Z3_sort_kind.Z3_BOOL_SORT:
+              return new n_(n);
+            case i.Z3_sort_kind.Z3_INT_SORT:
+            case i.Z3_sort_kind.Z3_REAL_SORT:
+              return new Tt(n);
+            case i.Z3_sort_kind.Z3_BV_SORT:
+              return new de(n);
+            case i.Z3_sort_kind.Z3_ARRAY_SORT:
+              return new jt(n);
+            default:
+              return new J(n);
+          }
+        }
+        function k(n) {
+          const r = f(o.get_ast_kind(c, n));
+          if (r === i.Z3_ast_kind.Z3_QUANTIFIER_AST) return o.is_lambda(c, n) ? new u_(n) : new Fe(n);
+          switch (f(o.get_sort_kind(c, o.get_sort(c, n)))) {
+            case i.Z3_sort_kind.Z3_BOOL_SORT:
+              return new w(n);
+            case i.Z3_sort_kind.Z3_INT_SORT:
+              return r === i.Z3_ast_kind.Z3_NUMERAL_AST ? new wt(n) : new d(n);
+            case i.Z3_sort_kind.Z3_REAL_SORT:
+              return r === i.Z3_ast_kind.Z3_NUMERAL_AST ? new xe(n) : new d(n);
+            case i.Z3_sort_kind.Z3_BV_SORT:
+              return r === i.Z3_ast_kind.Z3_NUMERAL_AST ? new Ue(n) : new S(n);
+            case i.Z3_sort_kind.Z3_ARRAY_SORT:
+              return new Yt(n);
+            default:
+              return new H(n);
+          }
+        }
+        function qt(n) {
+          const r = [];
+          for (const m of n) dr(m) ? r.push(...m.values()) : r.push(m);
+          return r;
+        }
+        function Sr(n) {
+          return ct(n) ? n : new Qt(n);
+        }
+        function Ir(n, r) {
+          (0, u.assert)(r.length > 0, "At least one argument expected");
+          let m = Sr(r[0]);
+          for (let O = 1; O < r.length; O++) m = new Qt(f(n(c, m.ptr, Sr(r[O]).ptr)));
+          return m;
+        }
+        function U_() {
+          f(o.interrupt(c));
+        }
+        function M_(n) {
+          const r = n instanceof Gt;
+          return (r && y(n), r);
+        }
+        function Nr(n) {
+          const r = n instanceof Vt;
+          return (r && y(n), r);
+        }
+        function Bt(n) {
+          const r = n instanceof J;
+          return (r && y(n), r);
+        }
+        function Ot(n) {
+          const r = n instanceof V;
+          return (r && y(n), r);
+        }
+        function Lr(n) {
+          const r = n instanceof Ae;
+          return (r && y(n), r);
+        }
+        function it(n) {
+          if (!q(n)) return !1;
+          const r = f(o.get_ast_kind(c, n.ast));
+          return r === i.Z3_ast_kind.Z3_NUMERAL_AST || r === i.Z3_ast_kind.Z3_APP_AST;
+        }
+        function K(n) {
+          return q(n) && it(n) && n.numArgs() === 0;
+        }
+        function q(n) {
+          const r = n instanceof H;
+          return (r && y(n), r);
+        }
+        function xr(n) {
+          return q(n) && f(o.get_ast_kind(c, n.ast)) === i.Z3_ast_kind.Z3_VAR_AST;
+        }
+        function $(n, r) {
+          return q(n) && it(n) && n.decl().kind() === r;
+        }
+        function Ct(n) {
+          const r = n instanceof H && n.sort.kind() === i.Z3_sort_kind.Z3_BOOL_SORT;
+          return (r && y(n), r);
+        }
+        function F_(n) {
+          return $(n, i.Z3_decl_kind.Z3_OP_TRUE);
+        }
+        function k_(n) {
+          return $(n, i.Z3_decl_kind.Z3_OP_FALSE);
+        }
+        function D_(n) {
+          return $(n, i.Z3_decl_kind.Z3_OP_AND);
+        }
+        function q_(n) {
+          return $(n, i.Z3_decl_kind.Z3_OP_OR);
+        }
+        function B_(n) {
+          return $(n, i.Z3_decl_kind.Z3_OP_IMPLIES);
+        }
+        function C_(n) {
+          return $(n, i.Z3_decl_kind.Z3_OP_NOT);
+        }
+        function z_(n) {
+          return $(n, i.Z3_decl_kind.Z3_OP_EQ);
+        }
+        function V_(n) {
+          return $(n, i.Z3_decl_kind.Z3_OP_DISTINCT);
+        }
+        function G_(n) {
+          const r = n instanceof Me;
+          return (r && y(n), r);
+        }
+        function vt(n) {
+          const r = n instanceof d;
+          return (r && y(n), r);
+        }
+        function Q_(n) {
+          const r = n instanceof Tt;
+          return (r && y(n), r);
+        }
+        function ie(n) {
+          return vt(n) && Pt(n.sort);
+        }
+        function j_(n) {
+          const r = n instanceof wt;
+          return (r && y(n), r);
+        }
+        function Pt(n) {
+          return Bt(n) && n.kind() === i.Z3_sort_kind.Z3_INT_SORT;
+        }
+        function ce(n) {
+          return vt(n) && me(n.sort);
+        }
+        function Y_(n) {
+          const r = n instanceof xe;
+          return (r && y(n), r);
+        }
+        function me(n) {
+          return Bt(n) && n.kind() === i.Z3_sort_kind.Z3_REAL_SORT;
+        }
+        function zt(n) {
+          const r = n instanceof de;
+          return (r && y(n), r);
+        }
+        function $_(n) {
+          const r = n instanceof S;
+          return (r && y(n), r);
+        }
+        function H_(n) {
+          const r = n instanceof Ue;
+          return (r && y(n), r);
+        }
+        function W_(n) {
+          const r = n instanceof jt;
+          return (r && y(n), r);
+        }
+        function X_(n) {
+          const r = n instanceof Yt;
+          return (r && y(n), r);
+        }
+        function K_(n) {
+          return $(n, i.Z3_decl_kind.Z3_OP_CONST_ARRAY);
+        }
+        function ct(n) {
+          const r = n instanceof Qt;
+          return (r && y(n), r);
+        }
+        function Rt(n) {
+          const r = n instanceof Te;
+          return (r && y(n), r);
+        }
+        function dr(n) {
+          const r = n instanceof rt;
+          return (r && y(n), r);
+        }
+        function J_(n, r) {
+          return n.eqIdentity(r);
+        }
+        function tn(n) {
+          return ((0, u.assert)(xr(n), "Z3 bound variable expected"), o.get_index_value(c, n.ast));
+        }
+        function D(n) {
+          if (typeof n == "boolean") return Q.val(n);
+          if (typeof n == "number") {
+            if (!Number.isFinite(n)) throw new Error(`cannot represent infinity/NaN (got ${n})`);
+            return Math.floor(n) === n ? j.val(n) : z.val(n);
+          } else {
+            if (p(n)) return z.val(n);
+            if (typeof n == "bigint") return j.val(n);
+            if (q(n)) return n;
+          }
+          (0, u.assert)(!1);
+        }
+        async function en(...n) {
+          const r = new F.Solver();
+          r.add(...n);
+          const m = await r.check();
+          return m === "sat" ? r.model() : m;
+        }
+        async function rn(n) {
+          const r = await o.simplify(c, n.ast);
+          return k(f(r));
+        }
+        const _n = { declare: (n) => new J(o.mk_uninterpreted_sort(c, M(n))) },
+          nn = {
+            declare: (n, ...r) => {
+              const m = r.length - 1,
+                O = r[m];
+              y(O);
+              const A = [];
+              for (let T = 0; T < m; T++) (y(r[T]), A.push(r[T].ptr));
+              return new V(o.mk_func_decl(c, M(n), A, O.ptr));
+            },
+            fresh: (...n) => {
+              const r = n.length - 1,
+                m = n[r];
+              y(m);
+              const O = [];
+              for (let A = 0; A < r; A++) (y(n[A]), O.push(n[A].ptr));
+              return new V(o.mk_fresh_func_decl(c, "f", O, m.ptr));
+            },
+          },
+          sn = {
+            declare: (n, ...r) => {
+              const m = r.length - 1,
+                O = r[m];
+              y(O);
+              const A = [];
+              for (let T = 0; T < m; T++) (y(r[T]), A.push(r[T].ptr));
+              return new V(o.mk_rec_func_decl(c, M(n), A, O.ptr));
+            },
+            addDefinition: (n, r, m) => {
+              (y(n, ...r, m),
+                f(
+                  o.add_rec_def(
+                    c,
+                    n.ptr,
+                    r.map((O) => O.ast),
+                    m.ast,
+                  ),
+                ));
+            },
+          },
+          Q = {
+            sort: () => new n_(o.mk_bool_sort(c)),
+            const: (n) => new w(o.mk_const(c, M(n), Q.sort().ptr)),
+            consts: (n) => (typeof n == "string" && (n = n.split(" ")), n.map((r) => Q.const(r))),
+            vector: (n, r) => {
+              const m = [];
+              for (let O = 0; O < r; O++) m.push(Q.const(`${n}__${O}`));
+              return m;
+            },
+            fresh: (n = "b") => new w(o.mk_fresh_const(c, n, Q.sort().ptr)),
+            val: (n) => (n ? new w(o.mk_true(c)) : new w(o.mk_false(c))),
+          },
+          j = {
+            sort: () => new Tt(o.mk_int_sort(c)),
+            const: (n) => new d(o.mk_const(c, M(n), j.sort().ptr)),
+            consts: (n) => (typeof n == "string" && (n = n.split(" ")), n.map((r) => j.const(r))),
+            vector: (n, r) => {
+              const m = [];
+              for (let O = 0; O < r; O++) m.push(j.const(`${n}__${O}`));
+              return m;
+            },
+            fresh: (n = "x") => new d(o.mk_fresh_const(c, n, j.sort().ptr)),
+            val: (n) => (
+              (0, u.assert)(typeof n == "bigint" || typeof n == "string" || Number.isSafeInteger(n)),
+              new wt(f(o.mk_numeral(c, n.toString(), j.sort().ptr)))
+            ),
+          },
+          z = {
+            sort: () => new Tt(o.mk_real_sort(c)),
+            const: (n) => new d(f(o.mk_const(c, M(n), z.sort().ptr))),
+            consts: (n) => (typeof n == "string" && (n = n.split(" ")), n.map((r) => z.const(r))),
+            vector: (n, r) => {
+              const m = [];
+              for (let O = 0; O < r; O++) m.push(z.const(`${n}__${O}`));
+              return m;
+            },
+            fresh: (n = "b") => new d(o.mk_fresh_const(c, n, z.sort().ptr)),
+            val: (n) => (p(n) && (n = `${n.numerator}/${n.denominator}`), new xe(o.mk_numeral(c, n.toString(), z.sort().ptr))),
+          },
+          mt = {
+            sort(n) {
+              return ((0, u.assert)(Number.isSafeInteger(n), "number of bits must be an integer"), new de(o.mk_bv_sort(c, n)));
+            },
+            const(n, r) {
+              return new S(f(o.mk_const(c, M(n), zt(r) ? r.ptr : mt.sort(r).ptr)));
+            },
+            consts(n, r) {
+              return (typeof n == "string" && (n = n.split(" ")), n.map((m) => mt.const(m, r)));
+            },
+            val(n, r) {
+              return n === !0 ? mt.val(1, r) : n === !1 ? mt.val(0, r) : new Ue(f(o.mk_numeral(c, n.toString(), zt(r) ? r.ptr : mt.sort(r).ptr)));
+            },
+          },
+          At = {
+            sort(...n) {
+              const r = n.length - 1,
+                m = n[r],
+                O = n[0];
+              if (r === 1) return new jt(o.mk_array_sort(c, O.ptr, m.ptr));
+              const A = n.slice(0, r);
+              return new jt(
+                o.mk_array_sort_n(
+                  c,
+                  A.map((T) => T.ptr),
+                  m.ptr,
+                ),
+              );
+            },
+            const(n, ...r) {
+              return new Yt(f(o.mk_const(c, M(n), At.sort(...r).ptr)));
+            },
+            consts(n, ...r) {
+              return (typeof n == "string" && (n = n.split(" ")), n.map((m) => At.const(m, ...r)));
+            },
+            K(n, r) {
+              return new Yt(f(o.mk_const_array(c, n.ptr, r.ptr)));
+            },
+          },
+          Ur = {
+            sort(n) {
+              return At.sort(n, Q.sort());
+            },
+            const(n, r) {
+              return new tt(f(o.mk_const(c, M(n), At.sort(r, Q.sort()).ptr)));
+            },
+            consts(n, r) {
+              return (typeof n == "string" && (n = n.split(" ")), n.map((m) => Ur.const(m, r)));
+            },
+            empty(n) {
+              return Re(n);
+            },
+            val(n, r) {
+              var m = Re(r);
+              for (const O of n) m = ve(m, O);
+              return m;
+            },
+          },
+          an = Object.assign((n) => new a_(F, n), {
+            createDatatypes(...n) {
+              return o_(...n);
+            },
+          });
+        function le(n, r, m) {
+          return ct(n) && Rt(r) && Rt(m)
+            ? Fr(n, r, m)
+            : ((0, u.assert)(!ct(n) && !Rt(r) && !Rt(m), "Mixed expressions and goals"),
+              typeof n == "boolean" && (n = Q.val(n)),
+              (r = D(r)),
+              (m = D(m)),
+              k(f(o.mk_ite(c, n.ptr, r.ast, m.ast))));
+        }
+        function on(...n) {
+          return (
+            (0, u.assert)(n.length > 0, "Can't make Distinct ouf of nothing"),
+            new w(
+              f(
+                o.mk_distinct(
+                  c,
+                  n.map((r) => ((r = D(r)), y(r), r.ast)),
+                ),
+              ),
+            )
+          );
+        }
+        function Mr(n, r) {
+          return (y(r), k(f(o.mk_const(c, M(n), r.ptr))));
+        }
+        function un(n, r) {
+          return (y(r), typeof n == "string" && (n = n.split(" ")), n.map((m) => Mr(m, r)));
+        }
+        function cn(n, r = "c") {
+          return (y(n), k(o.mk_fresh_const(n.ctx.ptr, r, n.ptr)));
+        }
+        function mn(n, r) {
+          return (y(r), k(o.mk_bound(r.ctx.ptr, n, r.ptr)));
+        }
+        function fe(n, r) {
+          return ((n = D(n)), (r = D(r)), y(n, r), new w(f(o.mk_implies(c, n.ptr, r.ptr))));
+        }
+        function pe(n, r) {
+          return ((n = D(n)), (r = D(r)), y(n, r), new w(f(o.mk_iff(c, n.ptr, r.ptr))));
+        }
+        function ln(n, r) {
+          return ((n = D(n)), (r = D(r)), y(n, r), n.eq(r));
+        }
+        function be(n, r) {
+          return ((n = D(n)), (r = D(r)), y(n, r), new w(f(o.mk_xor(c, n.ptr, r.ptr))));
+        }
+        function ge(n) {
+          return (typeof n == "boolean" && (n = D(n)), y(n), ct(n) ? new Qt(f(o.probe_not(c, n.ptr))) : new w(f(o.mk_not(c, n.ptr))));
+        }
+        function he(...n) {
+          if (
+            (n.length == 1 &&
+              n[0] instanceof F.AstVector &&
+              ((n = [...n[0].values()]), (0, u.assert)((0, u.allSatisfy)(n, Ct) ?? !0, "AstVector containing not bools")),
+            (0, u.allSatisfy)(n, ct) ?? !1)
+          )
+            return Ir(o.probe_and, n);
+          {
+            const m = n.map(D);
+            return (
+              y(...m),
+              new w(
+                f(
+                  o.mk_and(
+                    c,
+                    m.map((O) => O.ptr),
+                  ),
+                ),
+              )
+            );
+          }
+        }
+        function Oe(...n) {
+          if (
+            (n.length == 1 &&
+              n[0] instanceof F.AstVector &&
+              ((n = [...n[0].values()]), (0, u.assert)((0, u.allSatisfy)(n, Ct) ?? !0, "AstVector containing not bools")),
+            (0, u.allSatisfy)(n, ct) ?? !1)
+          )
+            return Ir(o.probe_or, n);
+          {
+            const m = n.map(D);
+            return (
+              y(...m),
+              new w(
+                f(
+                  o.mk_or(
+                    c,
+                    m.map((O) => O.ptr),
+                  ),
+                ),
+              )
+            );
+          }
+        }
+        function fn(n, r, m) {
+          if ((y(...n), n.length !== r.length)) throw new Error("Number of arguments and coefficients must match");
+          return new w(
+            f(
+              o.mk_pbeq(
+                c,
+                n.map((O) => O.ast),
+                r,
+                m,
+              ),
+            ),
+          );
+        }
+        function pn(n, r, m) {
+          if ((y(...n), n.length !== r.length)) throw new Error("Number of arguments and coefficients must match");
+          return new w(
+            f(
+              o.mk_pbge(
+                c,
+                n.map((O) => O.ast),
+                r,
+                m,
+              ),
+            ),
+          );
+        }
+        function bn(n, r, m) {
+          if ((y(...n), n.length !== r.length)) throw new Error("Number of arguments and coefficients must match");
+          return new w(
+            f(
+              o.mk_pble(
+                c,
+                n.map((O) => O.ast),
+                r,
+                m,
+              ),
+            ),
+          );
+        }
+        function gn(n, r, m = 1) {
+          if (!(0, u.allSatisfy)(n, K)) throw new Error("Quantifier variables must be constants");
+          return new Fe(
+            f(
+              o.mk_quantifier_const_ex(
+                c,
+                !0,
+                m,
+                M(""),
+                M(""),
+                n.map((O) => O.ptr),
+                [],
+                [],
+                r.ptr,
+              ),
+            ),
+          );
+        }
+        function hn(n, r, m = 1) {
+          if (!(0, u.allSatisfy)(n, K)) throw new Error("Quantifier variables must be constants");
+          return new Fe(
+            f(
+              o.mk_quantifier_const_ex(
+                c,
+                !1,
+                m,
+                M(""),
+                M(""),
+                n.map((O) => O.ptr),
+                [],
+                [],
+                r.ptr,
+              ),
+            ),
+          );
+        }
+        function On(n, r) {
+          if (!(0, u.allSatisfy)(n, K)) throw new Error("Quantifier variables must be constants");
+          return new u_(
+            f(
+              o.mk_lambda_const(
+                c,
+                n.map((m) => m.ptr),
+                r.ptr,
+              ),
+            ),
+          );
+        }
+        function Pe(n) {
+          return ((n = D(n)), y(n), (0, u.assert)(ie(n), "Int expression expected"), new d(f(o.mk_int2real(c, n.ast))));
+        }
+        function Pn(n) {
+          return (q(n) || (n = z.val(n)), y(n), (0, u.assert)(ce(n), "Real expression expected"), new d(f(o.mk_real2int(c, n.ast))));
+        }
+        function En(n) {
+          return (q(n) || (n = z.val(n)), y(n), (0, u.assert)(ce(n), "Real expression expected"), new w(f(o.mk_is_int(c, n.ast))));
+        }
+        function yn(n) {
+          return (q(n) || (n = z.val(n)), n.pow("1/2"));
+        }
+        function vn(n) {
+          return (q(n) || (n = z.val(n)), n.pow("1/3"));
+        }
+        function Rn(n, r) {
+          return (y(n), new d(f(o.mk_bv2int(c, n.ast, r))));
+        }
+        function An(n, r) {
+          return (
+            vt(n)
+              ? (0, u.assert)(ie(n), "parameter must be an integer")
+              : ((0, u.assert)(typeof n != "number" || Number.isSafeInteger(n), "parameter must not have decimal places"), (n = j.val(n))),
+            new S(f(o.mk_int2bv(c, r, n.ast)))
+          );
+        }
+        function Tn(...n) {
+          return (y(...n), n.reduce((r, m) => new S(f(o.mk_concat(c, r.ast, m.ast)))));
+        }
+        function Fr(n, r, m) {
+          return (y(n, r, m), new Te(f(o.tactic_cond(c, n.ptr, r.ptr, m.ptr))));
+        }
+        function kr(n, r) {
+          return new w(f(o.mk_lt(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function Dr(n, r) {
+          return new w(f(o.mk_gt(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function qr(n, r) {
+          return new w(f(o.mk_le(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function Br(n, r) {
+          return new w(f(o.mk_ge(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function Cr(n, r) {
+          return new w(f(o.mk_bvult(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function zr(n, r) {
+          return new w(f(o.mk_bvugt(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function Vr(n, r) {
+          return new w(f(o.mk_bvule(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function Gr(n, r) {
+          return new w(f(o.mk_bvuge(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function Qr(n, r) {
+          return new w(f(o.mk_bvslt(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function jr(n, r) {
+          return new w(f(o.mk_bvsgt(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function Yr(n, r) {
+          return new w(f(o.mk_bvsle(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function $r(n, r) {
+          return new w(f(o.mk_bvsge(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function Hr(n, r, m) {
+          return new S(f(o.mk_extract(c, n, r, m.ast)));
+        }
+        function Ee(n, ...r) {
+          const m = r.map((A, T) => n.domain_n(T).cast(A));
+          if (m.length === 1) return k(f(o.mk_select(c, n.ast, m[0].ast)));
+          const O = m.map((A) => A.ast);
+          return k(f(o.mk_select_n(c, n.ast, O)));
+        }
+        function ye(n, ...r) {
+          const m = r.map((A, T) => (T === r.length - 1 ? n.range().cast(A) : n.domain_n(T).cast(A)));
+          if (m.length <= 1) throw new Error("Array store requires both index and value arguments");
+          if (m.length === 2) return k(f(o.mk_store(c, n.ast, m[0].ast, m[1].ast)));
+          const O = m.slice(0, m.length - 1).map((A) => A.ast);
+          return k(f(o.mk_store_n(c, n.ast, O, m[m.length - 1].ast)));
+        }
+        function Wr(...n) {
+          return new tt(
+            f(
+              o.mk_set_union(
+                c,
+                n.map((r) => r.ast),
+              ),
+            ),
+          );
+        }
+        function Xr(...n) {
+          return new tt(
+            f(
+              o.mk_set_intersect(
+                c,
+                n.map((r) => r.ast),
+              ),
+            ),
+          );
+        }
+        function Kr(n, r) {
+          return new tt(f(o.mk_set_difference(c, n.ast, r.ast)));
+        }
+        function Jr(n, r) {
+          const m = j.sort().cast(r);
+          return new w(f(o.mk_set_has_size(c, n.ast, m.ast)));
+        }
+        function ve(n, r) {
+          const m = n.elemSort().cast(r);
+          return new tt(f(o.mk_set_add(c, n.ast, m.ast)));
+        }
+        function t_(n, r) {
+          const m = n.elemSort().cast(r);
+          return new tt(f(o.mk_set_del(c, n.ast, m.ast)));
+        }
+        function e_(n) {
+          return new tt(f(o.mk_set_complement(c, n.ast)));
+        }
+        function Re(n) {
+          return new tt(f(o.mk_empty_set(c, n.ptr)));
+        }
+        function wn(n) {
+          return new tt(f(o.mk_full_set(c, n.ptr)));
+        }
+        function r_(n, r) {
+          const m = r.elemSort().cast(n);
+          return new w(f(o.mk_set_member(c, m.ast, r.ast)));
+        }
+        function __(n, r) {
+          return new w(f(o.mk_set_subset(c, n.ast, r.ast)));
+        }
+        class Vt {
+          constructor(r) {
+            ((this.ptr = r), (this.ctx = F));
+            const m = this.ast;
+            (o.inc_ref(c, m), E.register(this, () => o.dec_ref(c, m), this));
+          }
+          get ast() {
+            return this.ptr;
+          }
+          id() {
+            return o.get_ast_id(c, this.ast);
+          }
+          eqIdentity(r) {
+            return (y(r), f(o.is_eq_ast(c, this.ast, r.ast)));
+          }
+          neqIdentity(r) {
+            return (y(r), !this.eqIdentity(r));
+          }
+          sexpr() {
+            return o.ast_to_string(c, this.ast);
+          }
+          hash() {
+            return o.get_ast_hash(c, this.ast);
+          }
+          toString() {
+            return this.sexpr();
+          }
+        }
+        class Zn {
+          get ptr() {
+            return (ae(this._ptr), this._ptr);
+          }
+          constructor(r = o.mk_solver(c)) {
+            this.ctx = F;
+            let m;
+            (typeof r == "string" ? (m = f(o.mk_solver_for_logic(c, M(r)))) : (m = r),
+              (this._ptr = m),
+              o.solver_inc_ref(c, m),
+              E.register(this, () => o.solver_dec_ref(c, m), this));
+          }
+          set(r, m) {
+            o.solver_set_params(c, this.ptr, Zr(r, m));
+          }
+          push() {
+            o.solver_push(c, this.ptr);
+          }
+          pop(r = 1) {
+            o.solver_pop(c, this.ptr, r);
+          }
+          numScopes() {
+            return o.solver_get_num_scopes(c, this.ptr);
+          }
+          reset() {
+            o.solver_reset(c, this.ptr);
+          }
+          add(...r) {
+            qt(r).forEach((m) => {
+              (y(m), f(o.solver_assert(c, this.ptr, m.ast)));
+            });
+          }
+          addAndTrack(r, m) {
+            (typeof m == "string" && (m = Q.const(m)),
+              (0, u.assert)(K(m), "Provided expression that is not a constant to addAndTrack"),
+              f(o.solver_assert_and_track(c, this.ptr, r.ast, m.ast)));
+          }
+          assertions() {
+            return new rt(f(o.solver_get_assertions(c, this.ptr)));
+          }
+          async check(...r) {
+            const m = qt(r).map((A) => (y(A), A.ast)),
+              O = await g.runExclusive(() => f(o.solver_check_assumptions(c, this.ptr, m)));
+            switch (O) {
+              case i.Z3_lbool.Z3_L_FALSE:
+                return "unsat";
+              case i.Z3_lbool.Z3_L_TRUE:
+                return "sat";
+              case i.Z3_lbool.Z3_L_UNDEF:
+                return "unknown";
+              default:
+                (0, u.assertExhaustive)(O);
+            }
+          }
+          model() {
+            return new Gt(f(o.solver_get_model(c, this.ptr)));
+          }
+          toString() {
+            return f(o.solver_to_string(c, this.ptr));
+          }
+          fromString(r) {
+            (o.solver_from_string(c, this.ptr, r), oe());
+          }
+          release() {
+            (o.solver_dec_ref(c, this.ptr), (this._ptr = null), E.unregister(this));
+          }
+        }
+        class Sn {
+          get ptr() {
+            return (ae(this._ptr), this._ptr);
+          }
+          constructor(r = o.mk_optimize(c)) {
+            this.ctx = F;
+            let m;
+            ((m = r), (this._ptr = m), o.optimize_inc_ref(c, m), E.register(this, () => o.optimize_dec_ref(c, m), this));
+          }
+          set(r, m) {
+            o.optimize_set_params(c, this.ptr, Zr(r, m));
+          }
+          push() {
+            o.optimize_push(c, this.ptr);
+          }
+          pop() {
+            o.optimize_pop(c, this.ptr);
+          }
+          add(...r) {
+            qt(r).forEach((m) => {
+              (y(m), f(o.optimize_assert(c, this.ptr, m.ast)));
+            });
+          }
+          addSoft(r, m, O = "") {
+            (p(m) && (m = `${m.numerator}/${m.denominator}`), f(o.optimize_assert_soft(c, this.ptr, r.ast, m.toString(), M(O))));
+          }
+          addAndTrack(r, m) {
+            (typeof m == "string" && (m = Q.const(m)),
+              (0, u.assert)(K(m), "Provided expression that is not a constant to addAndTrack"),
+              f(o.optimize_assert_and_track(c, this.ptr, r.ast, m.ast)));
+          }
+          assertions() {
+            return new rt(f(o.optimize_get_assertions(c, this.ptr)));
+          }
+          maximize(r) {
+            f(o.optimize_maximize(c, this.ptr, r.ast));
+          }
+          minimize(r) {
+            f(o.optimize_minimize(c, this.ptr, r.ast));
+          }
+          async check(...r) {
+            const m = qt(r).map((A) => (y(A), A.ast)),
+              O = await g.runExclusive(() => f(o.optimize_check(c, this.ptr, m)));
+            switch (O) {
+              case i.Z3_lbool.Z3_L_FALSE:
+                return "unsat";
+              case i.Z3_lbool.Z3_L_TRUE:
+                return "sat";
+              case i.Z3_lbool.Z3_L_UNDEF:
+                return "unknown";
+              default:
+                (0, u.assertExhaustive)(O);
+            }
+          }
+          model() {
+            return new Gt(f(o.optimize_get_model(c, this.ptr)));
+          }
+          toString() {
+            return f(o.optimize_to_string(c, this.ptr));
+          }
+          fromString(r) {
+            (o.optimize_from_string(c, this.ptr, r), oe());
+          }
+          release() {
+            (o.optimize_dec_ref(c, this.ptr), (this._ptr = null), E.unregister(this));
+          }
+        }
+        class Gt {
+          get ptr() {
+            return (ae(this._ptr), this._ptr);
+          }
+          constructor(r = o.mk_model(c)) {
+            ((this.ctx = F), (this._ptr = r), o.model_inc_ref(c, r), E.register(this, () => o.model_dec_ref(c, r), this));
+          }
+          length() {
+            return o.model_get_num_consts(c, this.ptr) + o.model_get_num_funcs(c, this.ptr);
+          }
+          [Symbol.iterator]() {
+            return this.values();
+          }
+          *entries() {
+            const r = this.length();
+            for (let m = 0; m < r; m++) yield [m, this.get(m)];
+          }
+          *keys() {
+            for (const [r] of this.entries()) yield r;
+          }
+          *values() {
+            for (const [, r] of this.entries()) yield r;
+          }
+          decls() {
+            return [...this.values()];
+          }
+          sexpr() {
+            return f(o.model_to_string(c, this.ptr));
+          }
+          toString() {
+            return this.sexpr();
+          }
+          eval(r, m = !1) {
+            y(r);
+            const O = f(o.model_eval(c, this.ptr, r.ast, m));
+            if (O === null) throw new t.Z3Error("Failed to evaluate expression in the model");
+            return k(O);
+          }
+          get(r, m) {
+            if (((0, u.assert)(m === void 0 || typeof r == "number"), typeof r == "number")) {
+              const O = this.length();
+              if (r >= O) throw new RangeError(`expected index ${r} to be less than length ${O}`);
+              if (m === void 0) {
+                const T = f(o.model_get_num_consts(c, this.ptr));
+                return r < T ? new V(f(o.model_get_const_decl(c, this.ptr, r))) : new V(f(o.model_get_func_decl(c, this.ptr, r - T)));
+              }
+              if ((m < 0 && (m += O), m >= O)) throw new RangeError(`expected index ${m} to be less than length ${O}`);
+              const A = [];
+              for (let T = r; T < m; T++) A.push(this.get(T));
+              return A;
+            } else if (Ot(r) || (q(r) && K(r))) {
+              const O = this.getInterp(r);
+              return ((0, u.assert)(O !== null), O);
+            } else if (Bt(r)) return this.getUniverse(r);
+            (0, u.assert)(!1, "Number, declaration or constant expected");
+          }
+          updateValue(r, m) {
+            if ((y(r), y(m), q(r) && (r = r.decl()), Ot(r) && r.arity() !== 0 && Lr(m))) {
+              const O = this.addFuncInterp(r, m.elseValue());
+              for (let A = 0; A < m.numEntries(); A++) {
+                const T = m.entry(A),
+                  $t = T.numArgs(),
+                  Ht = O_.Array($t).map((_t, C) => T.argValue(C));
+                O.addEntry(Ht, T.value());
+              }
+              return;
+            }
+            if (!Ot(r) || r.arity() !== 0) throw new t.Z3Error("Expecting 0-ary function or constant expression");
+            if (!Nr(m)) throw new t.Z3Error("Only func declarations can be assigned to func interpretations");
+            f(o.add_const_interp(c, this.ptr, r.ptr, m.ast));
+          }
+          addFuncInterp(r, m) {
+            const O = f(o.add_func_interp(c, this.ptr, r.ptr, r.range().cast(m).ptr));
+            return new Ae(O);
+          }
+          getInterp(r) {
+            if (
+              ((0, u.assert)(Ot(r) || K(r), "Declaration expected"),
+              K(r) && ((0, u.assert)(q(r)), (r = r.decl())),
+              (0, u.assert)(Ot(r)),
+              r.arity() === 0)
+            ) {
+              const m = f(o.model_get_const_interp(c, this.ptr, r.ptr));
+              return m === null ? null : k(m);
+            } else {
+              const m = f(o.model_get_func_interp(c, this.ptr, r.ptr));
+              return m === null ? null : new Ae(m);
+            }
+          }
+          getUniverse(r) {
+            return (y(r), new rt(f(o.model_get_sort_universe(c, this.ptr, r.ptr))));
+          }
+          release() {
+            (o.model_dec_ref(c, this.ptr), (this._ptr = null), E.unregister(this));
+          }
+        }
+        class In {
+          constructor(r) {
+            ((this.ptr = r), (this.ctx = F), o.func_entry_inc_ref(c, r), E.register(this, () => o.func_entry_dec_ref(c, r), this));
+          }
+          numArgs() {
+            return f(o.func_entry_get_num_args(c, this.ptr));
+          }
+          argValue(r) {
+            return k(f(o.func_entry_get_arg(c, this.ptr, r)));
+          }
+          value() {
+            return k(f(o.func_entry_get_value(c, this.ptr)));
+          }
+        }
+        class Ae {
+          constructor(r) {
+            ((this.ptr = r), (this.ctx = F), o.func_interp_inc_ref(c, r), E.register(this, () => o.func_interp_dec_ref(c, r), this));
+          }
+          elseValue() {
+            return k(f(o.func_interp_get_else(c, this.ptr)));
+          }
+          numEntries() {
+            return f(o.func_interp_get_num_entries(c, this.ptr));
+          }
+          arity() {
+            return f(o.func_interp_get_arity(c, this.ptr));
+          }
+          entry(r) {
+            return new In(f(o.func_interp_get_entry(c, this.ptr, r)));
+          }
+          addEntry(r, m) {
+            const O = new rt();
+            for (const A of r) O.push(A);
+            (y(O),
+              y(m),
+              (0, u.assert)(this.arity() === O.length(), "Number of arguments in entry doesn't match function arity"),
+              f(o.func_interp_add_entry(c, this.ptr, O.ptr, m.ptr)));
+          }
+        }
+        class J extends Vt {
+          get ast() {
+            return o.sort_to_ast(c, this.ptr);
+          }
+          kind() {
+            return o.get_sort_kind(c, this.ptr);
+          }
+          subsort(r) {
+            return (y(r), !1);
+          }
+          cast(r) {
+            return (y(r), (0, u.assert)(r.sort.eqIdentity(r.sort), "Sort mismatch"), r);
+          }
+          name() {
+            return Dt(o.get_sort_name(c, this.ptr));
+          }
+          eqIdentity(r) {
+            return (y(r), f(o.is_eq_sort(c, this.ptr, r.ptr)));
+          }
+          neqIdentity(r) {
+            return !this.eqIdentity(r);
+          }
+        }
+        class V extends Vt {
+          get ast() {
+            return o.func_decl_to_ast(c, this.ptr);
+          }
+          name() {
+            return Dt(o.get_decl_name(c, this.ptr));
+          }
+          arity() {
+            return o.get_arity(c, this.ptr);
+          }
+          domain(r) {
+            return ((0, u.assert)(r < this.arity(), "Index out of bounds"), et(o.get_domain(c, this.ptr, r)));
+          }
+          range() {
+            return et(o.get_range(c, this.ptr));
+          }
+          kind() {
+            return o.get_decl_kind(c, this.ptr);
+          }
+          params() {
+            const r = o.get_decl_num_parameters(c, this.ptr),
+              m = [];
+            for (let O = 0; O < r; O++) {
+              const A = f(o.get_decl_parameter_kind(c, this.ptr, O));
+              switch (A) {
+                case i.Z3_parameter_kind.Z3_PARAMETER_INT:
+                  m.push(f(o.get_decl_int_parameter(c, this.ptr, O)));
+                  break;
+                case i.Z3_parameter_kind.Z3_PARAMETER_DOUBLE:
+                  m.push(f(o.get_decl_double_parameter(c, this.ptr, O)));
+                  break;
+                case i.Z3_parameter_kind.Z3_PARAMETER_RATIONAL:
+                  m.push(f(o.get_decl_rational_parameter(c, this.ptr, O)));
+                  break;
+                case i.Z3_parameter_kind.Z3_PARAMETER_SYMBOL:
+                  m.push(Dt(f(o.get_decl_symbol_parameter(c, this.ptr, O))));
+                  break;
+                case i.Z3_parameter_kind.Z3_PARAMETER_SORT:
+                  m.push(new J(f(o.get_decl_sort_parameter(c, this.ptr, O))));
+                  break;
+                case i.Z3_parameter_kind.Z3_PARAMETER_AST:
+                  m.push(new H(f(o.get_decl_ast_parameter(c, this.ptr, O))));
+                  break;
+                case i.Z3_parameter_kind.Z3_PARAMETER_FUNC_DECL:
+                  m.push(new V(f(o.get_decl_func_decl_parameter(c, this.ptr, O))));
+                  break;
+                case i.Z3_parameter_kind.Z3_PARAMETER_INTERNAL:
+                  break;
+                case i.Z3_parameter_kind.Z3_PARAMETER_ZSTRING:
+                  break;
+                default:
+                  (0, u.assertExhaustive)(A);
+              }
+            }
+            return m;
+          }
+          call(...r) {
+            return (
+              (0, u.assert)(r.length === this.arity(), `Incorrect number of arguments to ${this}`),
+              k(
+                f(
+                  o.mk_app(
+                    c,
+                    this.ptr,
+                    r.map((m, O) => this.domain(O).cast(m).ast),
+                  ),
+                ),
+              )
+            );
+          }
+        }
+        class H extends Vt {
+          get sort() {
+            return et(o.get_sort(c, this.ast));
+          }
+          eq(r) {
+            return new w(f(o.mk_eq(c, this.ast, D(r).ast)));
+          }
+          neq(r) {
+            return new w(
+              f(
+                o.mk_distinct(
+                  c,
+                  [this, r].map((m) => D(m).ast),
+                ),
+              ),
+            );
+          }
+          name() {
+            return this.decl().name();
+          }
+          params() {
+            return this.decl().params();
+          }
+          decl() {
+            return ((0, u.assert)(it(this), "Z3 application expected"), new V(f(o.get_app_decl(c, f(o.to_app(c, this.ast))))));
+          }
+          numArgs() {
+            return ((0, u.assert)(it(this), "Z3 applicaiton expected"), f(o.get_app_num_args(c, f(o.to_app(c, this.ast)))));
+          }
+          arg(r) {
+            return (
+              (0, u.assert)(it(this), "Z3 applicaiton expected"),
+              (0, u.assert)(r < this.numArgs(), `Invalid argument index - expected ${r} to be less than ${this.numArgs()}`),
+              k(f(o.get_app_arg(c, f(o.to_app(c, this.ast)), r)))
+            );
+          }
+          children() {
+            const r = this.numArgs();
+            if (it(this)) {
+              const m = [];
+              for (let O = 0; O < r; O++) m.push(this.arg(O));
+              return m;
+            }
+            return [];
+          }
+        }
+        class Nn {
+          constructor(r) {
+            ((this.ptr = r), (this.ctx = F));
+          }
+        }
+        class n_ extends J {
+          cast(r) {
+            return (
+              typeof r == "boolean" && (r = Q.val(r)),
+              (0, u.assert)(q(r), "true, false or Z3 Boolean expression expected."),
+              (0, u.assert)(this.eqIdentity(r.sort), "Value cannot be converted into a Z3 Boolean value"),
+              r
+            );
+          }
+          subsort(r) {
+            return (y(r.ctx), r instanceof Tt);
+          }
+        }
+        class w extends H {
+          not() {
+            return ge(this);
+          }
+          and(r) {
+            return he(this, r);
+          }
+          or(r) {
+            return Oe(this, r);
+          }
+          xor(r) {
+            return be(this, r);
+          }
+          implies(r) {
+            return fe(this, r);
+          }
+          iff(r) {
+            return pe(this, r);
+          }
+        }
+        class Qt {
+          constructor(r) {
+            ((this.ptr = r), (this.ctx = F));
+          }
+        }
+        class Te {
+          constructor(r) {
+            this.ctx = F;
+            let m;
+            (typeof r == "string" ? (m = f(o.mk_tactic(c, r))) : (m = r),
+              (this.ptr = m),
+              o.tactic_inc_ref(c, m),
+              E.register(this, () => o.tactic_dec_ref(c, m), this));
+          }
+        }
+        class Tt extends J {
+          cast(r) {
+            const m = Pt(this) ? "IntSort" : "RealSort";
+            if (q(r)) {
+              const O = r.sort;
+              if (vt(r)) {
+                if (this.eqIdentity(O)) return r;
+                if (Pt(O) && me(this)) return Pe(r);
+                (0, u.assert)(!1, "Can't cast Real to IntSort without loss");
+              } else if (Ct(r)) return Pt(this) ? le(r, 1, 0) : Pe(le(r, 1, 0));
+              (0, u.assert)(!1, `Can't cast expression to ${m}`);
+            } else {
+              if (typeof r != "boolean") return Pt(this) ? ((0, u.assert)(!p(r), "Can't cast fraction to IntSort"), j.val(r)) : z.val(r);
+              (0, u.assert)(!1, `Can't cast primitive to ${m}`);
+            }
+          }
+        }
+        function we(n, ...r) {
+          if (n instanceof S) {
+            if (r.length !== 1) throw new Error("BitVec add only supports 2 arguments");
+            return new S(f(o.mk_bvadd(c, n.ast, n.sort.cast(r[0]).ast)));
+          } else return ((0, u.assert)(n instanceof d), new d(f(o.mk_add(c, [n.ast].concat(r.map((m) => n.sort.cast(m).ast))))));
+        }
+        function Ze(n, ...r) {
+          if (n instanceof S) {
+            if (r.length !== 1) throw new Error("BitVec sub only supports 2 arguments");
+            return new S(f(o.mk_bvsub(c, n.ast, n.sort.cast(r[0]).ast)));
+          } else return ((0, u.assert)(n instanceof d), new d(f(o.mk_sub(c, [n.ast].concat(r.map((m) => n.sort.cast(m).ast))))));
+        }
+        function Se(n, ...r) {
+          if (n instanceof S) {
+            if (r.length !== 1) throw new Error("BitVec mul only supports 2 arguments");
+            return new S(f(o.mk_bvmul(c, n.ast, n.sort.cast(r[0]).ast)));
+          } else return ((0, u.assert)(n instanceof d), new d(f(o.mk_mul(c, [n.ast].concat(r.map((m) => n.sort.cast(m).ast))))));
+        }
+        function Ie(n, r) {
+          return n instanceof S
+            ? new S(f(o.mk_bvsdiv(c, n.ast, n.sort.cast(r).ast)))
+            : ((0, u.assert)(n instanceof d), new d(f(o.mk_div(c, n.ast, n.sort.cast(r).ast))));
+        }
+        function s_(n, r) {
+          return new S(f(o.mk_bvudiv(c, n.ast, n.sort.cast(r).ast)));
+        }
+        function Ne(n) {
+          return n instanceof S ? new S(f(o.mk_bvneg(c, n.ast))) : ((0, u.assert)(n instanceof d), new d(f(o.mk_unary_minus(c, n.ast))));
+        }
+        function Le(n, r) {
+          return n instanceof S
+            ? new S(f(o.mk_bvsrem(c, n.ast, n.sort.cast(r).ast)))
+            : ((0, u.assert)(n instanceof d), new d(f(o.mk_mod(c, n.ast, n.sort.cast(r).ast))));
+        }
+        class d extends H {
+          add(r) {
+            return we(this, r);
+          }
+          mul(r) {
+            return Se(this, r);
+          }
+          sub(r) {
+            return Ze(this, r);
+          }
+          pow(r) {
+            return new d(f(o.mk_power(c, this.ast, this.sort.cast(r).ast)));
+          }
+          div(r) {
+            return Ie(this, r);
+          }
+          mod(r) {
+            return Le(this, r);
+          }
+          neg() {
+            return Ne(this);
+          }
+          le(r) {
+            return qr(this, r);
+          }
+          lt(r) {
+            return kr(this, r);
+          }
+          gt(r) {
+            return Dr(this, r);
+          }
+          ge(r) {
+            return Br(this, r);
+          }
+        }
+        class wt extends d {
+          value() {
+            return BigInt(this.asString());
+          }
+          asString() {
+            return o.get_numeral_string(c, this.ast);
+          }
+          asBinary() {
+            return o.get_numeral_binary_string(c, this.ast);
+          }
+        }
+        class xe extends d {
+          value() {
+            return { numerator: this.numerator().value(), denominator: this.denominator().value() };
+          }
+          numerator() {
+            return new wt(o.get_numerator(c, this.ast));
+          }
+          denominator() {
+            return new wt(o.get_denominator(c, this.ast));
+          }
+          asNumber() {
+            const { numerator: r, denominator: m } = this.value(),
+              O = r / m;
+            return Number(O) + Number(r - O * m) / Number(m);
+          }
+          asDecimal(r = Number.parseInt(v("precision") ?? b.toString())) {
+            return o.get_numeral_decimal_string(c, this.ast, r);
+          }
+          asString() {
+            return o.get_numeral_string(c, this.ast);
+          }
+        }
+        class de extends J {
+          size() {
+            return o.get_bv_sort_size(c, this.ptr);
+          }
+          subsort(r) {
+            return zt(r) && this.size() < r.size();
+          }
+          cast(r) {
+            return q(r) ? (y(r), r) : ((0, u.assert)(!p(r), "Can't convert rational to BitVec"), mt.val(r, this.size()));
+          }
+        }
+        class S extends H {
+          size() {
+            return this.sort.size();
+          }
+          add(r) {
+            return we(this, r);
+          }
+          mul(r) {
+            return Se(this, r);
+          }
+          sub(r) {
+            return Ze(this, r);
+          }
+          sdiv(r) {
+            return Ie(this, r);
+          }
+          udiv(r) {
+            return s_(this, r);
+          }
+          smod(r) {
+            return Le(this, r);
+          }
+          urem(r) {
+            return new S(f(o.mk_bvurem(c, this.ast, this.sort.cast(r).ast)));
+          }
+          srem(r) {
+            return new S(f(o.mk_bvsrem(c, this.ast, this.sort.cast(r).ast)));
+          }
+          neg() {
+            return Ne(this);
+          }
+          or(r) {
+            return new S(f(o.mk_bvor(c, this.ast, this.sort.cast(r).ast)));
+          }
+          and(r) {
+            return new S(f(o.mk_bvand(c, this.ast, this.sort.cast(r).ast)));
+          }
+          nand(r) {
+            return new S(f(o.mk_bvnand(c, this.ast, this.sort.cast(r).ast)));
+          }
+          xor(r) {
+            return new S(f(o.mk_bvxor(c, this.ast, this.sort.cast(r).ast)));
+          }
+          xnor(r) {
+            return new S(f(o.mk_bvxnor(c, this.ast, this.sort.cast(r).ast)));
+          }
+          shr(r) {
+            return new S(f(o.mk_bvashr(c, this.ast, this.sort.cast(r).ast)));
+          }
+          lshr(r) {
+            return new S(f(o.mk_bvlshr(c, this.ast, this.sort.cast(r).ast)));
+          }
+          shl(r) {
+            return new S(f(o.mk_bvshl(c, this.ast, this.sort.cast(r).ast)));
+          }
+          rotateRight(r) {
+            return new S(f(o.mk_ext_rotate_right(c, this.ast, this.sort.cast(r).ast)));
+          }
+          rotateLeft(r) {
+            return new S(f(o.mk_ext_rotate_left(c, this.ast, this.sort.cast(r).ast)));
+          }
+          not() {
+            return new S(f(o.mk_bvnot(c, this.ast)));
+          }
+          extract(r, m) {
+            return Hr(r, m, this);
+          }
+          signExt(r) {
+            return new S(f(o.mk_sign_ext(c, r, this.ast)));
+          }
+          zeroExt(r) {
+            return new S(f(o.mk_zero_ext(c, r, this.ast)));
+          }
+          repeat(r) {
+            return new S(f(o.mk_repeat(c, r, this.ast)));
+          }
+          sle(r) {
+            return Yr(this, r);
+          }
+          ule(r) {
+            return Vr(this, r);
+          }
+          slt(r) {
+            return Qr(this, r);
+          }
+          ult(r) {
+            return Cr(this, r);
+          }
+          sge(r) {
+            return $r(this, r);
+          }
+          uge(r) {
+            return Gr(this, r);
+          }
+          sgt(r) {
+            return jr(this, r);
+          }
+          ugt(r) {
+            return zr(this, r);
+          }
+          redAnd() {
+            return new S(f(o.mk_bvredand(c, this.ast)));
+          }
+          redOr() {
+            return new S(f(o.mk_bvredor(c, this.ast)));
+          }
+          addNoOverflow(r, m) {
+            return new w(f(o.mk_bvadd_no_overflow(c, this.ast, this.sort.cast(r).ast, m)));
+          }
+          addNoUnderflow(r) {
+            return new w(f(o.mk_bvadd_no_underflow(c, this.ast, this.sort.cast(r).ast)));
+          }
+          subNoOverflow(r) {
+            return new w(f(o.mk_bvsub_no_overflow(c, this.ast, this.sort.cast(r).ast)));
+          }
+          subNoUndeflow(r, m) {
+            return new w(f(o.mk_bvsub_no_underflow(c, this.ast, this.sort.cast(r).ast, m)));
+          }
+          sdivNoOverflow(r) {
+            return new w(f(o.mk_bvsdiv_no_overflow(c, this.ast, this.sort.cast(r).ast)));
+          }
+          mulNoOverflow(r, m) {
+            return new w(f(o.mk_bvmul_no_overflow(c, this.ast, this.sort.cast(r).ast, m)));
+          }
+          mulNoUndeflow(r) {
+            return new w(f(o.mk_bvmul_no_underflow(c, this.ast, this.sort.cast(r).ast)));
+          }
+          negNoOverflow() {
+            return new w(f(o.mk_bvneg_no_overflow(c, this.ast)));
+          }
+        }
+        class Ue extends S {
+          value() {
+            return BigInt(this.asString());
+          }
+          asSignedValue() {
+            let r = this.value();
+            const m = BigInt(this.size());
+            return (r >= 2n ** (m - 1n) && (r = r - 2n ** m), r < (-2n) ** (m - 1n) && (r = r + 2n ** m), r);
+          }
+          asString() {
+            return o.get_numeral_string(c, this.ast);
+          }
+          asBinaryString() {
+            return o.get_numeral_binary_string(c, this.ast);
+          }
+        }
+        class jt extends J {
+          domain() {
+            return et(f(o.get_array_sort_domain(c, this.ptr)));
+          }
+          domain_n(r) {
+            return et(f(o.get_array_sort_domain_n(c, this.ptr, r)));
+          }
+          range() {
+            return et(f(o.get_array_sort_range(c, this.ptr)));
+          }
+        }
+        class Yt extends H {
+          domain() {
+            return this.sort.domain();
+          }
+          domain_n(r) {
+            return this.sort.domain_n(r);
+          }
+          range() {
+            return this.sort.range();
+          }
+          select(...r) {
+            return Ee(this, ...r);
+          }
+          store(...r) {
+            return ye(this, ...r);
+          }
+        }
+        class tt extends H {
+          elemSort() {
+            return this.sort.domain();
+          }
+          union(...r) {
+            return Wr(this, ...r);
+          }
+          intersect(...r) {
+            return Xr(this, ...r);
+          }
+          diff(r) {
+            return Kr(this, r);
+          }
+          hasSize(r) {
+            return Jr(this, r);
+          }
+          add(r) {
+            return ve(this, r);
+          }
+          del(r) {
+            return t_(this, r);
+          }
+          complement() {
+            return e_(this);
+          }
+          contains(r) {
+            return r_(r, this);
+          }
+          subsetOf(r) {
+            return __(this, r);
+          }
+        }
+        class a_ {
+          constructor(r, m) {
+            ((this.constructors = []), (this.ctx = r), (this.name = m));
+          }
+          declare(r, ...m) {
+            return (this.constructors.push([r, m]), this);
+          }
+          create() {
+            return o_(this)[0];
+          }
+        }
+        class Ln extends J {
+          numConstructors() {
+            return o.get_datatype_sort_num_constructors(c, this.ptr);
+          }
+          constructorDecl(r) {
+            const m = o.get_datatype_sort_constructor(c, this.ptr, r);
+            return new V(m);
+          }
+          recognizer(r) {
+            const m = o.get_datatype_sort_recognizer(c, this.ptr, r);
+            return new V(m);
+          }
+          accessor(r, m) {
+            const O = o.get_datatype_sort_constructor_accessor(c, this.ptr, r, m);
+            return new V(O);
+          }
+          cast(r) {
+            if (q(r)) return ((0, u.assert)(this.eqIdentity(r.sort), "Value cannot be converted to this datatype"), r);
+            throw new Error("Cannot coerce value to datatype expression");
+          }
+          subsort(r) {
+            return (y(r.ctx), this.eqIdentity(r));
+          }
+        }
+        function o_(...n) {
+          if (n.length === 0) throw new Error("At least one datatype must be provided");
+          const r = n[0].ctx;
+          for (const T of n) if (T.ctx !== r) throw new Error("All datatypes must be from the same context");
+          const m = n.map((T) => T.name),
+            O = [],
+            A = [];
+          try {
+            for (const _t of n) {
+              const C = [];
+              for (const [nt, lt] of _t.constructors) {
+                const Wt = [],
+                  ft = [],
+                  pt = [];
+                for (const [St, Xt] of lt)
+                  if ((Wt.push(St), Xt instanceof a_)) {
+                    const i_ = n.indexOf(Xt);
+                    if (i_ === -1) throw new Error(`Referenced datatype "${Xt.name}" not found in datatypes being created`);
+                    (ft.push(null), pt.push(i_));
+                  } else (ft.push(Xt.ptr), pt.push(0));
+                const Zt = o.mk_constructor(
+                  c,
+                  o.mk_string_symbol(c, nt),
+                  o.mk_string_symbol(c, `is_${nt}`),
+                  Wt.map((St) => o.mk_string_symbol(c, St)),
+                  ft,
+                  pt,
+                );
+                (C.push(Zt), A.push(Zt));
+              }
+              const ke = o.mk_constructor_list(c, C);
+              O.push(ke);
+            }
+            const T = m.map((_t) => o.mk_string_symbol(c, _t)),
+              $t = o.mk_datatypes(c, T, O),
+              Ht = [];
+            for (let _t = 0; _t < $t.length; _t++) {
+              const C = new Ln($t[_t]),
+                ke = C.numConstructors();
+              for (let nt = 0; nt < ke; nt++) {
+                const lt = C.constructorDecl(nt),
+                  Wt = C.recognizer(nt),
+                  ft = lt.name().toString();
+                (lt.arity() === 0 ? (C[ft] = lt.call()) : (C[ft] = lt), (C[`is_${ft}`] = Wt));
+                for (let pt = 0; pt < lt.arity(); pt++) {
+                  const Zt = C.accessor(nt, pt),
+                    St = Zt.name().toString();
+                  C[St] = Zt;
+                }
+              }
+              Ht.push(C);
+            }
+            return Ht;
+          } finally {
+            for (const T of A) o.del_constructor(c, T);
+            for (const T of O) o.del_constructor_list(c, T);
+          }
+        }
+        class Me extends H {
+          is_forall() {
+            return o.is_quantifier_forall(c, this.ast);
+          }
+          is_exists() {
+            return o.is_quantifier_exists(c, this.ast);
+          }
+          is_lambda() {
+            return o.is_lambda(c, this.ast);
+          }
+          weight() {
+            return o.get_quantifier_weight(c, this.ast);
+          }
+          num_patterns() {
+            return o.get_quantifier_num_patterns(c, this.ast);
+          }
+          pattern(r) {
+            return new Nn(f(o.get_quantifier_pattern_ast(c, this.ast, r)));
+          }
+          num_no_patterns() {
+            return o.get_quantifier_num_no_patterns(c, this.ast);
+          }
+          no_pattern(r) {
+            return k(f(o.get_quantifier_no_pattern_ast(c, this.ast, r)));
+          }
+          body() {
+            return k(f(o.get_quantifier_body(c, this.ast)));
+          }
+          num_vars() {
+            return o.get_quantifier_num_bound(c, this.ast);
+          }
+          var_name(r) {
+            return Dt(o.get_quantifier_bound_name(c, this.ast, r));
+          }
+          var_sort(r) {
+            return et(f(o.get_quantifier_bound_sort(c, this.ast, r)));
+          }
+          children() {
+            return [this.body()];
+          }
+        }
+        class Fe extends Me {
+          not() {
+            return ge(this);
+          }
+          and(r) {
+            return he(this, r);
+          }
+          or(r) {
+            return Oe(this, r);
+          }
+          xor(r) {
+            return be(this, r);
+          }
+          implies(r) {
+            return fe(this, r);
+          }
+          iff(r) {
+            return pe(this, r);
+          }
+        }
+        class u_ extends Me {
+          domain() {
+            return this.sort.domain();
+          }
+          domain_n(r) {
+            return this.sort.domain_n(r);
+          }
+          range() {
+            return this.sort.range();
+          }
+          select(...r) {
+            return Ee(this, ...r);
+          }
+          store(...r) {
+            return ye(this, ...r);
+          }
+        }
+        class rt {
+          constructor(r = o.mk_ast_vector(c)) {
+            ((this.ptr = r), (this.ctx = F), o.ast_vector_inc_ref(c, r), E.register(this, () => o.ast_vector_dec_ref(c, r), this));
+          }
+          length() {
+            return o.ast_vector_size(c, this.ptr);
+          }
+          [Symbol.iterator]() {
+            return this.values();
+          }
+          *entries() {
+            const r = this.length();
+            for (let m = 0; m < r; m++) yield [m, this.get(m)];
+          }
+          *keys() {
+            for (let [r] of this.entries()) yield r;
+          }
+          *values() {
+            for (let [, r] of this.entries()) yield r;
+          }
+          get(r, m) {
+            const O = this.length();
+            if ((r < 0 && (r += O), r >= O)) throw new RangeError(`expected from index ${r} to be less than length ${O}`);
+            if (m === void 0) return ue(f(o.ast_vector_get(c, this.ptr, r)));
+            if ((m < 0 && (m += O), m >= O)) throw new RangeError(`expected to index ${m} to be less than length ${O}`);
+            const A = [];
+            for (let T = r; T < m; T++) A.push(ue(f(o.ast_vector_get(c, this.ptr, T))));
+            return A;
+          }
+          set(r, m) {
+            if ((y(m), r >= this.length())) throw new RangeError(`expected index ${r} to be less than length ${this.length()}`);
+            f(o.ast_vector_set(c, this.ptr, r, m.ast));
+          }
+          push(r) {
+            (y(r), f(o.ast_vector_push(c, this.ptr, r.ast)));
+          }
+          resize(r) {
+            f(o.ast_vector_resize(c, this.ptr, r));
+          }
+          has(r) {
+            y(r);
+            for (const m of this.values()) if (m.eqIdentity(r)) return !0;
+            return !1;
+          }
+          sexpr() {
+            return f(o.ast_vector_to_string(c, this.ptr));
+          }
+        }
+        class xn {
+          constructor(r = o.mk_ast_map(c)) {
+            ((this.ptr = r), (this.ctx = F), o.ast_map_inc_ref(c, r), E.register(this, () => o.ast_map_dec_ref(c, r), this));
+          }
+          [Symbol.iterator]() {
+            return this.entries();
+          }
+          get size() {
+            return o.ast_map_size(c, this.ptr);
+          }
+          *entries() {
+            for (const r of this.keys()) yield [r, this.get(r)];
+          }
+          keys() {
+            return new rt(o.ast_map_keys(c, this.ptr));
+          }
+          *values() {
+            for (const [r, m] of this.entries()) yield m;
+          }
+          get(r) {
+            return ue(f(o.ast_map_find(c, this.ptr, r.ast)));
+          }
+          set(r, m) {
+            f(o.ast_map_insert(c, this.ptr, r.ast, m.ast));
+          }
+          delete(r) {
+            f(o.ast_map_erase(c, this.ptr, r.ast));
+          }
+          clear() {
+            f(o.ast_map_reset(c, this.ptr));
+          }
+          has(r) {
+            return f(o.ast_map_contains(c, this.ptr, r.ast));
+          }
+          sexpr() {
+            return f(o.ast_map_to_string(c, this.ptr));
+          }
+        }
+        function dn(n, ...r) {
+          y(n);
+          const m = [],
+            O = [];
+          for (const [A, T] of r) (y(A), y(T), m.push(A.ast), O.push(T.ast));
+          return k(f(o.substitute(c, n.ast, m, O)));
+        }
+        function Un(n) {
+          const r = [],
+            m = [],
+            O = [],
+            A = [],
+            T = new rt(f(o.parse_smtlib2_string(c, n, r, m, O, A)));
+          if (T.length() !== 1) throw new Error("Expected exactly one AST. Instead got " + T.length() + ": " + T.sexpr());
+          return T.get(0);
+        }
+        const F = {
+          ptr: c,
+          name: L,
+          Solver: Zn,
+          Optimize: Sn,
+          Model: Gt,
+          Tactic: Te,
+          AstVector: rt,
+          AstMap: xn,
+          interrupt: U_,
+          isModel: M_,
+          isAst: Nr,
+          isSort: Bt,
+          isFuncDecl: Ot,
+          isFuncInterp: Lr,
+          isApp: it,
+          isConst: K,
+          isExpr: q,
+          isVar: xr,
+          isAppOf: $,
+          isBool: Ct,
+          isTrue: F_,
+          isFalse: k_,
+          isAnd: D_,
+          isOr: q_,
+          isImplies: B_,
+          isNot: C_,
+          isEq: z_,
+          isDistinct: V_,
+          isQuantifier: G_,
+          isArith: vt,
+          isArithSort: Q_,
+          isInt: ie,
+          isIntVal: j_,
+          isIntSort: Pt,
+          isReal: ce,
+          isRealVal: Y_,
+          isRealSort: me,
+          isBitVecSort: zt,
+          isBitVec: $_,
+          isBitVecVal: H_,
+          isArraySort: W_,
+          isArray: X_,
+          isConstArray: K_,
+          isProbe: ct,
+          isTactic: Rt,
+          isAstVector: dr,
+          eqIdentity: J_,
+          getVarIndex: tn,
+          from: D,
+          solve: en,
+          Sort: _n,
+          Function: nn,
+          RecFunc: sn,
+          Bool: Q,
+          Int: j,
+          Real: z,
+          BitVec: mt,
+          Array: At,
+          Set: Ur,
+          Datatype: an,
+          If: le,
+          Distinct: on,
+          Const: Mr,
+          Consts: un,
+          FreshConst: cn,
+          Var: mn,
+          Implies: fe,
+          Iff: pe,
+          Eq: ln,
+          Xor: be,
+          Not: ge,
+          And: he,
+          Or: Oe,
+          PbEq: fn,
+          PbGe: pn,
+          PbLe: bn,
+          ForAll: gn,
+          Exists: hn,
+          Lambda: On,
+          ToReal: Pe,
+          ToInt: Pn,
+          IsInt: En,
+          Sqrt: yn,
+          Cbrt: vn,
+          BV2Int: Rn,
+          Int2BV: An,
+          Concat: Tn,
+          Cond: Fr,
+          LT: kr,
+          GT: Dr,
+          LE: qr,
+          GE: Br,
+          ULT: Cr,
+          UGT: zr,
+          ULE: Vr,
+          UGE: Gr,
+          SLT: Qr,
+          SGT: jr,
+          SLE: Yr,
+          SGE: $r,
+          Sum: we,
+          Sub: Ze,
+          Product: Se,
+          Div: Ie,
+          BUDiv: s_,
+          Neg: Ne,
+          Mod: Le,
+          Select: Ee,
+          Store: ye,
+          Extract: Hr,
+          substitute: dn,
+          simplify: rn,
+          ast_from_string: Un,
+          SetUnion: Wr,
+          SetIntersect: Xr,
+          SetDifference: Kr,
+          SetHasSize: Jr,
+          SetAdd: ve,
+          SetDel: t_,
+          SetComplement: e_,
+          EmptySet: Re,
+          FullSet: wn,
+          isMember: r_,
+          isSubset: __,
+        };
+        return (E.register(F, () => o.del_context(c)), F);
+      }
+      return {
+        enableTrace: e,
+        disableTrace: Z,
+        getVersion: N,
+        getVersionString: R,
+        getFullVersion: x,
+        openLog: s,
+        appendLog: _,
+        getParam: v,
+        setParam: a,
+        resetParams: h,
+        Context: I,
+      };
+    }
+    return Nt;
+  }
+  var wr;
+  function L_() {
+    return (
+      wr ||
+        ((wr = 1),
+        (function (l) {
+          var i =
+              (ot && ot.__createBinding) ||
+              (Object.create
+                ? function (u, b, g, p) {
+                    p === void 0 && (p = g);
+                    var P = Object.getOwnPropertyDescriptor(b, g);
+                    ((!P || ("get" in P ? !b.__esModule : P.writable || P.configurable)) &&
+                      (P = {
+                        enumerable: !0,
+                        get: function () {
+                          return b[g];
+                        },
+                      }),
+                      Object.defineProperty(u, p, P));
+                  }
+                : function (u, b, g, p) {
+                    (p === void 0 && (p = g), (u[p] = b[g]));
+                  }),
+            t =
+              (ot && ot.__exportStar) ||
+              function (u, b) {
+                for (var g in u) g !== "default" && !Object.prototype.hasOwnProperty.call(b, g) && i(b, u, g);
+              };
+          (Object.defineProperty(l, "__esModule", { value: !0 }), t(N_(), l), t(se(), l));
+        })(ot)),
+      ot
+    );
+  }
+  var x_ = L_();
+  const d_ = bt({ __proto__: null }, [x_]);
+  return h_;
+});

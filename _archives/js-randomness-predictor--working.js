@@ -1,6 +1,10 @@
-(function(global2, factory) {
-  typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, global2.JSRandomnessPredictor = factory());
-})(this, (function() {
+(function (global2, factory) {
+  typeof exports === "object" && typeof module !== "undefined"
+    ? (module.exports = factory())
+    : typeof define === "function" && define.amd
+      ? define(factory)
+      : ((global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self), (global2.JSRandomnessPredictor = factory()));
+})(this, function () {
   "use strict";
   function _mergeNamespaces(n, m) {
     for (var i = 0; i < m.length; i++) {
@@ -10,10 +14,16 @@
           if (k !== "default" && !(k in n)) {
             const d = Object.getOwnPropertyDescriptor(e, k);
             if (d) {
-              Object.defineProperty(n, k, d.get ? d : {
-                enumerable: true,
-                get: () => e[k]
-              });
+              Object.defineProperty(
+                n,
+                k,
+                d.get
+                  ? d
+                  : {
+                      enumerable: true,
+                      get: () => e[k],
+                    },
+              );
             }
           }
         }
@@ -21,7 +31,16 @@
     }
     return Object.freeze(Object.defineProperty(n, Symbol.toStringTag, { value: "Module" }));
   }
-  var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+  var commonjsGlobal =
+    typeof globalThis !== "undefined"
+      ? globalThis
+      : typeof window !== "undefined"
+        ? window
+        : typeof global !== "undefined"
+          ? global
+          : typeof self !== "undefined"
+            ? self
+            : {};
   function getDefaultExportFromCjs(x) {
     return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
   }
@@ -33,8 +52,7 @@
         var isInstance = false;
         try {
           isInstance = this instanceof a2;
-        } catch {
-        }
+        } catch {}
         if (isInstance) {
           return Reflect.construct(f, arguments, this.constructor);
         }
@@ -43,14 +61,20 @@
       a.prototype = f.prototype;
     } else a = {};
     Object.defineProperty(a, "__esModule", { value: true });
-    Object.keys(n).forEach(function(k) {
+    Object.keys(n).forEach(function (k) {
       var d = Object.getOwnPropertyDescriptor(n, k);
-      Object.defineProperty(a, k, d.get ? d : {
-        enumerable: true,
-        get: function() {
-          return n[k];
-        }
-      });
+      Object.defineProperty(
+        a,
+        k,
+        d.get
+          ? d
+          : {
+              enumerable: true,
+              get: function () {
+                return n[k];
+              },
+            },
+      );
     });
     return a;
   }
@@ -80,17 +104,17 @@
       }
       var validLen = b64.indexOf("=");
       if (validLen === -1) validLen = len2;
-      var placeHoldersLen = validLen === len2 ? 0 : 4 - validLen % 4;
+      var placeHoldersLen = validLen === len2 ? 0 : 4 - (validLen % 4);
       return [validLen, placeHoldersLen];
     }
     function byteLength(b64) {
       var lens = getLens(b64);
       var validLen = lens[0];
       var placeHoldersLen = lens[1];
-      return (validLen + placeHoldersLen) * 3 / 4 - placeHoldersLen;
+      return ((validLen + placeHoldersLen) * 3) / 4 - placeHoldersLen;
     }
     function _byteLength(b64, validLen, placeHoldersLen) {
-      return (validLen + placeHoldersLen) * 3 / 4 - placeHoldersLen;
+      return ((validLen + placeHoldersLen) * 3) / 4 - placeHoldersLen;
     }
     function toByteArray(b64) {
       var tmp;
@@ -102,30 +126,34 @@
       var len2 = placeHoldersLen > 0 ? validLen - 4 : validLen;
       var i2;
       for (i2 = 0; i2 < len2; i2 += 4) {
-        tmp = revLookup[b64.charCodeAt(i2)] << 18 | revLookup[b64.charCodeAt(i2 + 1)] << 12 | revLookup[b64.charCodeAt(i2 + 2)] << 6 | revLookup[b64.charCodeAt(i2 + 3)];
-        arr[curByte++] = tmp >> 16 & 255;
-        arr[curByte++] = tmp >> 8 & 255;
+        tmp =
+          (revLookup[b64.charCodeAt(i2)] << 18) |
+          (revLookup[b64.charCodeAt(i2 + 1)] << 12) |
+          (revLookup[b64.charCodeAt(i2 + 2)] << 6) |
+          revLookup[b64.charCodeAt(i2 + 3)];
+        arr[curByte++] = (tmp >> 16) & 255;
+        arr[curByte++] = (tmp >> 8) & 255;
         arr[curByte++] = tmp & 255;
       }
       if (placeHoldersLen === 2) {
-        tmp = revLookup[b64.charCodeAt(i2)] << 2 | revLookup[b64.charCodeAt(i2 + 1)] >> 4;
+        tmp = (revLookup[b64.charCodeAt(i2)] << 2) | (revLookup[b64.charCodeAt(i2 + 1)] >> 4);
         arr[curByte++] = tmp & 255;
       }
       if (placeHoldersLen === 1) {
-        tmp = revLookup[b64.charCodeAt(i2)] << 10 | revLookup[b64.charCodeAt(i2 + 1)] << 4 | revLookup[b64.charCodeAt(i2 + 2)] >> 2;
-        arr[curByte++] = tmp >> 8 & 255;
+        tmp = (revLookup[b64.charCodeAt(i2)] << 10) | (revLookup[b64.charCodeAt(i2 + 1)] << 4) | (revLookup[b64.charCodeAt(i2 + 2)] >> 2);
+        arr[curByte++] = (tmp >> 8) & 255;
         arr[curByte++] = tmp & 255;
       }
       return arr;
     }
     function tripletToBase64(num) {
-      return lookup[num >> 18 & 63] + lookup[num >> 12 & 63] + lookup[num >> 6 & 63] + lookup[num & 63];
+      return lookup[(num >> 18) & 63] + lookup[(num >> 12) & 63] + lookup[(num >> 6) & 63] + lookup[num & 63];
     }
     function encodeChunk(uint8, start, end) {
       var tmp;
       var output = [];
       for (var i2 = start; i2 < end; i2 += 3) {
-        tmp = (uint8[i2] << 16 & 16711680) + (uint8[i2 + 1] << 8 & 65280) + (uint8[i2 + 2] & 255);
+        tmp = ((uint8[i2] << 16) & 16711680) + ((uint8[i2 + 1] << 8) & 65280) + (uint8[i2 + 2] & 255);
         output.push(tripletToBase64(tmp));
       }
       return output.join("");
@@ -141,14 +169,10 @@
       }
       if (extraBytes === 1) {
         tmp = uint8[len2 - 1];
-        parts.push(
-          lookup[tmp >> 2] + lookup[tmp << 4 & 63] + "=="
-        );
+        parts.push(lookup[tmp >> 2] + lookup[(tmp << 4) & 63] + "==");
       } else if (extraBytes === 2) {
         tmp = (uint8[len2 - 2] << 8) + uint8[len2 - 1];
-        parts.push(
-          lookup[tmp >> 10] + lookup[tmp >> 4 & 63] + lookup[tmp << 2 & 63] + "="
-        );
+        parts.push(lookup[tmp >> 10] + lookup[(tmp >> 4) & 63] + lookup[(tmp << 2) & 63] + "=");
       }
       return parts.join("");
     }
@@ -160,7 +184,7 @@
   function requireIeee754() {
     if (hasRequiredIeee754) return ieee754;
     hasRequiredIeee754 = 1;
-    ieee754.read = function(buffer2, offset, isLE, mLen, nBytes) {
+    ieee754.read = function (buffer2, offset, isLE, mLen, nBytes) {
       var e, m;
       var eLen = nBytes * 8 - mLen - 1;
       var eMax = (1 << eLen) - 1;
@@ -170,16 +194,14 @@
       var d = isLE ? -1 : 1;
       var s = buffer2[offset + i];
       i += d;
-      e = s & (1 << -nBits) - 1;
+      e = s & ((1 << -nBits) - 1);
       s >>= -nBits;
       nBits += eLen;
-      for (; nBits > 0; e = e * 256 + buffer2[offset + i], i += d, nBits -= 8) {
-      }
-      m = e & (1 << -nBits) - 1;
+      for (; nBits > 0; e = e * 256 + buffer2[offset + i], i += d, nBits -= 8) {}
+      m = e & ((1 << -nBits) - 1);
       e >>= -nBits;
       nBits += mLen;
-      for (; nBits > 0; m = m * 256 + buffer2[offset + i], i += d, nBits -= 8) {
-      }
+      for (; nBits > 0; m = m * 256 + buffer2[offset + i], i += d, nBits -= 8) {}
       if (e === 0) {
         e = 1 - eBias;
       } else if (e === eMax) {
@@ -190,7 +212,7 @@
       }
       return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
     };
-    ieee754.write = function(buffer2, value, offset, isLE, mLen, nBytes) {
+    ieee754.write = function (buffer2, value, offset, isLE, mLen, nBytes) {
       var e, m, c;
       var eLen = nBytes * 8 - mLen - 1;
       var eMax = (1 << eLen) - 1;
@@ -198,7 +220,7 @@
       var rt = mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0;
       var i = isLE ? 0 : nBytes - 1;
       var d = isLE ? 1 : -1;
-      var s = value < 0 || value === 0 && 1 / value < 0 ? 1 : 0;
+      var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
       value = Math.abs(value);
       if (isNaN(value) || value === Infinity) {
         m = isNaN(value) ? 1 : 0;
@@ -229,12 +251,10 @@
           e = 0;
         }
       }
-      for (; mLen >= 8; buffer2[offset + i] = m & 255, i += d, m /= 256, mLen -= 8) {
-      }
-      e = e << mLen | m;
+      for (; mLen >= 8; buffer2[offset + i] = m & 255, i += d, m /= 256, mLen -= 8) {}
+      e = (e << mLen) | m;
       eLen += mLen;
-      for (; eLen > 0; buffer2[offset + i] = e & 255, i += d, e /= 256, eLen -= 8) {
-      }
+      for (; eLen > 0; buffer2[offset + i] = e & 255, i += d, e /= 256, eLen -= 8) {}
       buffer2[offset + i - d] |= s * 128;
     };
     return ieee754;
@@ -249,10 +269,11 @@
   function requireBuffer() {
     if (hasRequiredBuffer) return buffer;
     hasRequiredBuffer = 1;
-    (function(exports2) {
+    (function (exports2) {
       const base64 = requireBase64Js();
       const ieee7542 = requireIeee754();
-      const customInspectSymbol = typeof Symbol === "function" && typeof Symbol["for"] === "function" ? Symbol["for"]("nodejs.util.inspect.custom") : null;
+      const customInspectSymbol =
+        typeof Symbol === "function" && typeof Symbol["for"] === "function" ? Symbol["for"]("nodejs.util.inspect.custom") : null;
       exports2.Buffer = Buffer;
       exports2.SlowBuffer = SlowBuffer;
       exports2.INSPECT_MAX_BYTES = 50;
@@ -261,15 +282,17 @@
       Buffer.TYPED_ARRAY_SUPPORT = typedArraySupport();
       if (!Buffer.TYPED_ARRAY_SUPPORT && typeof console !== "undefined" && typeof console.error === "function") {
         console.error(
-          "This browser lacks typed array (Uint8Array) support which is required by `buffer` v5.x. Use `buffer` v4.x if you require old browser support."
+          "This browser lacks typed array (Uint8Array) support which is required by `buffer` v5.x. Use `buffer` v4.x if you require old browser support.",
         );
       }
       function typedArraySupport() {
         try {
           const arr = new Uint8Array(1);
-          const proto = { foo: function() {
-            return 42;
-          } };
+          const proto = {
+            foo: function () {
+              return 42;
+            },
+          };
           Object.setPrototypeOf(proto, Uint8Array.prototype);
           Object.setPrototypeOf(arr, proto);
           return arr.foo() === 42;
@@ -279,17 +302,17 @@
       }
       Object.defineProperty(Buffer.prototype, "parent", {
         enumerable: true,
-        get: function() {
+        get: function () {
           if (!Buffer.isBuffer(this)) return void 0;
           return this.buffer;
-        }
+        },
       });
       Object.defineProperty(Buffer.prototype, "offset", {
         enumerable: true,
-        get: function() {
+        get: function () {
           if (!Buffer.isBuffer(this)) return void 0;
           return this.byteOffset;
-        }
+        },
       });
       function createBuffer(length) {
         if (length > K_MAX_LENGTH) {
@@ -302,9 +325,7 @@
       function Buffer(arg, encodingOrOffset, length) {
         if (typeof arg === "number") {
           if (typeof encodingOrOffset === "string") {
-            throw new TypeError(
-              'The "string" argument must be of type string. Received type number'
-            );
+            throw new TypeError('The "string" argument must be of type string. Received type number');
           }
           return allocUnsafe(arg);
         }
@@ -320,19 +341,20 @@
         }
         if (value == null) {
           throw new TypeError(
-            "The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof value
+            "The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof value,
           );
         }
-        if (isInstance(value, ArrayBuffer) || value && isInstance(value.buffer, ArrayBuffer)) {
+        if (isInstance(value, ArrayBuffer) || (value && isInstance(value.buffer, ArrayBuffer))) {
           return fromArrayBuffer(value, encodingOrOffset, length);
         }
-        if (typeof SharedArrayBuffer !== "undefined" && (isInstance(value, SharedArrayBuffer) || value && isInstance(value.buffer, SharedArrayBuffer))) {
+        if (
+          typeof SharedArrayBuffer !== "undefined" &&
+          (isInstance(value, SharedArrayBuffer) || (value && isInstance(value.buffer, SharedArrayBuffer)))
+        ) {
           return fromArrayBuffer(value, encodingOrOffset, length);
         }
         if (typeof value === "number") {
-          throw new TypeError(
-            'The "value" argument must not be of type number. Received type number'
-          );
+          throw new TypeError('The "value" argument must not be of type number. Received type number');
         }
         const valueOf = value.valueOf && value.valueOf();
         if (valueOf != null && valueOf !== value) {
@@ -344,10 +366,10 @@
           return Buffer.from(value[Symbol.toPrimitive]("string"), encodingOrOffset, length);
         }
         throw new TypeError(
-          "The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof value
+          "The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof value,
         );
       }
-      Buffer.from = function(value, encodingOrOffset, length) {
+      Buffer.from = function (value, encodingOrOffset, length) {
         return from(value, encodingOrOffset, length);
       };
       Object.setPrototypeOf(Buffer.prototype, Uint8Array.prototype);
@@ -369,17 +391,17 @@
         }
         return createBuffer(size);
       }
-      Buffer.alloc = function(size, fill, encoding) {
+      Buffer.alloc = function (size, fill, encoding) {
         return alloc(size, fill, encoding);
       };
       function allocUnsafe(size) {
         assertSize(size);
         return createBuffer(size < 0 ? 0 : checked(size) | 0);
       }
-      Buffer.allocUnsafe = function(size) {
+      Buffer.allocUnsafe = function (size) {
         return allocUnsafe(size);
       };
-      Buffer.allocUnsafeSlow = function(size) {
+      Buffer.allocUnsafeSlow = function (size) {
         return allocUnsafe(size);
       };
       function fromString(string, encoding) {
@@ -469,9 +491,7 @@
         if (isInstance(a, Uint8Array)) a = Buffer.from(a, a.offset, a.byteLength);
         if (isInstance(b, Uint8Array)) b = Buffer.from(b, b.offset, b.byteLength);
         if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
-          throw new TypeError(
-            'The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array'
-          );
+          throw new TypeError('The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array');
         }
         if (a === b) return 0;
         let x = a.length;
@@ -528,11 +548,7 @@
               if (!Buffer.isBuffer(buf)) buf = Buffer.from(buf);
               buf.copy(buffer2, pos);
             } else {
-              Uint8Array.prototype.set.call(
-                buffer2,
-                buf,
-                pos
-              );
+              Uint8Array.prototype.set.call(buffer2, buf, pos);
             }
           } else if (!Buffer.isBuffer(buf)) {
             throw new TypeError('"list" argument must be an Array of Buffers');
@@ -551,15 +567,13 @@
           return string.byteLength;
         }
         if (typeof string !== "string") {
-          throw new TypeError(
-            'The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type ' + typeof string
-          );
+          throw new TypeError('The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type ' + typeof string);
         }
         const len = string.length;
         const mustMatch = arguments.length > 2 && arguments[2] === true;
         if (!mustMatch && len === 0) return 0;
         let loweredCase = false;
-        for (; ; ) {
+        for (;;) {
           switch (encoding) {
             case "ascii":
             case "latin1":
@@ -688,7 +702,9 @@
       Buffer.prototype.inspect = function inspect() {
         let str = "";
         const max = exports2.INSPECT_MAX_BYTES;
-        str = this.toString("hex", 0, max).replace(/(.{2})/g, "$1 ").trim();
+        str = this.toString("hex", 0, max)
+          .replace(/(.{2})/g, "$1 ")
+          .trim();
         if (this.length > max) str += " ... ";
         return "<Buffer " + str + ">";
       };
@@ -700,9 +716,7 @@
           target = Buffer.from(target, target.offset, target.byteLength);
         }
         if (!Buffer.isBuffer(target)) {
-          throw new TypeError(
-            'The "target" argument must be one of type Buffer or Uint8Array. Received type ' + typeof target
-          );
+          throw new TypeError('The "target" argument must be one of type Buffer or Uint8Array. Received type ' + typeof target);
         }
         if (start === void 0) {
           start = 0;
@@ -905,18 +919,16 @@
             length = void 0;
           }
         } else {
-          throw new Error(
-            "Buffer.write(string, encoding, offset[, length]) is no longer supported"
-          );
+          throw new Error("Buffer.write(string, encoding, offset[, length]) is no longer supported");
         }
         const remaining = this.length - offset;
         if (length === void 0 || length > remaining) length = remaining;
-        if (string.length > 0 && (length < 0 || offset < 0) || offset > this.length) {
+        if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
           throw new RangeError("Attempt to write outside buffer bounds");
         }
         if (!encoding) encoding = "utf8";
         let loweredCase = false;
-        for (; ; ) {
+        for (;;) {
           switch (encoding) {
             case "hex":
               return hexWrite(this, string, offset, length);
@@ -944,7 +956,7 @@
       Buffer.prototype.toJSON = function toJSON() {
         return {
           type: "Buffer",
-          data: Array.prototype.slice.call(this._arr || this, 0)
+          data: Array.prototype.slice.call(this._arr || this, 0),
         };
       };
       function base64Slice(buf, start, end) {
@@ -973,7 +985,7 @@
               case 2:
                 secondByte = buf[i + 1];
                 if ((secondByte & 192) === 128) {
-                  tempCodePoint = (firstByte & 31) << 6 | secondByte & 63;
+                  tempCodePoint = ((firstByte & 31) << 6) | (secondByte & 63);
                   if (tempCodePoint > 127) {
                     codePoint = tempCodePoint;
                   }
@@ -983,7 +995,7 @@
                 secondByte = buf[i + 1];
                 thirdByte = buf[i + 2];
                 if ((secondByte & 192) === 128 && (thirdByte & 192) === 128) {
-                  tempCodePoint = (firstByte & 15) << 12 | (secondByte & 63) << 6 | thirdByte & 63;
+                  tempCodePoint = ((firstByte & 15) << 12) | ((secondByte & 63) << 6) | (thirdByte & 63);
                   if (tempCodePoint > 2047 && (tempCodePoint < 55296 || tempCodePoint > 57343)) {
                     codePoint = tempCodePoint;
                   }
@@ -994,7 +1006,7 @@
                 thirdByte = buf[i + 2];
                 fourthByte = buf[i + 3];
                 if ((secondByte & 192) === 128 && (thirdByte & 192) === 128 && (fourthByte & 192) === 128) {
-                  tempCodePoint = (firstByte & 15) << 18 | (secondByte & 63) << 12 | (thirdByte & 63) << 6 | fourthByte & 63;
+                  tempCodePoint = ((firstByte & 15) << 18) | ((secondByte & 63) << 12) | ((thirdByte & 63) << 6) | (fourthByte & 63);
                   if (tempCodePoint > 65535 && tempCodePoint < 1114112) {
                     codePoint = tempCodePoint;
                   }
@@ -1006,8 +1018,8 @@
             bytesPerSequence = 1;
           } else if (codePoint > 65535) {
             codePoint -= 65536;
-            res.push(codePoint >>> 10 & 1023 | 55296);
-            codePoint = 56320 | codePoint & 1023;
+            res.push(((codePoint >>> 10) & 1023) | 55296);
+            codePoint = 56320 | (codePoint & 1023);
           }
           res.push(codePoint);
           i += bytesPerSequence;
@@ -1023,10 +1035,7 @@
         let res = "";
         let i = 0;
         while (i < len) {
-          res += String.fromCharCode.apply(
-            String,
-            codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
-          );
+          res += String.fromCharCode.apply(String, codePoints.slice(i, (i += MAX_ARGUMENTS_LENGTH)));
         }
         return res;
       }
@@ -1122,22 +1131,22 @@
       Buffer.prototype.readUint16LE = Buffer.prototype.readUInt16LE = function readUInt16LE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert) checkOffset(offset, 2, this.length);
-        return this[offset] | this[offset + 1] << 8;
+        return this[offset] | (this[offset + 1] << 8);
       };
       Buffer.prototype.readUint16BE = Buffer.prototype.readUInt16BE = function readUInt16BE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert) checkOffset(offset, 2, this.length);
-        return this[offset] << 8 | this[offset + 1];
+        return (this[offset] << 8) | this[offset + 1];
       };
       Buffer.prototype.readUint32LE = Buffer.prototype.readUInt32LE = function readUInt32LE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert) checkOffset(offset, 4, this.length);
-        return (this[offset] | this[offset + 1] << 8 | this[offset + 2] << 16) + this[offset + 3] * 16777216;
+        return (this[offset] | (this[offset + 1] << 8) | (this[offset + 2] << 16)) + this[offset + 3] * 16777216;
       };
       Buffer.prototype.readUint32BE = Buffer.prototype.readUInt32BE = function readUInt32BE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert) checkOffset(offset, 4, this.length);
-        return this[offset] * 16777216 + (this[offset + 1] << 16 | this[offset + 2] << 8 | this[offset + 3]);
+        return this[offset] * 16777216 + ((this[offset + 1] << 16) | (this[offset + 2] << 8) | this[offset + 3]);
       };
       Buffer.prototype.readBigUInt64LE = defineBigIntMethod(function readBigUInt64LE(offset) {
         offset = offset >>> 0;
@@ -1200,24 +1209,24 @@
       Buffer.prototype.readInt16LE = function readInt16LE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert) checkOffset(offset, 2, this.length);
-        const val = this[offset] | this[offset + 1] << 8;
+        const val = this[offset] | (this[offset + 1] << 8);
         return val & 32768 ? val | 4294901760 : val;
       };
       Buffer.prototype.readInt16BE = function readInt16BE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert) checkOffset(offset, 2, this.length);
-        const val = this[offset + 1] | this[offset] << 8;
+        const val = this[offset + 1] | (this[offset] << 8);
         return val & 32768 ? val | 4294901760 : val;
       };
       Buffer.prototype.readInt32LE = function readInt32LE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert) checkOffset(offset, 4, this.length);
-        return this[offset] | this[offset + 1] << 8 | this[offset + 2] << 16 | this[offset + 3] << 24;
+        return this[offset] | (this[offset + 1] << 8) | (this[offset + 2] << 16) | (this[offset + 3] << 24);
       };
       Buffer.prototype.readInt32BE = function readInt32BE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert) checkOffset(offset, 4, this.length);
-        return this[offset] << 24 | this[offset + 1] << 16 | this[offset + 2] << 8 | this[offset + 3];
+        return (this[offset] << 24) | (this[offset + 1] << 16) | (this[offset + 2] << 8) | this[offset + 3];
       };
       Buffer.prototype.readBigInt64LE = defineBigIntMethod(function readBigInt64LE(offset) {
         offset = offset >>> 0;
@@ -1238,8 +1247,11 @@
         if (first === void 0 || last === void 0) {
           boundsError(offset, this.length - 8);
         }
-        const val = (first << 24) + // Overflow
-        this[++offset] * 2 ** 16 + this[++offset] * 2 ** 8 + this[++offset];
+        const val =
+          (first << 24) + // Overflow
+          this[++offset] * 2 ** 16 +
+          this[++offset] * 2 ** 8 +
+          this[++offset];
         return (BigInt(val) << BigInt(32)) + BigInt(this[++offset] * 2 ** 24 + this[++offset] * 2 ** 16 + this[++offset] * 2 ** 8 + last);
       });
       Buffer.prototype.readFloatLE = function readFloatLE(offset, noAssert) {
@@ -1279,7 +1291,7 @@
         let i = 0;
         this[offset] = value & 255;
         while (++i < byteLength2 && (mul *= 256)) {
-          this[offset + i] = value / mul & 255;
+          this[offset + i] = (value / mul) & 255;
         }
         return offset + byteLength2;
       };
@@ -1295,7 +1307,7 @@
         let mul = 1;
         this[offset + i] = value & 255;
         while (--i >= 0 && (mul *= 256)) {
-          this[offset + i] = value / mul & 255;
+          this[offset + i] = (value / mul) & 255;
         }
         return offset + byteLength2;
       };
@@ -1352,7 +1364,7 @@
         buf[offset++] = lo;
         lo = lo >> 8;
         buf[offset++] = lo;
-        let hi = Number(value >> BigInt(32) & BigInt(4294967295));
+        let hi = Number((value >> BigInt(32)) & BigInt(4294967295));
         buf[offset++] = hi;
         hi = hi >> 8;
         buf[offset++] = hi;
@@ -1372,7 +1384,7 @@
         buf[offset + 5] = lo;
         lo = lo >> 8;
         buf[offset + 4] = lo;
-        let hi = Number(value >> BigInt(32) & BigInt(4294967295));
+        let hi = Number((value >> BigInt(32)) & BigInt(4294967295));
         buf[offset + 3] = hi;
         hi = hi >> 8;
         buf[offset + 2] = hi;
@@ -1403,7 +1415,7 @@
           if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
             sub = 1;
           }
-          this[offset + i] = (value / mul >> 0) - sub & 255;
+          this[offset + i] = (((value / mul) >> 0) - sub) & 255;
         }
         return offset + byteLength2;
       };
@@ -1422,7 +1434,7 @@
           if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
             sub = 1;
           }
-          this[offset + i] = (value / mul >> 0) - sub & 255;
+          this[offset + i] = (((value / mul) >> 0) - sub) & 255;
         }
         return offset + byteLength2;
       };
@@ -1533,11 +1545,7 @@
         if (this === target && typeof Uint8Array.prototype.copyWithin === "function") {
           this.copyWithin(targetStart, start, end);
         } else {
-          Uint8Array.prototype.set.call(
-            target,
-            this.subarray(start, end),
-            targetStart
-          );
+          Uint8Array.prototype.set.call(target, this.subarray(start, end), targetStart);
         }
         return len;
       };
@@ -1559,7 +1567,7 @@
           }
           if (val.length === 1) {
             const code = val.charCodeAt(0);
-            if (encoding === "utf8" && code < 128 || encoding === "latin1") {
+            if ((encoding === "utf8" && code < 128) || encoding === "latin1") {
               val = code;
             }
           }
@@ -1602,7 +1610,7 @@
             Object.defineProperty(this, "message", {
               value: getMessage.apply(this, arguments),
               writable: true,
-              configurable: true
+              configurable: true,
             });
             this.name = `${this.name} [${sym}]`;
             this.stack;
@@ -1616,7 +1624,7 @@
               configurable: true,
               enumerable: true,
               value,
-              writable: true
+              writable: true,
             });
           }
           toString() {
@@ -1626,24 +1634,24 @@
       }
       E(
         "ERR_BUFFER_OUT_OF_BOUNDS",
-        function(name) {
+        function (name) {
           if (name) {
             return `${name} is outside of buffer bounds`;
           }
           return "Attempt to access memory outside buffer bounds";
         },
-        RangeError
+        RangeError,
       );
       E(
         "ERR_INVALID_ARG_TYPE",
-        function(name, actual) {
+        function (name, actual) {
           return `The "${name}" argument must be of type number. Received type ${typeof actual}`;
         },
-        TypeError
+        TypeError,
       );
       E(
         "ERR_OUT_OF_RANGE",
-        function(str, range, input) {
+        function (str, range, input) {
           let msg = `The value of "${str}" is out of range.`;
           let received = input;
           if (Number.isInteger(input) && Math.abs(input) > 2 ** 32) {
@@ -1658,7 +1666,7 @@
           msg += ` It must be ${range}. Received ${received}`;
           return msg;
         },
-        RangeError
+        RangeError,
       );
       function addNumericalSeparator(val) {
         let res = "";
@@ -1703,11 +1711,7 @@
         if (length < 0) {
           throw new errors2.ERR_BUFFER_OUT_OF_BOUNDS();
         }
-        throw new errors2.ERR_OUT_OF_RANGE(
-          "offset",
-          `>= ${0} and <= ${length}`,
-          value
-        );
+        throw new errors2.ERR_OUT_OF_RANGE("offset", `>= ${0} and <= ${length}`, value);
       }
       const INVALID_BASE64_RE = /[^+/0-9A-Za-z-_]/g;
       function base64clean(str) {
@@ -1744,7 +1748,7 @@
               leadSurrogate = codePoint;
               continue;
             }
-            codePoint = (leadSurrogate - 55296 << 10 | codePoint - 56320) + 65536;
+            codePoint = (((leadSurrogate - 55296) << 10) | (codePoint - 56320)) + 65536;
           } else if (leadSurrogate) {
             if ((units -= 3) > -1) bytes.push(239, 191, 189);
           }
@@ -1754,25 +1758,13 @@
             bytes.push(codePoint);
           } else if (codePoint < 2048) {
             if ((units -= 2) < 0) break;
-            bytes.push(
-              codePoint >> 6 | 192,
-              codePoint & 63 | 128
-            );
+            bytes.push((codePoint >> 6) | 192, (codePoint & 63) | 128);
           } else if (codePoint < 65536) {
             if ((units -= 3) < 0) break;
-            bytes.push(
-              codePoint >> 12 | 224,
-              codePoint >> 6 & 63 | 128,
-              codePoint & 63 | 128
-            );
+            bytes.push((codePoint >> 12) | 224, ((codePoint >> 6) & 63) | 128, (codePoint & 63) | 128);
           } else if (codePoint < 1114112) {
             if ((units -= 4) < 0) break;
-            bytes.push(
-              codePoint >> 18 | 240,
-              codePoint >> 12 & 63 | 128,
-              codePoint >> 6 & 63 | 128,
-              codePoint & 63 | 128
-            );
+            bytes.push((codePoint >> 18) | 240, ((codePoint >> 12) & 63) | 128, ((codePoint >> 6) & 63) | 128, (codePoint & 63) | 128);
           } else {
             throw new Error("Invalid code point");
           }
@@ -1811,12 +1803,12 @@
         return i;
       }
       function isInstance(obj, type) {
-        return obj instanceof type || obj != null && obj.constructor != null && obj.constructor.name != null && obj.constructor.name === type.name;
+        return obj instanceof type || (obj != null && obj.constructor != null && obj.constructor.name != null && obj.constructor.name === type.name);
       }
       function numberIsNaN(obj) {
         return obj !== obj;
       }
-      const hexSliceLookupTable = (function() {
+      const hexSliceLookupTable = (function () {
         const alphabet = "0123456789abcdef";
         const table = new Array(256);
         for (let i = 0; i < 16; ++i) {
@@ -1841,52 +1833,58 @@
   var highLevel$1 = {};
   var highLevel = {};
   var lib = {};
-  var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d2, b2) {
-      d2.__proto__ = b2;
-    } || function(d2, b2) {
-      for (var p in b2) if (Object.prototype.hasOwnProperty.call(b2, p)) d2[p] = b2[p];
-    };
+  var extendStatics = function (d, b) {
+    extendStatics =
+      Object.setPrototypeOf ||
+      ({ __proto__: [] } instanceof Array &&
+        function (d2, b2) {
+          d2.__proto__ = b2;
+        }) ||
+      function (d2, b2) {
+        for (var p in b2) if (Object.prototype.hasOwnProperty.call(b2, p)) d2[p] = b2[p];
+      };
     return extendStatics(d, b);
   };
   function __extends(d, b) {
-    if (typeof b !== "function" && b !== null)
-      throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+    if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() {
       this.constructor = d;
     }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    d.prototype = b === null ? Object.create(b) : ((__.prototype = b.prototype), new __());
   }
-  var __assign = function() {
-    __assign = Object.assign || function __assign2(t) {
-      for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-      return t;
-    };
+  var __assign = function () {
+    __assign =
+      Object.assign ||
+      function __assign2(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+      };
     return __assign.apply(this, arguments);
   };
   function __rest(s, e) {
     var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-      t[p] = s[p];
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
     if (s != null && typeof Object.getOwnPropertySymbols === "function")
       for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-        if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-          t[p[i]] = s[p[i]];
+        if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
       }
     return t;
   }
   function __decorate(decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    var c = arguments.length,
+      r = c < 3 ? target : desc === null ? (desc = Object.getOwnPropertyDescriptor(target, key)) : desc,
+      d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
+    else
+      for (var i = decorators.length - 1; i >= 0; i--) if ((d = decorators[i])) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return (c > 3 && r && Object.defineProperty(target, key, r), r);
   }
   function __param(paramIndex, decorator) {
-    return function(target, key) {
+    return function (target, key) {
       decorator(target, key, paramIndex);
     };
   }
@@ -1895,15 +1893,17 @@
       if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected");
       return f;
     }
-    var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
-    var target = !descriptorIn && ctor ? contextIn["static"] ? ctor : ctor.prototype : null;
+    var kind = contextIn.kind,
+      key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
+    var target = !descriptorIn && ctor ? (contextIn["static"] ? ctor : ctor.prototype) : null;
     var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
-    var _, done = false;
+    var _,
+      done = false;
     for (var i = decorators.length - 1; i >= 0; i--) {
       var context = {};
       for (var p in contextIn) context[p] = p === "access" ? {} : contextIn[p];
       for (var p in contextIn.access) context.access[p] = contextIn.access[p];
-      context.addInitializer = function(f) {
+      context.addInitializer = function (f) {
         if (done) throw new TypeError("Cannot add initializers after decoration has completed");
         extraInitializers.push(accept(f || null));
       };
@@ -1911,10 +1911,10 @@
       if (kind === "accessor") {
         if (result === void 0) continue;
         if (result === null || typeof result !== "object") throw new TypeError("Object expected");
-        if (_ = accept(result.get)) descriptor.get = _;
-        if (_ = accept(result.set)) descriptor.set = _;
-        if (_ = accept(result.init)) initializers.unshift(_);
-      } else if (_ = accept(result)) {
+        if ((_ = accept(result.get))) descriptor.get = _;
+        if ((_ = accept(result.set))) descriptor.set = _;
+        if ((_ = accept(result.init))) initializers.unshift(_);
+      } else if ((_ = accept(result))) {
         if (kind === "field") initializers.unshift(_);
         else descriptor[key] = _;
       }
@@ -1941,11 +1941,13 @@
   }
   function __awaiter(thisArg, _arguments, P, generator) {
     function adopt(value) {
-      return value instanceof P ? value : new P(function(resolve) {
-        resolve(value);
-      });
+      return value instanceof P
+        ? value
+        : new P(function (resolve) {
+            resolve(value);
+          });
     }
-    return new (P || (P = Promise))(function(resolve, reject) {
+    return new (P || (P = Promise))(function (resolve, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -1967,105 +1969,137 @@
     });
   }
   function __generator(thisArg, body) {
-    var _ = { label: 0, sent: function() {
-      if (t[0] & 1) throw t[1];
-      return t[1];
-    }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() {
-      return this;
-    }), g;
+    var _ = {
+        label: 0,
+        sent: function () {
+          if (t[0] & 1) throw t[1];
+          return t[1];
+        },
+        trys: [],
+        ops: [],
+      },
+      f,
+      y,
+      t,
+      g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return (
+      (g.next = verb(0)),
+      (g["throw"] = verb(1)),
+      (g["return"] = verb(2)),
+      typeof Symbol === "function" &&
+        (g[Symbol.iterator] = function () {
+          return this;
+        }),
+      g
+    );
     function verb(n) {
-      return function(v) {
+      return function (v) {
         return step([n, v]);
       };
     }
     function step(op) {
       if (f) throw new TypeError("Generator is already executing.");
-      while (g && (g = 0, op[0] && (_ = 0)), _) try {
-        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-        if (y = 0, t) op = [op[0] & 2, t.value];
-        switch (op[0]) {
-          case 0:
-          case 1:
-            t = op;
-            break;
-          case 4:
-            _.label++;
-            return { value: op[1], done: false };
-          case 5:
-            _.label++;
-            y = op[1];
-            op = [0];
-            continue;
-          case 7:
-            op = _.ops.pop();
-            _.trys.pop();
-            continue;
-          default:
-            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-              _ = 0;
-              continue;
-            }
-            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-              _.label = op[1];
-              break;
-            }
-            if (op[0] === 6 && _.label < t[1]) {
-              _.label = t[1];
+      while ((g && ((g = 0), op[0] && (_ = 0)), _))
+        try {
+          if (
+            ((f = 1),
+            y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done)
+          )
+            return t;
+          if (((y = 0), t)) op = [op[0] & 2, t.value];
+          switch (op[0]) {
+            case 0:
+            case 1:
               t = op;
               break;
-            }
-            if (t && _.label < t[2]) {
-              _.label = t[2];
-              _.ops.push(op);
-              break;
-            }
-            if (t[2]) _.ops.pop();
-            _.trys.pop();
-            continue;
+            case 4:
+              _.label++;
+              return { value: op[1], done: false };
+            case 5:
+              _.label++;
+              y = op[1];
+              op = [0];
+              continue;
+            case 7:
+              op = _.ops.pop();
+              _.trys.pop();
+              continue;
+            default:
+              if (!((t = _.trys), (t = t.length > 0 && t[t.length - 1])) && (op[0] === 6 || op[0] === 2)) {
+                _ = 0;
+                continue;
+              }
+              if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) {
+                _.label = op[1];
+                break;
+              }
+              if (op[0] === 6 && _.label < t[1]) {
+                _.label = t[1];
+                t = op;
+                break;
+              }
+              if (t && _.label < t[2]) {
+                _.label = t[2];
+                _.ops.push(op);
+                break;
+              }
+              if (t[2]) _.ops.pop();
+              _.trys.pop();
+              continue;
+          }
+          op = body.call(thisArg, _);
+        } catch (e) {
+          op = [6, e];
+          y = 0;
+        } finally {
+          f = t = 0;
         }
-        op = body.call(thisArg, _);
-      } catch (e) {
-        op = [6, e];
-        y = 0;
-      } finally {
-        f = t = 0;
-      }
       if (op[0] & 5) throw op[1];
       return { value: op[0] ? op[1] : void 0, done: true };
     }
   }
-  var __createBinding = Object.create ? (function(o, m, k, k2) {
-    if (k2 === void 0) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() {
-        return m[k];
-      } };
-    }
-    Object.defineProperty(o, k2, desc);
-  }) : (function(o, m, k, k2) {
-    if (k2 === void 0) k2 = k;
-    o[k2] = m[k];
-  });
+  var __createBinding = Object.create
+    ? function (o, m, k, k2) {
+        if (k2 === void 0) k2 = k;
+        var desc = Object.getOwnPropertyDescriptor(m, k);
+        if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+          desc = {
+            enumerable: true,
+            get: function () {
+              return m[k];
+            },
+          };
+        }
+        Object.defineProperty(o, k2, desc);
+      }
+    : function (o, m, k, k2) {
+        if (k2 === void 0) k2 = k;
+        o[k2] = m[k];
+      };
   function __exportStar(m, o) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(o, p)) __createBinding(o, m, p);
   }
   function __values(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    var s = typeof Symbol === "function" && Symbol.iterator,
+      m = s && o[s],
+      i = 0;
     if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-      next: function() {
-        if (o && i >= o.length) o = void 0;
-        return { value: o && o[i++], done: !o };
-      }
-    };
+    if (o && typeof o.length === "number")
+      return {
+        next: function () {
+          if (o && i >= o.length) o = void 0;
+          return { value: o && o[i++], done: !o };
+        },
+      };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
   }
   function __read(o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
+    var i = m.call(o),
+      r,
+      ar = [],
+      e;
     try {
       while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
     } catch (error) {
@@ -2080,44 +2114,51 @@
     return ar;
   }
   function __spread() {
-    for (var ar = [], i = 0; i < arguments.length; i++)
-      ar = ar.concat(__read(arguments[i]));
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
     return ar;
   }
   function __spreadArrays() {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-      for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-        r[k] = a[j];
+    for (var r = Array(s), k = 0, i = 0; i < il; i++) for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++) r[k] = a[j];
     return r;
   }
   function __spreadArray(to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-      if (ar || !(i in from)) {
-        if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-        ar[i] = from[i];
+    if (pack || arguments.length === 2)
+      for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+          if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+          ar[i] = from[i];
+        }
       }
-    }
     return to.concat(ar || Array.prototype.slice.call(from));
   }
   function __await(v) {
-    return this instanceof __await ? (this.v = v, this) : new __await(v);
+    return this instanceof __await ? ((this.v = v), this) : new __await(v);
   }
   function __asyncGenerator(thisArg, _arguments, generator) {
     if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var g = generator.apply(thisArg, _arguments || []), i, q = [];
-    return i = Object.create((typeof AsyncIterator === "function" ? AsyncIterator : Object).prototype), verb("next"), verb("throw"), verb("return", awaitReturn), i[Symbol.asyncIterator] = function() {
-      return this;
-    }, i;
+    var g = generator.apply(thisArg, _arguments || []),
+      i,
+      q = [];
+    return (
+      (i = Object.create((typeof AsyncIterator === "function" ? AsyncIterator : Object).prototype)),
+      verb("next"),
+      verb("throw"),
+      verb("return", awaitReturn),
+      (i[Symbol.asyncIterator] = function () {
+        return this;
+      }),
+      i
+    );
     function awaitReturn(f) {
-      return function(v) {
+      return function (v) {
         return Promise.resolve(v).then(f, reject);
       };
     }
     function verb(n, f) {
       if (g[n]) {
-        i[n] = function(v) {
-          return new Promise(function(a, b) {
+        i[n] = function (v) {
+          return new Promise(function (a, b) {
             q.push([n, v, a, b]) > 1 || resume(n, v);
           });
         };
@@ -2141,37 +2182,57 @@
       resume("throw", value);
     }
     function settle(f, v) {
-      if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]);
+      if ((f(v), q.shift(), q.length)) resume(q[0][0], q[0][1]);
     }
   }
   function __asyncDelegator(o) {
     var i, p;
-    return i = {}, verb("next"), verb("throw", function(e) {
-      throw e;
-    }), verb("return"), i[Symbol.iterator] = function() {
-      return this;
-    }, i;
+    return (
+      (i = {}),
+      verb("next"),
+      verb("throw", function (e) {
+        throw e;
+      }),
+      verb("return"),
+      (i[Symbol.iterator] = function () {
+        return this;
+      }),
+      i
+    );
     function verb(n, f) {
-      i[n] = o[n] ? function(v) {
-        return (p = !p) ? { value: __await(o[n](v)), done: false } : f ? f(v) : v;
-      } : f;
+      i[n] = o[n]
+        ? function (v) {
+            return (p = !p) ? { value: __await(o[n](v)), done: false } : f ? f(v) : v;
+          }
+        : f;
     }
   }
   function __asyncValues(o) {
     if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator], i;
-    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function() {
-      return this;
-    }, i);
+    var m = o[Symbol.asyncIterator],
+      i;
+    return m
+      ? m.call(o)
+      : ((o = typeof __values === "function" ? __values(o) : o[Symbol.iterator]()),
+        (i = {}),
+        verb("next"),
+        verb("throw"),
+        verb("return"),
+        (i[Symbol.asyncIterator] = function () {
+          return this;
+        }),
+        i);
     function verb(n) {
-      i[n] = o[n] && function(v) {
-        return new Promise(function(resolve, reject) {
-          v = o[n](v), settle(resolve, reject, v.done, v.value);
-        });
-      };
+      i[n] =
+        o[n] &&
+        function (v) {
+          return new Promise(function (resolve, reject) {
+            ((v = o[n](v)), settle(resolve, reject, v.done, v.value));
+          });
+        };
     }
     function settle(resolve, reject, d, v) {
-      Promise.resolve(v).then(function(v2) {
+      Promise.resolve(v).then(function (v2) {
         resolve({ value: v2, done: d });
       }, reject);
     }
@@ -2184,17 +2245,21 @@
     }
     return cooked;
   }
-  var __setModuleDefault = Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-  }) : function(o, v) {
-    o["default"] = v;
-  };
-  var ownKeys = function(o) {
-    ownKeys = Object.getOwnPropertyNames || function(o2) {
-      var ar = [];
-      for (var k in o2) if (Object.prototype.hasOwnProperty.call(o2, k)) ar[ar.length] = k;
-      return ar;
-    };
+  var __setModuleDefault = Object.create
+    ? function (o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+      }
+    : function (o, v) {
+        o["default"] = v;
+      };
+  var ownKeys = function (o) {
+    ownKeys =
+      Object.getOwnPropertyNames ||
+      function (o2) {
+        var ar = [];
+        for (var k in o2) if (Object.prototype.hasOwnProperty.call(o2, k)) ar[ar.length] = k;
+        return ar;
+      };
     return ownKeys(o);
   };
   function __importStar(mod) {
@@ -2211,17 +2276,20 @@
   }
   function __classPrivateFieldGet(receiver, state, kind, f) {
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
   }
   function __classPrivateFieldSet(receiver, state, value, kind, f) {
     if (kind === "m") throw new TypeError("Private method is not writable");
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
-    return kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? (f.value = value) : state.set(receiver, value), value);
   }
   function __classPrivateFieldIn(state, receiver) {
-    if (receiver === null || typeof receiver !== "object" && typeof receiver !== "function") throw new TypeError("Cannot use 'in' operator on non-object");
+    if (receiver === null || (typeof receiver !== "object" && typeof receiver !== "function"))
+      throw new TypeError("Cannot use 'in' operator on non-object");
     return typeof state === "function" ? receiver === state : state.has(receiver);
   }
   function __addDisposableResource(env, value, async) {
@@ -2238,39 +2306,48 @@
         if (async) inner = dispose;
       }
       if (typeof dispose !== "function") throw new TypeError("Object not disposable.");
-      if (inner) dispose = function() {
-        try {
-          inner.call(this);
-        } catch (e) {
-          return Promise.reject(e);
-        }
-      };
+      if (inner)
+        dispose = function () {
+          try {
+            inner.call(this);
+          } catch (e) {
+            return Promise.reject(e);
+          }
+        };
       env.stack.push({ value, dispose, async });
     } else if (async) {
       env.stack.push({ async: true });
     }
     return value;
   }
-  var _SuppressedError = typeof SuppressedError === "function" ? SuppressedError : function(error, suppressed, message) {
-    var e = new Error(message);
-    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
-  };
+  var _SuppressedError =
+    typeof SuppressedError === "function"
+      ? SuppressedError
+      : function (error, suppressed, message) {
+          var e = new Error(message);
+          return ((e.name = "SuppressedError"), (e.error = error), (e.suppressed = suppressed), e);
+        };
   function __disposeResources(env) {
     function fail(e) {
       env.error = env.hasError ? new _SuppressedError(e, env.error, "An error was suppressed during disposal.") : e;
       env.hasError = true;
     }
-    var r, s = 0;
+    var r,
+      s = 0;
     function next() {
-      while (r = env.stack.pop()) {
+      while ((r = env.stack.pop())) {
         try {
-          if (!r.async && s === 1) return s = 0, env.stack.push(r), Promise.resolve().then(next);
+          if (!r.async && s === 1) return ((s = 0), env.stack.push(r), Promise.resolve().then(next));
           if (r.dispose) {
             var result = r.dispose.call(r.value);
-            if (r.async) return s |= 2, Promise.resolve(result).then(next, function(e) {
-              fail(e);
-              return next();
-            });
+            if (r.async)
+              return (
+                (s |= 2),
+                Promise.resolve(result).then(next, function (e) {
+                  fail(e);
+                  return next();
+                })
+              );
           } else s |= 1;
         } catch (e) {
           fail(e);
@@ -2283,8 +2360,8 @@
   }
   function __rewriteRelativeImportExtension(path, preserveJsx) {
     if (typeof path === "string" && /^\.\.?\//.test(path)) {
-      return path.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m, tsx, d, ext, cm) {
-        return tsx ? preserveJsx ? ".jsx" : ".js" : d && (!ext || !cm) ? m : d + ext + "." + cm.toLowerCase() + "js";
+      return path.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function (m, tsx, d, ext, cm) {
+        return tsx ? (preserveJsx ? ".jsx" : ".js") : d && (!ext || !cm) ? m : d + ext + "." + cm.toLowerCase() + "js";
       });
     }
     return path;
@@ -2321,46 +2398,52 @@
     __classPrivateFieldIn,
     __addDisposableResource,
     __disposeResources,
-    __rewriteRelativeImportExtension
-  };
-  const tslib_es6$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-    __proto__: null,
-    __addDisposableResource,
-    get __assign() {
-      return __assign;
-    },
-    __asyncDelegator,
-    __asyncGenerator,
-    __asyncValues,
-    __await,
-    __awaiter,
-    __classPrivateFieldGet,
-    __classPrivateFieldIn,
-    __classPrivateFieldSet,
-    __createBinding,
-    __decorate,
-    __disposeResources,
-    __esDecorate,
-    __exportStar,
-    __extends,
-    __generator,
-    __importDefault,
-    __importStar,
-    __makeTemplateObject,
-    __metadata,
-    __param,
-    __propKey,
-    __read,
-    __rest,
     __rewriteRelativeImportExtension,
-    __runInitializers,
-    __setFunctionName,
-    __spread,
-    __spreadArray,
-    __spreadArrays,
-    __values,
-    default: tslib_es6
-  }, Symbol.toStringTag, { value: "Module" }));
+  };
+  const tslib_es6$1 = /* @__PURE__ */ Object.freeze(
+    /* @__PURE__ */ Object.defineProperty(
+      {
+        __proto__: null,
+        __addDisposableResource,
+        get __assign() {
+          return __assign;
+        },
+        __asyncDelegator,
+        __asyncGenerator,
+        __asyncValues,
+        __await,
+        __awaiter,
+        __classPrivateFieldGet,
+        __classPrivateFieldIn,
+        __classPrivateFieldSet,
+        __createBinding,
+        __decorate,
+        __disposeResources,
+        __esDecorate,
+        __exportStar,
+        __extends,
+        __generator,
+        __importDefault,
+        __importStar,
+        __makeTemplateObject,
+        __metadata,
+        __param,
+        __propKey,
+        __read,
+        __rest,
+        __rewriteRelativeImportExtension,
+        __runInitializers,
+        __setFunctionName,
+        __spread,
+        __spreadArray,
+        __spreadArrays,
+        __values,
+        default: tslib_es6,
+      },
+      Symbol.toStringTag,
+      { value: "Module" },
+    ),
+  );
   const require$$0 = /* @__PURE__ */ getAugmentedNamespace(tslib_es6$1);
   var Mutex = {};
   var Semaphore = {};
@@ -2383,9 +2466,9 @@
     Object.defineProperty(Semaphore, "__esModule", { value: true });
     var tslib_1 = require$$0;
     var errors_1 = requireErrors();
-    var Semaphore$1 = (
+    var Semaphore$1 =
       /** @class */
-      (function() {
+      (function () {
         function Semaphore2(_value, _cancelError) {
           if (_cancelError === void 0) {
             _cancelError = errors_1.E_CANCELED;
@@ -2395,7 +2478,7 @@
           this._queue = [];
           this._weightedWaiters = [];
         }
-        Semaphore2.prototype.acquire = function(weight, priority) {
+        Semaphore2.prototype.acquire = function (weight, priority) {
           var _this = this;
           if (weight === void 0) {
             weight = 1;
@@ -2403,11 +2486,10 @@
           if (priority === void 0) {
             priority = 0;
           }
-          if (weight <= 0)
-            throw new Error("invalid weight ".concat(weight, ": must be positive"));
-          return new Promise(function(resolve, reject) {
+          if (weight <= 0) throw new Error("invalid weight ".concat(weight, ": must be positive"));
+          return new Promise(function (resolve, reject) {
             var task = { resolve, reject, weight, priority };
-            var i = findIndexFromEnd(_this._queue, function(other) {
+            var i = findIndexFromEnd(_this._queue, function (other) {
               return priority <= other.priority;
             });
             if (i === -1 && weight <= _this._value) {
@@ -2417,8 +2499,8 @@
             }
           });
         };
-        Semaphore2.prototype.runExclusive = function(callback_1) {
-          return tslib_1.__awaiter(this, arguments, void 0, function(callback, weight, priority) {
+        Semaphore2.prototype.runExclusive = function (callback_1) {
+          return tslib_1.__awaiter(this, arguments, void 0, function (callback, weight, priority) {
             var _a, value, release;
             if (weight === void 0) {
               weight = 1;
@@ -2426,12 +2508,12 @@
             if (priority === void 0) {
               priority = 0;
             }
-            return tslib_1.__generator(this, function(_b) {
+            return tslib_1.__generator(this, function (_b) {
               switch (_b.label) {
                 case 0:
                   return [4, this.acquire(weight, priority)];
                 case 1:
-                  _a = _b.sent(), value = _a[0], release = _a[1];
+                  ((_a = _b.sent()), (value = _a[0]), (release = _a[1]));
                   _b.label = 2;
                 case 2:
                   _b.trys.push([2, , 4, 5]);
@@ -2441,19 +2523,19 @@
                 case 4:
                   release();
                   return [
-                    7
+                    7,
                     /*endfinally*/
                   ];
                 case 5:
                   return [
-                    2
+                    2,
                     /*return*/
                   ];
               }
             });
           });
         };
-        Semaphore2.prototype.waitForUnlock = function(weight, priority) {
+        Semaphore2.prototype.waitForUnlock = function (weight, priority) {
           var _this = this;
           if (weight === void 0) {
             weight = 1;
@@ -2461,73 +2543,68 @@
           if (priority === void 0) {
             priority = 0;
           }
-          if (weight <= 0)
-            throw new Error("invalid weight ".concat(weight, ": must be positive"));
+          if (weight <= 0) throw new Error("invalid weight ".concat(weight, ": must be positive"));
           if (this._couldLockImmediately(weight, priority)) {
             return Promise.resolve();
           } else {
-            return new Promise(function(resolve) {
-              if (!_this._weightedWaiters[weight - 1])
-                _this._weightedWaiters[weight - 1] = [];
+            return new Promise(function (resolve) {
+              if (!_this._weightedWaiters[weight - 1]) _this._weightedWaiters[weight - 1] = [];
               insertSorted(_this._weightedWaiters[weight - 1], { resolve, priority });
             });
           }
         };
-        Semaphore2.prototype.isLocked = function() {
+        Semaphore2.prototype.isLocked = function () {
           return this._value <= 0;
         };
-        Semaphore2.prototype.getValue = function() {
+        Semaphore2.prototype.getValue = function () {
           return this._value;
         };
-        Semaphore2.prototype.setValue = function(value) {
+        Semaphore2.prototype.setValue = function (value) {
           this._value = value;
           this._dispatchQueue();
         };
-        Semaphore2.prototype.release = function(weight) {
+        Semaphore2.prototype.release = function (weight) {
           if (weight === void 0) {
             weight = 1;
           }
-          if (weight <= 0)
-            throw new Error("invalid weight ".concat(weight, ": must be positive"));
+          if (weight <= 0) throw new Error("invalid weight ".concat(weight, ": must be positive"));
           this._value += weight;
           this._dispatchQueue();
         };
-        Semaphore2.prototype.cancel = function() {
+        Semaphore2.prototype.cancel = function () {
           var _this = this;
-          this._queue.forEach(function(entry) {
+          this._queue.forEach(function (entry) {
             return entry.reject(_this._cancelError);
           });
           this._queue = [];
         };
-        Semaphore2.prototype._dispatchQueue = function() {
+        Semaphore2.prototype._dispatchQueue = function () {
           this._drainUnlockWaiters();
           while (this._queue.length > 0 && this._queue[0].weight <= this._value) {
             this._dispatchItem(this._queue.shift());
             this._drainUnlockWaiters();
           }
         };
-        Semaphore2.prototype._dispatchItem = function(item) {
+        Semaphore2.prototype._dispatchItem = function (item) {
           var previousValue = this._value;
           this._value -= item.weight;
           item.resolve([previousValue, this._newReleaser(item.weight)]);
         };
-        Semaphore2.prototype._newReleaser = function(weight) {
+        Semaphore2.prototype._newReleaser = function (weight) {
           var _this = this;
           var called = false;
-          return function() {
-            if (called)
-              return;
+          return function () {
+            if (called) return;
             called = true;
             _this.release(weight);
           };
         };
-        Semaphore2.prototype._drainUnlockWaiters = function() {
+        Semaphore2.prototype._drainUnlockWaiters = function () {
           if (this._queue.length === 0) {
             for (var weight = this._value; weight > 0; weight--) {
               var waiters = this._weightedWaiters[weight - 1];
-              if (!waiters)
-                continue;
-              waiters.forEach(function(waiter) {
+              if (!waiters) continue;
+              waiters.forEach(function (waiter) {
                 return waiter.resolve();
               });
               this._weightedWaiters[weight - 1] = [];
@@ -2536,25 +2613,23 @@
             var queuedPriority_1 = this._queue[0].priority;
             for (var weight = this._value; weight > 0; weight--) {
               var waiters = this._weightedWaiters[weight - 1];
-              if (!waiters)
-                continue;
-              var i = waiters.findIndex(function(waiter) {
+              if (!waiters) continue;
+              var i = waiters.findIndex(function (waiter) {
                 return waiter.priority <= queuedPriority_1;
               });
-              (i === -1 ? waiters : waiters.splice(0, i)).forEach((function(waiter) {
+              (i === -1 ? waiters : waiters.splice(0, i)).forEach(function (waiter) {
                 return waiter.resolve();
-              }));
+              });
             }
           }
         };
-        Semaphore2.prototype._couldLockImmediately = function(weight, priority) {
+        Semaphore2.prototype._couldLockImmediately = function (weight, priority) {
           return (this._queue.length === 0 || this._queue[0].priority < priority) && weight <= this._value;
         };
         return Semaphore2;
-      })()
-    );
+      })();
     function insertSorted(a, v) {
-      var i = findIndexFromEnd(a, function(other) {
+      var i = findIndexFromEnd(a, function (other) {
         return v.priority <= other.priority;
       });
       a.splice(i + 1, 0, v);
@@ -2577,56 +2652,58 @@
     Object.defineProperty(Mutex, "__esModule", { value: true });
     var tslib_1 = require$$0;
     var Semaphore_1 = requireSemaphore();
-    var Mutex$1 = (
+    var Mutex$1 =
       /** @class */
-      (function() {
+      (function () {
         function Mutex2(cancelError) {
           this._semaphore = new Semaphore_1.default(1, cancelError);
         }
-        Mutex2.prototype.acquire = function() {
-          return tslib_1.__awaiter(this, arguments, void 0, function(priority) {
+        Mutex2.prototype.acquire = function () {
+          return tslib_1.__awaiter(this, arguments, void 0, function (priority) {
             var _a, releaser;
             if (priority === void 0) {
               priority = 0;
             }
-            return tslib_1.__generator(this, function(_b) {
+            return tslib_1.__generator(this, function (_b) {
               switch (_b.label) {
                 case 0:
                   return [4, this._semaphore.acquire(1, priority)];
                 case 1:
-                  _a = _b.sent(), releaser = _a[1];
+                  ((_a = _b.sent()), (releaser = _a[1]));
                   return [2, releaser];
               }
             });
           });
         };
-        Mutex2.prototype.runExclusive = function(callback, priority) {
+        Mutex2.prototype.runExclusive = function (callback, priority) {
           if (priority === void 0) {
             priority = 0;
           }
-          return this._semaphore.runExclusive(function() {
-            return callback();
-          }, 1, priority);
+          return this._semaphore.runExclusive(
+            function () {
+              return callback();
+            },
+            1,
+            priority,
+          );
         };
-        Mutex2.prototype.isLocked = function() {
+        Mutex2.prototype.isLocked = function () {
           return this._semaphore.isLocked();
         };
-        Mutex2.prototype.waitForUnlock = function(priority) {
+        Mutex2.prototype.waitForUnlock = function (priority) {
           if (priority === void 0) {
             priority = 0;
           }
           return this._semaphore.waitForUnlock(1, priority);
         };
-        Mutex2.prototype.release = function() {
-          if (this._semaphore.isLocked())
-            this._semaphore.release();
+        Mutex2.prototype.release = function () {
+          if (this._semaphore.isLocked()) this._semaphore.release();
         };
-        Mutex2.prototype.cancel = function() {
+        Mutex2.prototype.cancel = function () {
           return this._semaphore.cancel();
         };
         return Mutex2;
-      })()
-    );
+      })();
     Mutex.default = Mutex$1;
     return Mutex;
   }
@@ -2645,7 +2722,7 @@
         timeoutError = errors_1.E_TIMEOUT;
       }
       return {
-        acquire: function(weightOrPriority, priority) {
+        acquire: function (weightOrPriority, priority) {
           var weight;
           if (isSemaphore(sync)) {
             weight = weightOrPriority;
@@ -2656,14 +2733,14 @@
           if (weight !== void 0 && weight <= 0) {
             throw new Error("invalid weight ".concat(weight, ": must be positive"));
           }
-          return new Promise(function(resolve, reject) {
-            return tslib_1.__awaiter(_this, void 0, void 0, function() {
+          return new Promise(function (resolve, reject) {
+            return tslib_1.__awaiter(_this, void 0, void 0, function () {
               var isTimeout, handle, ticket, release, e_1;
-              return tslib_1.__generator(this, function(_a) {
+              return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                   case 0:
                     isTimeout = false;
-                    handle = setTimeout(function() {
+                    handle = setTimeout(function () {
                       isTimeout = true;
                       reject(timeoutError);
                     }, timeout);
@@ -2690,7 +2767,7 @@
                     return [3, 4];
                   case 4:
                     return [
-                      2
+                      2,
                       /*return*/
                     ];
                 }
@@ -2698,13 +2775,13 @@
             });
           });
         },
-        runExclusive: function(callback, weight, priority) {
-          return tslib_1.__awaiter(this, void 0, void 0, function() {
+        runExclusive: function (callback, weight, priority) {
+          return tslib_1.__awaiter(this, void 0, void 0, function () {
             var release, ticket;
-            return tslib_1.__generator(this, function(_a) {
+            return tslib_1.__generator(this, function (_a) {
               switch (_a.label) {
                 case 0:
-                  release = function() {
+                  release = function () {
                     return void 0;
                   };
                   _a.label = 1;
@@ -2728,25 +2805,25 @@
                 case 7:
                   release();
                   return [
-                    7
+                    7,
                     /*endfinally*/
                   ];
                 case 8:
                   return [
-                    2
+                    2,
                     /*return*/
                   ];
               }
             });
           });
         },
-        release: function(weight) {
+        release: function (weight) {
           sync.release(weight);
         },
-        cancel: function() {
+        cancel: function () {
           return sync.cancel();
         },
-        waitForUnlock: function(weightOrPriority, priority) {
+        waitForUnlock: function (weightOrPriority, priority) {
           var weight;
           if (isSemaphore(sync)) {
             weight = weightOrPriority;
@@ -2757,25 +2834,25 @@
           if (weight !== void 0 && weight <= 0) {
             throw new Error("invalid weight ".concat(weight, ": must be positive"));
           }
-          return new Promise(function(resolve, reject) {
-            var handle = setTimeout(function() {
+          return new Promise(function (resolve, reject) {
+            var handle = setTimeout(function () {
               return reject(timeoutError);
             }, timeout);
-            (isSemaphore(sync) ? sync.waitForUnlock(weight, priority) : sync.waitForUnlock(priority)).then(function() {
+            (isSemaphore(sync) ? sync.waitForUnlock(weight, priority) : sync.waitForUnlock(priority)).then(function () {
               clearTimeout(handle);
               resolve();
             });
           });
         },
-        isLocked: function() {
+        isLocked: function () {
           return sync.isLocked();
         },
-        getValue: function() {
+        getValue: function () {
           return sync.getValue();
         },
-        setValue: function(value) {
+        setValue: function (value) {
           return sync.setValue(value);
-        }
+        },
       };
     }
     withTimeout.withTimeout = withTimeout$1;
@@ -2806,26 +2883,38 @@
   function requireLib() {
     if (hasRequiredLib) return lib;
     hasRequiredLib = 1;
-    (function(exports2) {
+    (function (exports2) {
       Object.defineProperty(exports2, "__esModule", { value: true });
       exports2.tryAcquire = exports2.withTimeout = exports2.Semaphore = exports2.Mutex = void 0;
       var tslib_1 = require$$0;
       var Mutex_1 = requireMutex();
-      Object.defineProperty(exports2, "Mutex", { enumerable: true, get: function() {
-        return Mutex_1.default;
-      } });
+      Object.defineProperty(exports2, "Mutex", {
+        enumerable: true,
+        get: function () {
+          return Mutex_1.default;
+        },
+      });
       var Semaphore_1 = requireSemaphore();
-      Object.defineProperty(exports2, "Semaphore", { enumerable: true, get: function() {
-        return Semaphore_1.default;
-      } });
+      Object.defineProperty(exports2, "Semaphore", {
+        enumerable: true,
+        get: function () {
+          return Semaphore_1.default;
+        },
+      });
       var withTimeout_1 = requireWithTimeout();
-      Object.defineProperty(exports2, "withTimeout", { enumerable: true, get: function() {
-        return withTimeout_1.withTimeout;
-      } });
+      Object.defineProperty(exports2, "withTimeout", {
+        enumerable: true,
+        get: function () {
+          return withTimeout_1.withTimeout;
+        },
+      });
       var tryAcquire_1 = requireTryAcquire();
-      Object.defineProperty(exports2, "tryAcquire", { enumerable: true, get: function() {
-        return tryAcquire_1.tryAcquire;
-      } });
+      Object.defineProperty(exports2, "tryAcquire", {
+        enumerable: true,
+        get: function () {
+          return tryAcquire_1.tryAcquire;
+        },
+      });
       tslib_1.__exportStar(requireErrors(), exports2);
     })(lib);
     return lib;
@@ -2837,381 +2926,391 @@
     if (hasRequiredTypes___GENERATED__) return types___GENERATED__;
     hasRequiredTypes___GENERATED__ = 1;
     Object.defineProperty(types___GENERATED__, "__esModule", { value: true });
-    types___GENERATED__.Z3_goal_prec = types___GENERATED__.Z3_error_code = types___GENERATED__.Z3_ast_print_mode = types___GENERATED__.Z3_param_kind = types___GENERATED__.Z3_decl_kind = types___GENERATED__.Z3_ast_kind = types___GENERATED__.Z3_sort_kind = types___GENERATED__.Z3_parameter_kind = types___GENERATED__.Z3_symbol_kind = types___GENERATED__.Z3_lbool = void 0;
+    types___GENERATED__.Z3_goal_prec =
+      types___GENERATED__.Z3_error_code =
+      types___GENERATED__.Z3_ast_print_mode =
+      types___GENERATED__.Z3_param_kind =
+      types___GENERATED__.Z3_decl_kind =
+      types___GENERATED__.Z3_ast_kind =
+      types___GENERATED__.Z3_sort_kind =
+      types___GENERATED__.Z3_parameter_kind =
+      types___GENERATED__.Z3_symbol_kind =
+      types___GENERATED__.Z3_lbool =
+        void 0;
     var Z3_lbool;
-    (function(Z3_lbool2) {
-      Z3_lbool2[Z3_lbool2["Z3_L_FALSE"] = -1] = "Z3_L_FALSE";
-      Z3_lbool2[Z3_lbool2["Z3_L_UNDEF"] = 0] = "Z3_L_UNDEF";
-      Z3_lbool2[Z3_lbool2["Z3_L_TRUE"] = 1] = "Z3_L_TRUE";
+    (function (Z3_lbool2) {
+      Z3_lbool2[(Z3_lbool2["Z3_L_FALSE"] = -1)] = "Z3_L_FALSE";
+      Z3_lbool2[(Z3_lbool2["Z3_L_UNDEF"] = 0)] = "Z3_L_UNDEF";
+      Z3_lbool2[(Z3_lbool2["Z3_L_TRUE"] = 1)] = "Z3_L_TRUE";
     })(Z3_lbool || (types___GENERATED__.Z3_lbool = Z3_lbool = {}));
     var Z3_symbol_kind;
-    (function(Z3_symbol_kind2) {
-      Z3_symbol_kind2[Z3_symbol_kind2["Z3_INT_SYMBOL"] = 0] = "Z3_INT_SYMBOL";
-      Z3_symbol_kind2[Z3_symbol_kind2["Z3_STRING_SYMBOL"] = 1] = "Z3_STRING_SYMBOL";
+    (function (Z3_symbol_kind2) {
+      Z3_symbol_kind2[(Z3_symbol_kind2["Z3_INT_SYMBOL"] = 0)] = "Z3_INT_SYMBOL";
+      Z3_symbol_kind2[(Z3_symbol_kind2["Z3_STRING_SYMBOL"] = 1)] = "Z3_STRING_SYMBOL";
     })(Z3_symbol_kind || (types___GENERATED__.Z3_symbol_kind = Z3_symbol_kind = {}));
     var Z3_parameter_kind;
-    (function(Z3_parameter_kind2) {
-      Z3_parameter_kind2[Z3_parameter_kind2["Z3_PARAMETER_INT"] = 0] = "Z3_PARAMETER_INT";
-      Z3_parameter_kind2[Z3_parameter_kind2["Z3_PARAMETER_DOUBLE"] = 1] = "Z3_PARAMETER_DOUBLE";
-      Z3_parameter_kind2[Z3_parameter_kind2["Z3_PARAMETER_RATIONAL"] = 2] = "Z3_PARAMETER_RATIONAL";
-      Z3_parameter_kind2[Z3_parameter_kind2["Z3_PARAMETER_SYMBOL"] = 3] = "Z3_PARAMETER_SYMBOL";
-      Z3_parameter_kind2[Z3_parameter_kind2["Z3_PARAMETER_SORT"] = 4] = "Z3_PARAMETER_SORT";
-      Z3_parameter_kind2[Z3_parameter_kind2["Z3_PARAMETER_AST"] = 5] = "Z3_PARAMETER_AST";
-      Z3_parameter_kind2[Z3_parameter_kind2["Z3_PARAMETER_FUNC_DECL"] = 6] = "Z3_PARAMETER_FUNC_DECL";
-      Z3_parameter_kind2[Z3_parameter_kind2["Z3_PARAMETER_INTERNAL"] = 7] = "Z3_PARAMETER_INTERNAL";
-      Z3_parameter_kind2[Z3_parameter_kind2["Z3_PARAMETER_ZSTRING"] = 8] = "Z3_PARAMETER_ZSTRING";
+    (function (Z3_parameter_kind2) {
+      Z3_parameter_kind2[(Z3_parameter_kind2["Z3_PARAMETER_INT"] = 0)] = "Z3_PARAMETER_INT";
+      Z3_parameter_kind2[(Z3_parameter_kind2["Z3_PARAMETER_DOUBLE"] = 1)] = "Z3_PARAMETER_DOUBLE";
+      Z3_parameter_kind2[(Z3_parameter_kind2["Z3_PARAMETER_RATIONAL"] = 2)] = "Z3_PARAMETER_RATIONAL";
+      Z3_parameter_kind2[(Z3_parameter_kind2["Z3_PARAMETER_SYMBOL"] = 3)] = "Z3_PARAMETER_SYMBOL";
+      Z3_parameter_kind2[(Z3_parameter_kind2["Z3_PARAMETER_SORT"] = 4)] = "Z3_PARAMETER_SORT";
+      Z3_parameter_kind2[(Z3_parameter_kind2["Z3_PARAMETER_AST"] = 5)] = "Z3_PARAMETER_AST";
+      Z3_parameter_kind2[(Z3_parameter_kind2["Z3_PARAMETER_FUNC_DECL"] = 6)] = "Z3_PARAMETER_FUNC_DECL";
+      Z3_parameter_kind2[(Z3_parameter_kind2["Z3_PARAMETER_INTERNAL"] = 7)] = "Z3_PARAMETER_INTERNAL";
+      Z3_parameter_kind2[(Z3_parameter_kind2["Z3_PARAMETER_ZSTRING"] = 8)] = "Z3_PARAMETER_ZSTRING";
     })(Z3_parameter_kind || (types___GENERATED__.Z3_parameter_kind = Z3_parameter_kind = {}));
     var Z3_sort_kind;
-    (function(Z3_sort_kind2) {
-      Z3_sort_kind2[Z3_sort_kind2["Z3_UNINTERPRETED_SORT"] = 0] = "Z3_UNINTERPRETED_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_BOOL_SORT"] = 1] = "Z3_BOOL_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_INT_SORT"] = 2] = "Z3_INT_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_REAL_SORT"] = 3] = "Z3_REAL_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_BV_SORT"] = 4] = "Z3_BV_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_ARRAY_SORT"] = 5] = "Z3_ARRAY_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_DATATYPE_SORT"] = 6] = "Z3_DATATYPE_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_RELATION_SORT"] = 7] = "Z3_RELATION_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_FINITE_DOMAIN_SORT"] = 8] = "Z3_FINITE_DOMAIN_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_FLOATING_POINT_SORT"] = 9] = "Z3_FLOATING_POINT_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_ROUNDING_MODE_SORT"] = 10] = "Z3_ROUNDING_MODE_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_SEQ_SORT"] = 11] = "Z3_SEQ_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_RE_SORT"] = 12] = "Z3_RE_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_CHAR_SORT"] = 13] = "Z3_CHAR_SORT";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_TYPE_VAR"] = 14] = "Z3_TYPE_VAR";
-      Z3_sort_kind2[Z3_sort_kind2["Z3_UNKNOWN_SORT"] = 1e3] = "Z3_UNKNOWN_SORT";
+    (function (Z3_sort_kind2) {
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_UNINTERPRETED_SORT"] = 0)] = "Z3_UNINTERPRETED_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_BOOL_SORT"] = 1)] = "Z3_BOOL_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_INT_SORT"] = 2)] = "Z3_INT_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_REAL_SORT"] = 3)] = "Z3_REAL_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_BV_SORT"] = 4)] = "Z3_BV_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_ARRAY_SORT"] = 5)] = "Z3_ARRAY_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_DATATYPE_SORT"] = 6)] = "Z3_DATATYPE_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_RELATION_SORT"] = 7)] = "Z3_RELATION_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_FINITE_DOMAIN_SORT"] = 8)] = "Z3_FINITE_DOMAIN_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_FLOATING_POINT_SORT"] = 9)] = "Z3_FLOATING_POINT_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_ROUNDING_MODE_SORT"] = 10)] = "Z3_ROUNDING_MODE_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_SEQ_SORT"] = 11)] = "Z3_SEQ_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_RE_SORT"] = 12)] = "Z3_RE_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_CHAR_SORT"] = 13)] = "Z3_CHAR_SORT";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_TYPE_VAR"] = 14)] = "Z3_TYPE_VAR";
+      Z3_sort_kind2[(Z3_sort_kind2["Z3_UNKNOWN_SORT"] = 1e3)] = "Z3_UNKNOWN_SORT";
     })(Z3_sort_kind || (types___GENERATED__.Z3_sort_kind = Z3_sort_kind = {}));
     var Z3_ast_kind;
-    (function(Z3_ast_kind2) {
-      Z3_ast_kind2[Z3_ast_kind2["Z3_NUMERAL_AST"] = 0] = "Z3_NUMERAL_AST";
-      Z3_ast_kind2[Z3_ast_kind2["Z3_APP_AST"] = 1] = "Z3_APP_AST";
-      Z3_ast_kind2[Z3_ast_kind2["Z3_VAR_AST"] = 2] = "Z3_VAR_AST";
-      Z3_ast_kind2[Z3_ast_kind2["Z3_QUANTIFIER_AST"] = 3] = "Z3_QUANTIFIER_AST";
-      Z3_ast_kind2[Z3_ast_kind2["Z3_SORT_AST"] = 4] = "Z3_SORT_AST";
-      Z3_ast_kind2[Z3_ast_kind2["Z3_FUNC_DECL_AST"] = 5] = "Z3_FUNC_DECL_AST";
-      Z3_ast_kind2[Z3_ast_kind2["Z3_UNKNOWN_AST"] = 1e3] = "Z3_UNKNOWN_AST";
+    (function (Z3_ast_kind2) {
+      Z3_ast_kind2[(Z3_ast_kind2["Z3_NUMERAL_AST"] = 0)] = "Z3_NUMERAL_AST";
+      Z3_ast_kind2[(Z3_ast_kind2["Z3_APP_AST"] = 1)] = "Z3_APP_AST";
+      Z3_ast_kind2[(Z3_ast_kind2["Z3_VAR_AST"] = 2)] = "Z3_VAR_AST";
+      Z3_ast_kind2[(Z3_ast_kind2["Z3_QUANTIFIER_AST"] = 3)] = "Z3_QUANTIFIER_AST";
+      Z3_ast_kind2[(Z3_ast_kind2["Z3_SORT_AST"] = 4)] = "Z3_SORT_AST";
+      Z3_ast_kind2[(Z3_ast_kind2["Z3_FUNC_DECL_AST"] = 5)] = "Z3_FUNC_DECL_AST";
+      Z3_ast_kind2[(Z3_ast_kind2["Z3_UNKNOWN_AST"] = 1e3)] = "Z3_UNKNOWN_AST";
     })(Z3_ast_kind || (types___GENERATED__.Z3_ast_kind = Z3_ast_kind = {}));
     var Z3_decl_kind;
-    (function(Z3_decl_kind2) {
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_TRUE"] = 256] = "Z3_OP_TRUE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FALSE"] = 257] = "Z3_OP_FALSE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_EQ"] = 258] = "Z3_OP_EQ";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_DISTINCT"] = 259] = "Z3_OP_DISTINCT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ITE"] = 260] = "Z3_OP_ITE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_AND"] = 261] = "Z3_OP_AND";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_OR"] = 262] = "Z3_OP_OR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_IFF"] = 263] = "Z3_OP_IFF";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_XOR"] = 264] = "Z3_OP_XOR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_NOT"] = 265] = "Z3_OP_NOT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_IMPLIES"] = 266] = "Z3_OP_IMPLIES";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_OEQ"] = 267] = "Z3_OP_OEQ";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ANUM"] = 512] = "Z3_OP_ANUM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_AGNUM"] = 513] = "Z3_OP_AGNUM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_LE"] = 514] = "Z3_OP_LE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_GE"] = 515] = "Z3_OP_GE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_LT"] = 516] = "Z3_OP_LT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_GT"] = 517] = "Z3_OP_GT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ADD"] = 518] = "Z3_OP_ADD";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SUB"] = 519] = "Z3_OP_SUB";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_UMINUS"] = 520] = "Z3_OP_UMINUS";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_MUL"] = 521] = "Z3_OP_MUL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_DIV"] = 522] = "Z3_OP_DIV";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_IDIV"] = 523] = "Z3_OP_IDIV";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_REM"] = 524] = "Z3_OP_REM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_MOD"] = 525] = "Z3_OP_MOD";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_TO_REAL"] = 526] = "Z3_OP_TO_REAL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_TO_INT"] = 527] = "Z3_OP_TO_INT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_IS_INT"] = 528] = "Z3_OP_IS_INT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_POWER"] = 529] = "Z3_OP_POWER";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ABS"] = 530] = "Z3_OP_ABS";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_STORE"] = 768] = "Z3_OP_STORE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SELECT"] = 769] = "Z3_OP_SELECT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_CONST_ARRAY"] = 770] = "Z3_OP_CONST_ARRAY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ARRAY_MAP"] = 771] = "Z3_OP_ARRAY_MAP";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ARRAY_DEFAULT"] = 772] = "Z3_OP_ARRAY_DEFAULT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SET_UNION"] = 773] = "Z3_OP_SET_UNION";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SET_INTERSECT"] = 774] = "Z3_OP_SET_INTERSECT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SET_DIFFERENCE"] = 775] = "Z3_OP_SET_DIFFERENCE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SET_COMPLEMENT"] = 776] = "Z3_OP_SET_COMPLEMENT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SET_SUBSET"] = 777] = "Z3_OP_SET_SUBSET";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_AS_ARRAY"] = 778] = "Z3_OP_AS_ARRAY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ARRAY_EXT"] = 779] = "Z3_OP_ARRAY_EXT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SET_HAS_SIZE"] = 780] = "Z3_OP_SET_HAS_SIZE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SET_CARD"] = 781] = "Z3_OP_SET_CARD";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BNUM"] = 1024] = "Z3_OP_BNUM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BIT1"] = 1025] = "Z3_OP_BIT1";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BIT0"] = 1026] = "Z3_OP_BIT0";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BNEG"] = 1027] = "Z3_OP_BNEG";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BADD"] = 1028] = "Z3_OP_BADD";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSUB"] = 1029] = "Z3_OP_BSUB";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BMUL"] = 1030] = "Z3_OP_BMUL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSDIV"] = 1031] = "Z3_OP_BSDIV";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BUDIV"] = 1032] = "Z3_OP_BUDIV";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSREM"] = 1033] = "Z3_OP_BSREM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BUREM"] = 1034] = "Z3_OP_BUREM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSMOD"] = 1035] = "Z3_OP_BSMOD";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSDIV0"] = 1036] = "Z3_OP_BSDIV0";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BUDIV0"] = 1037] = "Z3_OP_BUDIV0";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSREM0"] = 1038] = "Z3_OP_BSREM0";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BUREM0"] = 1039] = "Z3_OP_BUREM0";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSMOD0"] = 1040] = "Z3_OP_BSMOD0";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ULEQ"] = 1041] = "Z3_OP_ULEQ";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SLEQ"] = 1042] = "Z3_OP_SLEQ";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_UGEQ"] = 1043] = "Z3_OP_UGEQ";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SGEQ"] = 1044] = "Z3_OP_SGEQ";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ULT"] = 1045] = "Z3_OP_ULT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SLT"] = 1046] = "Z3_OP_SLT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_UGT"] = 1047] = "Z3_OP_UGT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SGT"] = 1048] = "Z3_OP_SGT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BAND"] = 1049] = "Z3_OP_BAND";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BOR"] = 1050] = "Z3_OP_BOR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BNOT"] = 1051] = "Z3_OP_BNOT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BXOR"] = 1052] = "Z3_OP_BXOR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BNAND"] = 1053] = "Z3_OP_BNAND";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BNOR"] = 1054] = "Z3_OP_BNOR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BXNOR"] = 1055] = "Z3_OP_BXNOR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_CONCAT"] = 1056] = "Z3_OP_CONCAT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SIGN_EXT"] = 1057] = "Z3_OP_SIGN_EXT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ZERO_EXT"] = 1058] = "Z3_OP_ZERO_EXT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_EXTRACT"] = 1059] = "Z3_OP_EXTRACT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_REPEAT"] = 1060] = "Z3_OP_REPEAT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BREDOR"] = 1061] = "Z3_OP_BREDOR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BREDAND"] = 1062] = "Z3_OP_BREDAND";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BCOMP"] = 1063] = "Z3_OP_BCOMP";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSHL"] = 1064] = "Z3_OP_BSHL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BLSHR"] = 1065] = "Z3_OP_BLSHR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BASHR"] = 1066] = "Z3_OP_BASHR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ROTATE_LEFT"] = 1067] = "Z3_OP_ROTATE_LEFT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_ROTATE_RIGHT"] = 1068] = "Z3_OP_ROTATE_RIGHT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_EXT_ROTATE_LEFT"] = 1069] = "Z3_OP_EXT_ROTATE_LEFT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_EXT_ROTATE_RIGHT"] = 1070] = "Z3_OP_EXT_ROTATE_RIGHT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BIT2BOOL"] = 1071] = "Z3_OP_BIT2BOOL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_INT2BV"] = 1072] = "Z3_OP_INT2BV";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BV2INT"] = 1073] = "Z3_OP_BV2INT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SBV2INT"] = 1074] = "Z3_OP_SBV2INT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_CARRY"] = 1075] = "Z3_OP_CARRY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_XOR3"] = 1076] = "Z3_OP_XOR3";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSMUL_NO_OVFL"] = 1077] = "Z3_OP_BSMUL_NO_OVFL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BUMUL_NO_OVFL"] = 1078] = "Z3_OP_BUMUL_NO_OVFL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSMUL_NO_UDFL"] = 1079] = "Z3_OP_BSMUL_NO_UDFL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSDIV_I"] = 1080] = "Z3_OP_BSDIV_I";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BUDIV_I"] = 1081] = "Z3_OP_BUDIV_I";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSREM_I"] = 1082] = "Z3_OP_BSREM_I";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BUREM_I"] = 1083] = "Z3_OP_BUREM_I";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_BSMOD_I"] = 1084] = "Z3_OP_BSMOD_I";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_UNDEF"] = 1280] = "Z3_OP_PR_UNDEF";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_TRUE"] = 1281] = "Z3_OP_PR_TRUE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_ASSERTED"] = 1282] = "Z3_OP_PR_ASSERTED";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_GOAL"] = 1283] = "Z3_OP_PR_GOAL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_MODUS_PONENS"] = 1284] = "Z3_OP_PR_MODUS_PONENS";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_REFLEXIVITY"] = 1285] = "Z3_OP_PR_REFLEXIVITY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_SYMMETRY"] = 1286] = "Z3_OP_PR_SYMMETRY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_TRANSITIVITY"] = 1287] = "Z3_OP_PR_TRANSITIVITY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_TRANSITIVITY_STAR"] = 1288] = "Z3_OP_PR_TRANSITIVITY_STAR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_MONOTONICITY"] = 1289] = "Z3_OP_PR_MONOTONICITY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_QUANT_INTRO"] = 1290] = "Z3_OP_PR_QUANT_INTRO";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_BIND"] = 1291] = "Z3_OP_PR_BIND";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_DISTRIBUTIVITY"] = 1292] = "Z3_OP_PR_DISTRIBUTIVITY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_AND_ELIM"] = 1293] = "Z3_OP_PR_AND_ELIM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_NOT_OR_ELIM"] = 1294] = "Z3_OP_PR_NOT_OR_ELIM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_REWRITE"] = 1295] = "Z3_OP_PR_REWRITE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_REWRITE_STAR"] = 1296] = "Z3_OP_PR_REWRITE_STAR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_PULL_QUANT"] = 1297] = "Z3_OP_PR_PULL_QUANT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_PUSH_QUANT"] = 1298] = "Z3_OP_PR_PUSH_QUANT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_ELIM_UNUSED_VARS"] = 1299] = "Z3_OP_PR_ELIM_UNUSED_VARS";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_DER"] = 1300] = "Z3_OP_PR_DER";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_QUANT_INST"] = 1301] = "Z3_OP_PR_QUANT_INST";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_HYPOTHESIS"] = 1302] = "Z3_OP_PR_HYPOTHESIS";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_LEMMA"] = 1303] = "Z3_OP_PR_LEMMA";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_UNIT_RESOLUTION"] = 1304] = "Z3_OP_PR_UNIT_RESOLUTION";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_IFF_TRUE"] = 1305] = "Z3_OP_PR_IFF_TRUE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_IFF_FALSE"] = 1306] = "Z3_OP_PR_IFF_FALSE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_COMMUTATIVITY"] = 1307] = "Z3_OP_PR_COMMUTATIVITY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_DEF_AXIOM"] = 1308] = "Z3_OP_PR_DEF_AXIOM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_ASSUMPTION_ADD"] = 1309] = "Z3_OP_PR_ASSUMPTION_ADD";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_LEMMA_ADD"] = 1310] = "Z3_OP_PR_LEMMA_ADD";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_REDUNDANT_DEL"] = 1311] = "Z3_OP_PR_REDUNDANT_DEL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_CLAUSE_TRAIL"] = 1312] = "Z3_OP_PR_CLAUSE_TRAIL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_DEF_INTRO"] = 1313] = "Z3_OP_PR_DEF_INTRO";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_APPLY_DEF"] = 1314] = "Z3_OP_PR_APPLY_DEF";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_IFF_OEQ"] = 1315] = "Z3_OP_PR_IFF_OEQ";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_NNF_POS"] = 1316] = "Z3_OP_PR_NNF_POS";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_NNF_NEG"] = 1317] = "Z3_OP_PR_NNF_NEG";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_SKOLEMIZE"] = 1318] = "Z3_OP_PR_SKOLEMIZE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_MODUS_PONENS_OEQ"] = 1319] = "Z3_OP_PR_MODUS_PONENS_OEQ";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_TH_LEMMA"] = 1320] = "Z3_OP_PR_TH_LEMMA";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PR_HYPER_RESOLVE"] = 1321] = "Z3_OP_PR_HYPER_RESOLVE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_STORE"] = 1536] = "Z3_OP_RA_STORE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_EMPTY"] = 1537] = "Z3_OP_RA_EMPTY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_IS_EMPTY"] = 1538] = "Z3_OP_RA_IS_EMPTY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_JOIN"] = 1539] = "Z3_OP_RA_JOIN";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_UNION"] = 1540] = "Z3_OP_RA_UNION";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_WIDEN"] = 1541] = "Z3_OP_RA_WIDEN";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_PROJECT"] = 1542] = "Z3_OP_RA_PROJECT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_FILTER"] = 1543] = "Z3_OP_RA_FILTER";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_NEGATION_FILTER"] = 1544] = "Z3_OP_RA_NEGATION_FILTER";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_RENAME"] = 1545] = "Z3_OP_RA_RENAME";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_COMPLEMENT"] = 1546] = "Z3_OP_RA_COMPLEMENT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_SELECT"] = 1547] = "Z3_OP_RA_SELECT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RA_CLONE"] = 1548] = "Z3_OP_RA_CLONE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FD_CONSTANT"] = 1549] = "Z3_OP_FD_CONSTANT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FD_LT"] = 1550] = "Z3_OP_FD_LT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_UNIT"] = 1551] = "Z3_OP_SEQ_UNIT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_EMPTY"] = 1552] = "Z3_OP_SEQ_EMPTY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_CONCAT"] = 1553] = "Z3_OP_SEQ_CONCAT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_PREFIX"] = 1554] = "Z3_OP_SEQ_PREFIX";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_SUFFIX"] = 1555] = "Z3_OP_SEQ_SUFFIX";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_CONTAINS"] = 1556] = "Z3_OP_SEQ_CONTAINS";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_EXTRACT"] = 1557] = "Z3_OP_SEQ_EXTRACT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_REPLACE"] = 1558] = "Z3_OP_SEQ_REPLACE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_REPLACE_RE"] = 1559] = "Z3_OP_SEQ_REPLACE_RE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_REPLACE_RE_ALL"] = 1560] = "Z3_OP_SEQ_REPLACE_RE_ALL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_REPLACE_ALL"] = 1561] = "Z3_OP_SEQ_REPLACE_ALL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_AT"] = 1562] = "Z3_OP_SEQ_AT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_NTH"] = 1563] = "Z3_OP_SEQ_NTH";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_LENGTH"] = 1564] = "Z3_OP_SEQ_LENGTH";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_INDEX"] = 1565] = "Z3_OP_SEQ_INDEX";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_LAST_INDEX"] = 1566] = "Z3_OP_SEQ_LAST_INDEX";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_TO_RE"] = 1567] = "Z3_OP_SEQ_TO_RE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_IN_RE"] = 1568] = "Z3_OP_SEQ_IN_RE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_MAP"] = 1569] = "Z3_OP_SEQ_MAP";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_MAPI"] = 1570] = "Z3_OP_SEQ_MAPI";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_FOLDL"] = 1571] = "Z3_OP_SEQ_FOLDL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SEQ_FOLDLI"] = 1572] = "Z3_OP_SEQ_FOLDLI";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_STR_TO_INT"] = 1573] = "Z3_OP_STR_TO_INT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_INT_TO_STR"] = 1574] = "Z3_OP_INT_TO_STR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_UBV_TO_STR"] = 1575] = "Z3_OP_UBV_TO_STR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SBV_TO_STR"] = 1576] = "Z3_OP_SBV_TO_STR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_STR_TO_CODE"] = 1577] = "Z3_OP_STR_TO_CODE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_STR_FROM_CODE"] = 1578] = "Z3_OP_STR_FROM_CODE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_STRING_LT"] = 1579] = "Z3_OP_STRING_LT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_STRING_LE"] = 1580] = "Z3_OP_STRING_LE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_PLUS"] = 1581] = "Z3_OP_RE_PLUS";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_STAR"] = 1582] = "Z3_OP_RE_STAR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_OPTION"] = 1583] = "Z3_OP_RE_OPTION";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_CONCAT"] = 1584] = "Z3_OP_RE_CONCAT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_UNION"] = 1585] = "Z3_OP_RE_UNION";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_RANGE"] = 1586] = "Z3_OP_RE_RANGE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_DIFF"] = 1587] = "Z3_OP_RE_DIFF";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_INTERSECT"] = 1588] = "Z3_OP_RE_INTERSECT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_LOOP"] = 1589] = "Z3_OP_RE_LOOP";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_POWER"] = 1590] = "Z3_OP_RE_POWER";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_COMPLEMENT"] = 1591] = "Z3_OP_RE_COMPLEMENT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_EMPTY_SET"] = 1592] = "Z3_OP_RE_EMPTY_SET";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_FULL_SET"] = 1593] = "Z3_OP_RE_FULL_SET";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_FULL_CHAR_SET"] = 1594] = "Z3_OP_RE_FULL_CHAR_SET";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_OF_PRED"] = 1595] = "Z3_OP_RE_OF_PRED";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_REVERSE"] = 1596] = "Z3_OP_RE_REVERSE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RE_DERIVATIVE"] = 1597] = "Z3_OP_RE_DERIVATIVE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_CHAR_CONST"] = 1598] = "Z3_OP_CHAR_CONST";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_CHAR_LE"] = 1599] = "Z3_OP_CHAR_LE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_CHAR_TO_INT"] = 1600] = "Z3_OP_CHAR_TO_INT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_CHAR_TO_BV"] = 1601] = "Z3_OP_CHAR_TO_BV";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_CHAR_FROM_BV"] = 1602] = "Z3_OP_CHAR_FROM_BV";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_CHAR_IS_DIGIT"] = 1603] = "Z3_OP_CHAR_IS_DIGIT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_LABEL"] = 1792] = "Z3_OP_LABEL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_LABEL_LIT"] = 1793] = "Z3_OP_LABEL_LIT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_DT_CONSTRUCTOR"] = 2048] = "Z3_OP_DT_CONSTRUCTOR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_DT_RECOGNISER"] = 2049] = "Z3_OP_DT_RECOGNISER";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_DT_IS"] = 2050] = "Z3_OP_DT_IS";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_DT_ACCESSOR"] = 2051] = "Z3_OP_DT_ACCESSOR";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_DT_UPDATE_FIELD"] = 2052] = "Z3_OP_DT_UPDATE_FIELD";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PB_AT_MOST"] = 2304] = "Z3_OP_PB_AT_MOST";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PB_AT_LEAST"] = 2305] = "Z3_OP_PB_AT_LEAST";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PB_LE"] = 2306] = "Z3_OP_PB_LE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PB_GE"] = 2307] = "Z3_OP_PB_GE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_PB_EQ"] = 2308] = "Z3_OP_PB_EQ";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_LO"] = 40960] = "Z3_OP_SPECIAL_RELATION_LO";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_PO"] = 40961] = "Z3_OP_SPECIAL_RELATION_PO";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_PLO"] = 40962] = "Z3_OP_SPECIAL_RELATION_PLO";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_TO"] = 40963] = "Z3_OP_SPECIAL_RELATION_TO";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_TC"] = 40964] = "Z3_OP_SPECIAL_RELATION_TC";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_TRC"] = 40965] = "Z3_OP_SPECIAL_RELATION_TRC";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_RM_NEAREST_TIES_TO_EVEN"] = 45056] = "Z3_OP_FPA_RM_NEAREST_TIES_TO_EVEN";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_RM_NEAREST_TIES_TO_AWAY"] = 45057] = "Z3_OP_FPA_RM_NEAREST_TIES_TO_AWAY";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_RM_TOWARD_POSITIVE"] = 45058] = "Z3_OP_FPA_RM_TOWARD_POSITIVE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_RM_TOWARD_NEGATIVE"] = 45059] = "Z3_OP_FPA_RM_TOWARD_NEGATIVE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_RM_TOWARD_ZERO"] = 45060] = "Z3_OP_FPA_RM_TOWARD_ZERO";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_NUM"] = 45061] = "Z3_OP_FPA_NUM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_PLUS_INF"] = 45062] = "Z3_OP_FPA_PLUS_INF";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_MINUS_INF"] = 45063] = "Z3_OP_FPA_MINUS_INF";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_NAN"] = 45064] = "Z3_OP_FPA_NAN";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_PLUS_ZERO"] = 45065] = "Z3_OP_FPA_PLUS_ZERO";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_MINUS_ZERO"] = 45066] = "Z3_OP_FPA_MINUS_ZERO";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_ADD"] = 45067] = "Z3_OP_FPA_ADD";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_SUB"] = 45068] = "Z3_OP_FPA_SUB";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_NEG"] = 45069] = "Z3_OP_FPA_NEG";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_MUL"] = 45070] = "Z3_OP_FPA_MUL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_DIV"] = 45071] = "Z3_OP_FPA_DIV";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_REM"] = 45072] = "Z3_OP_FPA_REM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_ABS"] = 45073] = "Z3_OP_FPA_ABS";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_MIN"] = 45074] = "Z3_OP_FPA_MIN";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_MAX"] = 45075] = "Z3_OP_FPA_MAX";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_FMA"] = 45076] = "Z3_OP_FPA_FMA";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_SQRT"] = 45077] = "Z3_OP_FPA_SQRT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_ROUND_TO_INTEGRAL"] = 45078] = "Z3_OP_FPA_ROUND_TO_INTEGRAL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_EQ"] = 45079] = "Z3_OP_FPA_EQ";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_LT"] = 45080] = "Z3_OP_FPA_LT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_GT"] = 45081] = "Z3_OP_FPA_GT";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_LE"] = 45082] = "Z3_OP_FPA_LE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_GE"] = 45083] = "Z3_OP_FPA_GE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_IS_NAN"] = 45084] = "Z3_OP_FPA_IS_NAN";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_IS_INF"] = 45085] = "Z3_OP_FPA_IS_INF";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_IS_ZERO"] = 45086] = "Z3_OP_FPA_IS_ZERO";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_IS_NORMAL"] = 45087] = "Z3_OP_FPA_IS_NORMAL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_IS_SUBNORMAL"] = 45088] = "Z3_OP_FPA_IS_SUBNORMAL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_IS_NEGATIVE"] = 45089] = "Z3_OP_FPA_IS_NEGATIVE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_IS_POSITIVE"] = 45090] = "Z3_OP_FPA_IS_POSITIVE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_FP"] = 45091] = "Z3_OP_FPA_FP";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_TO_FP"] = 45092] = "Z3_OP_FPA_TO_FP";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_TO_FP_UNSIGNED"] = 45093] = "Z3_OP_FPA_TO_FP_UNSIGNED";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_TO_UBV"] = 45094] = "Z3_OP_FPA_TO_UBV";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_TO_SBV"] = 45095] = "Z3_OP_FPA_TO_SBV";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_TO_REAL"] = 45096] = "Z3_OP_FPA_TO_REAL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_TO_IEEE_BV"] = 45097] = "Z3_OP_FPA_TO_IEEE_BV";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_BVWRAP"] = 45098] = "Z3_OP_FPA_BVWRAP";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_FPA_BV2RM"] = 45099] = "Z3_OP_FPA_BV2RM";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_INTERNAL"] = 45100] = "Z3_OP_INTERNAL";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_RECURSIVE"] = 45101] = "Z3_OP_RECURSIVE";
-      Z3_decl_kind2[Z3_decl_kind2["Z3_OP_UNINTERPRETED"] = 45102] = "Z3_OP_UNINTERPRETED";
+    (function (Z3_decl_kind2) {
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_TRUE"] = 256)] = "Z3_OP_TRUE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FALSE"] = 257)] = "Z3_OP_FALSE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_EQ"] = 258)] = "Z3_OP_EQ";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_DISTINCT"] = 259)] = "Z3_OP_DISTINCT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ITE"] = 260)] = "Z3_OP_ITE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_AND"] = 261)] = "Z3_OP_AND";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_OR"] = 262)] = "Z3_OP_OR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_IFF"] = 263)] = "Z3_OP_IFF";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_XOR"] = 264)] = "Z3_OP_XOR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_NOT"] = 265)] = "Z3_OP_NOT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_IMPLIES"] = 266)] = "Z3_OP_IMPLIES";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_OEQ"] = 267)] = "Z3_OP_OEQ";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ANUM"] = 512)] = "Z3_OP_ANUM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_AGNUM"] = 513)] = "Z3_OP_AGNUM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_LE"] = 514)] = "Z3_OP_LE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_GE"] = 515)] = "Z3_OP_GE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_LT"] = 516)] = "Z3_OP_LT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_GT"] = 517)] = "Z3_OP_GT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ADD"] = 518)] = "Z3_OP_ADD";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SUB"] = 519)] = "Z3_OP_SUB";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_UMINUS"] = 520)] = "Z3_OP_UMINUS";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_MUL"] = 521)] = "Z3_OP_MUL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_DIV"] = 522)] = "Z3_OP_DIV";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_IDIV"] = 523)] = "Z3_OP_IDIV";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_REM"] = 524)] = "Z3_OP_REM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_MOD"] = 525)] = "Z3_OP_MOD";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_TO_REAL"] = 526)] = "Z3_OP_TO_REAL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_TO_INT"] = 527)] = "Z3_OP_TO_INT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_IS_INT"] = 528)] = "Z3_OP_IS_INT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_POWER"] = 529)] = "Z3_OP_POWER";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ABS"] = 530)] = "Z3_OP_ABS";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_STORE"] = 768)] = "Z3_OP_STORE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SELECT"] = 769)] = "Z3_OP_SELECT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_CONST_ARRAY"] = 770)] = "Z3_OP_CONST_ARRAY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ARRAY_MAP"] = 771)] = "Z3_OP_ARRAY_MAP";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ARRAY_DEFAULT"] = 772)] = "Z3_OP_ARRAY_DEFAULT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SET_UNION"] = 773)] = "Z3_OP_SET_UNION";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SET_INTERSECT"] = 774)] = "Z3_OP_SET_INTERSECT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SET_DIFFERENCE"] = 775)] = "Z3_OP_SET_DIFFERENCE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SET_COMPLEMENT"] = 776)] = "Z3_OP_SET_COMPLEMENT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SET_SUBSET"] = 777)] = "Z3_OP_SET_SUBSET";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_AS_ARRAY"] = 778)] = "Z3_OP_AS_ARRAY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ARRAY_EXT"] = 779)] = "Z3_OP_ARRAY_EXT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SET_HAS_SIZE"] = 780)] = "Z3_OP_SET_HAS_SIZE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SET_CARD"] = 781)] = "Z3_OP_SET_CARD";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BNUM"] = 1024)] = "Z3_OP_BNUM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BIT1"] = 1025)] = "Z3_OP_BIT1";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BIT0"] = 1026)] = "Z3_OP_BIT0";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BNEG"] = 1027)] = "Z3_OP_BNEG";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BADD"] = 1028)] = "Z3_OP_BADD";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSUB"] = 1029)] = "Z3_OP_BSUB";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BMUL"] = 1030)] = "Z3_OP_BMUL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSDIV"] = 1031)] = "Z3_OP_BSDIV";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BUDIV"] = 1032)] = "Z3_OP_BUDIV";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSREM"] = 1033)] = "Z3_OP_BSREM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BUREM"] = 1034)] = "Z3_OP_BUREM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSMOD"] = 1035)] = "Z3_OP_BSMOD";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSDIV0"] = 1036)] = "Z3_OP_BSDIV0";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BUDIV0"] = 1037)] = "Z3_OP_BUDIV0";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSREM0"] = 1038)] = "Z3_OP_BSREM0";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BUREM0"] = 1039)] = "Z3_OP_BUREM0";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSMOD0"] = 1040)] = "Z3_OP_BSMOD0";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ULEQ"] = 1041)] = "Z3_OP_ULEQ";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SLEQ"] = 1042)] = "Z3_OP_SLEQ";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_UGEQ"] = 1043)] = "Z3_OP_UGEQ";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SGEQ"] = 1044)] = "Z3_OP_SGEQ";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ULT"] = 1045)] = "Z3_OP_ULT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SLT"] = 1046)] = "Z3_OP_SLT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_UGT"] = 1047)] = "Z3_OP_UGT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SGT"] = 1048)] = "Z3_OP_SGT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BAND"] = 1049)] = "Z3_OP_BAND";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BOR"] = 1050)] = "Z3_OP_BOR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BNOT"] = 1051)] = "Z3_OP_BNOT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BXOR"] = 1052)] = "Z3_OP_BXOR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BNAND"] = 1053)] = "Z3_OP_BNAND";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BNOR"] = 1054)] = "Z3_OP_BNOR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BXNOR"] = 1055)] = "Z3_OP_BXNOR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_CONCAT"] = 1056)] = "Z3_OP_CONCAT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SIGN_EXT"] = 1057)] = "Z3_OP_SIGN_EXT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ZERO_EXT"] = 1058)] = "Z3_OP_ZERO_EXT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_EXTRACT"] = 1059)] = "Z3_OP_EXTRACT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_REPEAT"] = 1060)] = "Z3_OP_REPEAT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BREDOR"] = 1061)] = "Z3_OP_BREDOR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BREDAND"] = 1062)] = "Z3_OP_BREDAND";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BCOMP"] = 1063)] = "Z3_OP_BCOMP";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSHL"] = 1064)] = "Z3_OP_BSHL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BLSHR"] = 1065)] = "Z3_OP_BLSHR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BASHR"] = 1066)] = "Z3_OP_BASHR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ROTATE_LEFT"] = 1067)] = "Z3_OP_ROTATE_LEFT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_ROTATE_RIGHT"] = 1068)] = "Z3_OP_ROTATE_RIGHT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_EXT_ROTATE_LEFT"] = 1069)] = "Z3_OP_EXT_ROTATE_LEFT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_EXT_ROTATE_RIGHT"] = 1070)] = "Z3_OP_EXT_ROTATE_RIGHT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BIT2BOOL"] = 1071)] = "Z3_OP_BIT2BOOL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_INT2BV"] = 1072)] = "Z3_OP_INT2BV";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BV2INT"] = 1073)] = "Z3_OP_BV2INT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SBV2INT"] = 1074)] = "Z3_OP_SBV2INT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_CARRY"] = 1075)] = "Z3_OP_CARRY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_XOR3"] = 1076)] = "Z3_OP_XOR3";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSMUL_NO_OVFL"] = 1077)] = "Z3_OP_BSMUL_NO_OVFL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BUMUL_NO_OVFL"] = 1078)] = "Z3_OP_BUMUL_NO_OVFL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSMUL_NO_UDFL"] = 1079)] = "Z3_OP_BSMUL_NO_UDFL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSDIV_I"] = 1080)] = "Z3_OP_BSDIV_I";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BUDIV_I"] = 1081)] = "Z3_OP_BUDIV_I";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSREM_I"] = 1082)] = "Z3_OP_BSREM_I";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BUREM_I"] = 1083)] = "Z3_OP_BUREM_I";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_BSMOD_I"] = 1084)] = "Z3_OP_BSMOD_I";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_UNDEF"] = 1280)] = "Z3_OP_PR_UNDEF";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_TRUE"] = 1281)] = "Z3_OP_PR_TRUE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_ASSERTED"] = 1282)] = "Z3_OP_PR_ASSERTED";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_GOAL"] = 1283)] = "Z3_OP_PR_GOAL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_MODUS_PONENS"] = 1284)] = "Z3_OP_PR_MODUS_PONENS";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_REFLEXIVITY"] = 1285)] = "Z3_OP_PR_REFLEXIVITY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_SYMMETRY"] = 1286)] = "Z3_OP_PR_SYMMETRY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_TRANSITIVITY"] = 1287)] = "Z3_OP_PR_TRANSITIVITY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_TRANSITIVITY_STAR"] = 1288)] = "Z3_OP_PR_TRANSITIVITY_STAR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_MONOTONICITY"] = 1289)] = "Z3_OP_PR_MONOTONICITY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_QUANT_INTRO"] = 1290)] = "Z3_OP_PR_QUANT_INTRO";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_BIND"] = 1291)] = "Z3_OP_PR_BIND";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_DISTRIBUTIVITY"] = 1292)] = "Z3_OP_PR_DISTRIBUTIVITY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_AND_ELIM"] = 1293)] = "Z3_OP_PR_AND_ELIM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_NOT_OR_ELIM"] = 1294)] = "Z3_OP_PR_NOT_OR_ELIM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_REWRITE"] = 1295)] = "Z3_OP_PR_REWRITE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_REWRITE_STAR"] = 1296)] = "Z3_OP_PR_REWRITE_STAR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_PULL_QUANT"] = 1297)] = "Z3_OP_PR_PULL_QUANT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_PUSH_QUANT"] = 1298)] = "Z3_OP_PR_PUSH_QUANT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_ELIM_UNUSED_VARS"] = 1299)] = "Z3_OP_PR_ELIM_UNUSED_VARS";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_DER"] = 1300)] = "Z3_OP_PR_DER";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_QUANT_INST"] = 1301)] = "Z3_OP_PR_QUANT_INST";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_HYPOTHESIS"] = 1302)] = "Z3_OP_PR_HYPOTHESIS";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_LEMMA"] = 1303)] = "Z3_OP_PR_LEMMA";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_UNIT_RESOLUTION"] = 1304)] = "Z3_OP_PR_UNIT_RESOLUTION";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_IFF_TRUE"] = 1305)] = "Z3_OP_PR_IFF_TRUE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_IFF_FALSE"] = 1306)] = "Z3_OP_PR_IFF_FALSE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_COMMUTATIVITY"] = 1307)] = "Z3_OP_PR_COMMUTATIVITY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_DEF_AXIOM"] = 1308)] = "Z3_OP_PR_DEF_AXIOM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_ASSUMPTION_ADD"] = 1309)] = "Z3_OP_PR_ASSUMPTION_ADD";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_LEMMA_ADD"] = 1310)] = "Z3_OP_PR_LEMMA_ADD";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_REDUNDANT_DEL"] = 1311)] = "Z3_OP_PR_REDUNDANT_DEL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_CLAUSE_TRAIL"] = 1312)] = "Z3_OP_PR_CLAUSE_TRAIL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_DEF_INTRO"] = 1313)] = "Z3_OP_PR_DEF_INTRO";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_APPLY_DEF"] = 1314)] = "Z3_OP_PR_APPLY_DEF";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_IFF_OEQ"] = 1315)] = "Z3_OP_PR_IFF_OEQ";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_NNF_POS"] = 1316)] = "Z3_OP_PR_NNF_POS";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_NNF_NEG"] = 1317)] = "Z3_OP_PR_NNF_NEG";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_SKOLEMIZE"] = 1318)] = "Z3_OP_PR_SKOLEMIZE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_MODUS_PONENS_OEQ"] = 1319)] = "Z3_OP_PR_MODUS_PONENS_OEQ";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_TH_LEMMA"] = 1320)] = "Z3_OP_PR_TH_LEMMA";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PR_HYPER_RESOLVE"] = 1321)] = "Z3_OP_PR_HYPER_RESOLVE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_STORE"] = 1536)] = "Z3_OP_RA_STORE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_EMPTY"] = 1537)] = "Z3_OP_RA_EMPTY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_IS_EMPTY"] = 1538)] = "Z3_OP_RA_IS_EMPTY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_JOIN"] = 1539)] = "Z3_OP_RA_JOIN";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_UNION"] = 1540)] = "Z3_OP_RA_UNION";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_WIDEN"] = 1541)] = "Z3_OP_RA_WIDEN";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_PROJECT"] = 1542)] = "Z3_OP_RA_PROJECT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_FILTER"] = 1543)] = "Z3_OP_RA_FILTER";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_NEGATION_FILTER"] = 1544)] = "Z3_OP_RA_NEGATION_FILTER";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_RENAME"] = 1545)] = "Z3_OP_RA_RENAME";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_COMPLEMENT"] = 1546)] = "Z3_OP_RA_COMPLEMENT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_SELECT"] = 1547)] = "Z3_OP_RA_SELECT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RA_CLONE"] = 1548)] = "Z3_OP_RA_CLONE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FD_CONSTANT"] = 1549)] = "Z3_OP_FD_CONSTANT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FD_LT"] = 1550)] = "Z3_OP_FD_LT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_UNIT"] = 1551)] = "Z3_OP_SEQ_UNIT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_EMPTY"] = 1552)] = "Z3_OP_SEQ_EMPTY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_CONCAT"] = 1553)] = "Z3_OP_SEQ_CONCAT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_PREFIX"] = 1554)] = "Z3_OP_SEQ_PREFIX";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_SUFFIX"] = 1555)] = "Z3_OP_SEQ_SUFFIX";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_CONTAINS"] = 1556)] = "Z3_OP_SEQ_CONTAINS";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_EXTRACT"] = 1557)] = "Z3_OP_SEQ_EXTRACT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_REPLACE"] = 1558)] = "Z3_OP_SEQ_REPLACE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_REPLACE_RE"] = 1559)] = "Z3_OP_SEQ_REPLACE_RE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_REPLACE_RE_ALL"] = 1560)] = "Z3_OP_SEQ_REPLACE_RE_ALL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_REPLACE_ALL"] = 1561)] = "Z3_OP_SEQ_REPLACE_ALL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_AT"] = 1562)] = "Z3_OP_SEQ_AT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_NTH"] = 1563)] = "Z3_OP_SEQ_NTH";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_LENGTH"] = 1564)] = "Z3_OP_SEQ_LENGTH";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_INDEX"] = 1565)] = "Z3_OP_SEQ_INDEX";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_LAST_INDEX"] = 1566)] = "Z3_OP_SEQ_LAST_INDEX";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_TO_RE"] = 1567)] = "Z3_OP_SEQ_TO_RE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_IN_RE"] = 1568)] = "Z3_OP_SEQ_IN_RE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_MAP"] = 1569)] = "Z3_OP_SEQ_MAP";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_MAPI"] = 1570)] = "Z3_OP_SEQ_MAPI";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_FOLDL"] = 1571)] = "Z3_OP_SEQ_FOLDL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SEQ_FOLDLI"] = 1572)] = "Z3_OP_SEQ_FOLDLI";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_STR_TO_INT"] = 1573)] = "Z3_OP_STR_TO_INT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_INT_TO_STR"] = 1574)] = "Z3_OP_INT_TO_STR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_UBV_TO_STR"] = 1575)] = "Z3_OP_UBV_TO_STR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SBV_TO_STR"] = 1576)] = "Z3_OP_SBV_TO_STR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_STR_TO_CODE"] = 1577)] = "Z3_OP_STR_TO_CODE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_STR_FROM_CODE"] = 1578)] = "Z3_OP_STR_FROM_CODE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_STRING_LT"] = 1579)] = "Z3_OP_STRING_LT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_STRING_LE"] = 1580)] = "Z3_OP_STRING_LE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_PLUS"] = 1581)] = "Z3_OP_RE_PLUS";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_STAR"] = 1582)] = "Z3_OP_RE_STAR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_OPTION"] = 1583)] = "Z3_OP_RE_OPTION";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_CONCAT"] = 1584)] = "Z3_OP_RE_CONCAT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_UNION"] = 1585)] = "Z3_OP_RE_UNION";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_RANGE"] = 1586)] = "Z3_OP_RE_RANGE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_DIFF"] = 1587)] = "Z3_OP_RE_DIFF";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_INTERSECT"] = 1588)] = "Z3_OP_RE_INTERSECT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_LOOP"] = 1589)] = "Z3_OP_RE_LOOP";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_POWER"] = 1590)] = "Z3_OP_RE_POWER";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_COMPLEMENT"] = 1591)] = "Z3_OP_RE_COMPLEMENT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_EMPTY_SET"] = 1592)] = "Z3_OP_RE_EMPTY_SET";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_FULL_SET"] = 1593)] = "Z3_OP_RE_FULL_SET";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_FULL_CHAR_SET"] = 1594)] = "Z3_OP_RE_FULL_CHAR_SET";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_OF_PRED"] = 1595)] = "Z3_OP_RE_OF_PRED";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_REVERSE"] = 1596)] = "Z3_OP_RE_REVERSE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RE_DERIVATIVE"] = 1597)] = "Z3_OP_RE_DERIVATIVE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_CHAR_CONST"] = 1598)] = "Z3_OP_CHAR_CONST";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_CHAR_LE"] = 1599)] = "Z3_OP_CHAR_LE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_CHAR_TO_INT"] = 1600)] = "Z3_OP_CHAR_TO_INT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_CHAR_TO_BV"] = 1601)] = "Z3_OP_CHAR_TO_BV";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_CHAR_FROM_BV"] = 1602)] = "Z3_OP_CHAR_FROM_BV";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_CHAR_IS_DIGIT"] = 1603)] = "Z3_OP_CHAR_IS_DIGIT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_LABEL"] = 1792)] = "Z3_OP_LABEL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_LABEL_LIT"] = 1793)] = "Z3_OP_LABEL_LIT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_DT_CONSTRUCTOR"] = 2048)] = "Z3_OP_DT_CONSTRUCTOR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_DT_RECOGNISER"] = 2049)] = "Z3_OP_DT_RECOGNISER";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_DT_IS"] = 2050)] = "Z3_OP_DT_IS";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_DT_ACCESSOR"] = 2051)] = "Z3_OP_DT_ACCESSOR";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_DT_UPDATE_FIELD"] = 2052)] = "Z3_OP_DT_UPDATE_FIELD";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PB_AT_MOST"] = 2304)] = "Z3_OP_PB_AT_MOST";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PB_AT_LEAST"] = 2305)] = "Z3_OP_PB_AT_LEAST";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PB_LE"] = 2306)] = "Z3_OP_PB_LE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PB_GE"] = 2307)] = "Z3_OP_PB_GE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_PB_EQ"] = 2308)] = "Z3_OP_PB_EQ";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_LO"] = 40960)] = "Z3_OP_SPECIAL_RELATION_LO";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_PO"] = 40961)] = "Z3_OP_SPECIAL_RELATION_PO";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_PLO"] = 40962)] = "Z3_OP_SPECIAL_RELATION_PLO";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_TO"] = 40963)] = "Z3_OP_SPECIAL_RELATION_TO";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_TC"] = 40964)] = "Z3_OP_SPECIAL_RELATION_TC";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_SPECIAL_RELATION_TRC"] = 40965)] = "Z3_OP_SPECIAL_RELATION_TRC";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_RM_NEAREST_TIES_TO_EVEN"] = 45056)] = "Z3_OP_FPA_RM_NEAREST_TIES_TO_EVEN";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_RM_NEAREST_TIES_TO_AWAY"] = 45057)] = "Z3_OP_FPA_RM_NEAREST_TIES_TO_AWAY";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_RM_TOWARD_POSITIVE"] = 45058)] = "Z3_OP_FPA_RM_TOWARD_POSITIVE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_RM_TOWARD_NEGATIVE"] = 45059)] = "Z3_OP_FPA_RM_TOWARD_NEGATIVE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_RM_TOWARD_ZERO"] = 45060)] = "Z3_OP_FPA_RM_TOWARD_ZERO";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_NUM"] = 45061)] = "Z3_OP_FPA_NUM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_PLUS_INF"] = 45062)] = "Z3_OP_FPA_PLUS_INF";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_MINUS_INF"] = 45063)] = "Z3_OP_FPA_MINUS_INF";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_NAN"] = 45064)] = "Z3_OP_FPA_NAN";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_PLUS_ZERO"] = 45065)] = "Z3_OP_FPA_PLUS_ZERO";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_MINUS_ZERO"] = 45066)] = "Z3_OP_FPA_MINUS_ZERO";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_ADD"] = 45067)] = "Z3_OP_FPA_ADD";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_SUB"] = 45068)] = "Z3_OP_FPA_SUB";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_NEG"] = 45069)] = "Z3_OP_FPA_NEG";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_MUL"] = 45070)] = "Z3_OP_FPA_MUL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_DIV"] = 45071)] = "Z3_OP_FPA_DIV";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_REM"] = 45072)] = "Z3_OP_FPA_REM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_ABS"] = 45073)] = "Z3_OP_FPA_ABS";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_MIN"] = 45074)] = "Z3_OP_FPA_MIN";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_MAX"] = 45075)] = "Z3_OP_FPA_MAX";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_FMA"] = 45076)] = "Z3_OP_FPA_FMA";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_SQRT"] = 45077)] = "Z3_OP_FPA_SQRT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_ROUND_TO_INTEGRAL"] = 45078)] = "Z3_OP_FPA_ROUND_TO_INTEGRAL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_EQ"] = 45079)] = "Z3_OP_FPA_EQ";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_LT"] = 45080)] = "Z3_OP_FPA_LT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_GT"] = 45081)] = "Z3_OP_FPA_GT";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_LE"] = 45082)] = "Z3_OP_FPA_LE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_GE"] = 45083)] = "Z3_OP_FPA_GE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_IS_NAN"] = 45084)] = "Z3_OP_FPA_IS_NAN";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_IS_INF"] = 45085)] = "Z3_OP_FPA_IS_INF";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_IS_ZERO"] = 45086)] = "Z3_OP_FPA_IS_ZERO";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_IS_NORMAL"] = 45087)] = "Z3_OP_FPA_IS_NORMAL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_IS_SUBNORMAL"] = 45088)] = "Z3_OP_FPA_IS_SUBNORMAL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_IS_NEGATIVE"] = 45089)] = "Z3_OP_FPA_IS_NEGATIVE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_IS_POSITIVE"] = 45090)] = "Z3_OP_FPA_IS_POSITIVE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_FP"] = 45091)] = "Z3_OP_FPA_FP";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_TO_FP"] = 45092)] = "Z3_OP_FPA_TO_FP";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_TO_FP_UNSIGNED"] = 45093)] = "Z3_OP_FPA_TO_FP_UNSIGNED";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_TO_UBV"] = 45094)] = "Z3_OP_FPA_TO_UBV";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_TO_SBV"] = 45095)] = "Z3_OP_FPA_TO_SBV";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_TO_REAL"] = 45096)] = "Z3_OP_FPA_TO_REAL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_TO_IEEE_BV"] = 45097)] = "Z3_OP_FPA_TO_IEEE_BV";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_BVWRAP"] = 45098)] = "Z3_OP_FPA_BVWRAP";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_FPA_BV2RM"] = 45099)] = "Z3_OP_FPA_BV2RM";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_INTERNAL"] = 45100)] = "Z3_OP_INTERNAL";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_RECURSIVE"] = 45101)] = "Z3_OP_RECURSIVE";
+      Z3_decl_kind2[(Z3_decl_kind2["Z3_OP_UNINTERPRETED"] = 45102)] = "Z3_OP_UNINTERPRETED";
     })(Z3_decl_kind || (types___GENERATED__.Z3_decl_kind = Z3_decl_kind = {}));
     var Z3_param_kind;
-    (function(Z3_param_kind2) {
-      Z3_param_kind2[Z3_param_kind2["Z3_PK_UINT"] = 0] = "Z3_PK_UINT";
-      Z3_param_kind2[Z3_param_kind2["Z3_PK_BOOL"] = 1] = "Z3_PK_BOOL";
-      Z3_param_kind2[Z3_param_kind2["Z3_PK_DOUBLE"] = 2] = "Z3_PK_DOUBLE";
-      Z3_param_kind2[Z3_param_kind2["Z3_PK_SYMBOL"] = 3] = "Z3_PK_SYMBOL";
-      Z3_param_kind2[Z3_param_kind2["Z3_PK_STRING"] = 4] = "Z3_PK_STRING";
-      Z3_param_kind2[Z3_param_kind2["Z3_PK_OTHER"] = 5] = "Z3_PK_OTHER";
-      Z3_param_kind2[Z3_param_kind2["Z3_PK_INVALID"] = 6] = "Z3_PK_INVALID";
+    (function (Z3_param_kind2) {
+      Z3_param_kind2[(Z3_param_kind2["Z3_PK_UINT"] = 0)] = "Z3_PK_UINT";
+      Z3_param_kind2[(Z3_param_kind2["Z3_PK_BOOL"] = 1)] = "Z3_PK_BOOL";
+      Z3_param_kind2[(Z3_param_kind2["Z3_PK_DOUBLE"] = 2)] = "Z3_PK_DOUBLE";
+      Z3_param_kind2[(Z3_param_kind2["Z3_PK_SYMBOL"] = 3)] = "Z3_PK_SYMBOL";
+      Z3_param_kind2[(Z3_param_kind2["Z3_PK_STRING"] = 4)] = "Z3_PK_STRING";
+      Z3_param_kind2[(Z3_param_kind2["Z3_PK_OTHER"] = 5)] = "Z3_PK_OTHER";
+      Z3_param_kind2[(Z3_param_kind2["Z3_PK_INVALID"] = 6)] = "Z3_PK_INVALID";
     })(Z3_param_kind || (types___GENERATED__.Z3_param_kind = Z3_param_kind = {}));
     var Z3_ast_print_mode;
-    (function(Z3_ast_print_mode2) {
-      Z3_ast_print_mode2[Z3_ast_print_mode2["Z3_PRINT_SMTLIB_FULL"] = 0] = "Z3_PRINT_SMTLIB_FULL";
-      Z3_ast_print_mode2[Z3_ast_print_mode2["Z3_PRINT_LOW_LEVEL"] = 1] = "Z3_PRINT_LOW_LEVEL";
-      Z3_ast_print_mode2[Z3_ast_print_mode2["Z3_PRINT_SMTLIB2_COMPLIANT"] = 2] = "Z3_PRINT_SMTLIB2_COMPLIANT";
+    (function (Z3_ast_print_mode2) {
+      Z3_ast_print_mode2[(Z3_ast_print_mode2["Z3_PRINT_SMTLIB_FULL"] = 0)] = "Z3_PRINT_SMTLIB_FULL";
+      Z3_ast_print_mode2[(Z3_ast_print_mode2["Z3_PRINT_LOW_LEVEL"] = 1)] = "Z3_PRINT_LOW_LEVEL";
+      Z3_ast_print_mode2[(Z3_ast_print_mode2["Z3_PRINT_SMTLIB2_COMPLIANT"] = 2)] = "Z3_PRINT_SMTLIB2_COMPLIANT";
     })(Z3_ast_print_mode || (types___GENERATED__.Z3_ast_print_mode = Z3_ast_print_mode = {}));
     var Z3_error_code;
-    (function(Z3_error_code2) {
-      Z3_error_code2[Z3_error_code2["Z3_OK"] = 0] = "Z3_OK";
-      Z3_error_code2[Z3_error_code2["Z3_SORT_ERROR"] = 1] = "Z3_SORT_ERROR";
-      Z3_error_code2[Z3_error_code2["Z3_IOB"] = 2] = "Z3_IOB";
-      Z3_error_code2[Z3_error_code2["Z3_INVALID_ARG"] = 3] = "Z3_INVALID_ARG";
-      Z3_error_code2[Z3_error_code2["Z3_PARSER_ERROR"] = 4] = "Z3_PARSER_ERROR";
-      Z3_error_code2[Z3_error_code2["Z3_NO_PARSER"] = 5] = "Z3_NO_PARSER";
-      Z3_error_code2[Z3_error_code2["Z3_INVALID_PATTERN"] = 6] = "Z3_INVALID_PATTERN";
-      Z3_error_code2[Z3_error_code2["Z3_MEMOUT_FAIL"] = 7] = "Z3_MEMOUT_FAIL";
-      Z3_error_code2[Z3_error_code2["Z3_FILE_ACCESS_ERROR"] = 8] = "Z3_FILE_ACCESS_ERROR";
-      Z3_error_code2[Z3_error_code2["Z3_INTERNAL_FATAL"] = 9] = "Z3_INTERNAL_FATAL";
-      Z3_error_code2[Z3_error_code2["Z3_INVALID_USAGE"] = 10] = "Z3_INVALID_USAGE";
-      Z3_error_code2[Z3_error_code2["Z3_DEC_REF_ERROR"] = 11] = "Z3_DEC_REF_ERROR";
-      Z3_error_code2[Z3_error_code2["Z3_EXCEPTION"] = 12] = "Z3_EXCEPTION";
+    (function (Z3_error_code2) {
+      Z3_error_code2[(Z3_error_code2["Z3_OK"] = 0)] = "Z3_OK";
+      Z3_error_code2[(Z3_error_code2["Z3_SORT_ERROR"] = 1)] = "Z3_SORT_ERROR";
+      Z3_error_code2[(Z3_error_code2["Z3_IOB"] = 2)] = "Z3_IOB";
+      Z3_error_code2[(Z3_error_code2["Z3_INVALID_ARG"] = 3)] = "Z3_INVALID_ARG";
+      Z3_error_code2[(Z3_error_code2["Z3_PARSER_ERROR"] = 4)] = "Z3_PARSER_ERROR";
+      Z3_error_code2[(Z3_error_code2["Z3_NO_PARSER"] = 5)] = "Z3_NO_PARSER";
+      Z3_error_code2[(Z3_error_code2["Z3_INVALID_PATTERN"] = 6)] = "Z3_INVALID_PATTERN";
+      Z3_error_code2[(Z3_error_code2["Z3_MEMOUT_FAIL"] = 7)] = "Z3_MEMOUT_FAIL";
+      Z3_error_code2[(Z3_error_code2["Z3_FILE_ACCESS_ERROR"] = 8)] = "Z3_FILE_ACCESS_ERROR";
+      Z3_error_code2[(Z3_error_code2["Z3_INTERNAL_FATAL"] = 9)] = "Z3_INTERNAL_FATAL";
+      Z3_error_code2[(Z3_error_code2["Z3_INVALID_USAGE"] = 10)] = "Z3_INVALID_USAGE";
+      Z3_error_code2[(Z3_error_code2["Z3_DEC_REF_ERROR"] = 11)] = "Z3_DEC_REF_ERROR";
+      Z3_error_code2[(Z3_error_code2["Z3_EXCEPTION"] = 12)] = "Z3_EXCEPTION";
     })(Z3_error_code || (types___GENERATED__.Z3_error_code = Z3_error_code = {}));
     var Z3_goal_prec;
-    (function(Z3_goal_prec2) {
-      Z3_goal_prec2[Z3_goal_prec2["Z3_GOAL_PRECISE"] = 0] = "Z3_GOAL_PRECISE";
-      Z3_goal_prec2[Z3_goal_prec2["Z3_GOAL_UNDER"] = 1] = "Z3_GOAL_UNDER";
-      Z3_goal_prec2[Z3_goal_prec2["Z3_GOAL_OVER"] = 2] = "Z3_GOAL_OVER";
-      Z3_goal_prec2[Z3_goal_prec2["Z3_GOAL_UNDER_OVER"] = 3] = "Z3_GOAL_UNDER_OVER";
+    (function (Z3_goal_prec2) {
+      Z3_goal_prec2[(Z3_goal_prec2["Z3_GOAL_PRECISE"] = 0)] = "Z3_GOAL_PRECISE";
+      Z3_goal_prec2[(Z3_goal_prec2["Z3_GOAL_UNDER"] = 1)] = "Z3_GOAL_UNDER";
+      Z3_goal_prec2[(Z3_goal_prec2["Z3_GOAL_OVER"] = 2)] = "Z3_GOAL_OVER";
+      Z3_goal_prec2[(Z3_goal_prec2["Z3_GOAL_UNDER_OVER"] = 3)] = "Z3_GOAL_UNDER_OVER";
     })(Z3_goal_prec || (types___GENERATED__.Z3_goal_prec = Z3_goal_prec = {}));
     return types___GENERATED__;
   }
@@ -3228,7 +3327,7 @@
         return new Uint8Array(new Uint32Array(ints).buffer);
       }
       function boolArrayToByteArr(bools) {
-        return bools.map((b) => b ? 1 : 0);
+        return bools.map((b) => (b ? 1 : 0));
       }
       function readUintArray(address, count) {
         return Array.from(new Uint32Array(Mod.HEAPU32.buffer, address, count));
@@ -3245,21 +3344,21 @@
       return {
         em: Mod,
         Z3: {
-          mk_context: function(c) {
+          mk_context: function (c) {
             let ctx = Mod._Z3_mk_context(c);
             Mod._set_noop_error_handler(ctx);
             return ctx;
           },
-          mk_context_rc: function(c) {
+          mk_context_rc: function (c) {
             let ctx = Mod._Z3_mk_context_rc(c);
             Mod._set_noop_error_handler(ctx);
             return ctx;
           },
-          global_param_set: function(param_id, param_value) {
+          global_param_set: function (param_id, param_value) {
             return Mod.ccall("Z3_global_param_set", "void", ["string", "string"], [param_id, param_value]);
           },
           global_param_reset_all: Mod._Z3_global_param_reset_all,
-          global_param_get: function(param_id) {
+          global_param_get: function (param_id) {
             let ret = Mod.ccall("Z3_global_param_get", "boolean", ["string", "number"], [param_id, outAddress]);
             if (!ret) {
               return null;
@@ -3268,13 +3367,13 @@
           },
           mk_config: Mod._Z3_mk_config,
           del_config: Mod._Z3_del_config,
-          set_param_value: function(c, param_id, param_value) {
+          set_param_value: function (c, param_id, param_value) {
             return Mod.ccall("Z3_set_param_value", "void", ["number", "string", "string"], [c, param_id, param_value]);
           },
           del_context: Mod._Z3_del_context,
           inc_ref: Mod._Z3_inc_ref,
           dec_ref: Mod._Z3_dec_ref,
-          update_param_value: function(c, param_id, param_value) {
+          update_param_value: function (c, param_id, param_value) {
             return Mod.ccall("Z3_update_param_value", "void", ["number", "string", "string"], [c, param_id, param_value]);
           },
           get_global_param_descrs: Mod._Z3_get_global_param_descrs,
@@ -3287,27 +3386,27 @@
           params_set_uint: Mod._Z3_params_set_uint,
           params_set_double: Mod._Z3_params_set_double,
           params_set_symbol: Mod._Z3_params_set_symbol,
-          params_to_string: function(c, p) {
+          params_to_string: function (c, p) {
             return Mod.ccall("Z3_params_to_string", "string", ["number", "number"], [c, p]);
           },
           params_validate: Mod._Z3_params_validate,
           param_descrs_inc_ref: Mod._Z3_param_descrs_inc_ref,
           param_descrs_dec_ref: Mod._Z3_param_descrs_dec_ref,
           param_descrs_get_kind: Mod._Z3_param_descrs_get_kind,
-          param_descrs_size: function(c, p) {
+          param_descrs_size: function (c, p) {
             let ret = Mod.ccall("Z3_param_descrs_size", "number", ["number", "number"], [c, p]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           param_descrs_get_name: Mod._Z3_param_descrs_get_name,
-          param_descrs_get_documentation: function(c, p, s) {
+          param_descrs_get_documentation: function (c, p, s) {
             return Mod.ccall("Z3_param_descrs_get_documentation", "string", ["number", "number", "number"], [c, p, s]);
           },
-          param_descrs_to_string: function(c, p) {
+          param_descrs_to_string: function (c, p) {
             return Mod.ccall("Z3_param_descrs_to_string", "string", ["number", "number"], [c, p]);
           },
           mk_int_symbol: Mod._Z3_mk_int_symbol,
-          mk_string_symbol: function(c, s) {
+          mk_string_symbol: function (c, s) {
             return Mod.ccall("Z3_mk_string_symbol", "number", ["number", "string"], [c, s]);
           },
           mk_uninterpreted_sort: Mod._Z3_mk_uninterpreted_sort,
@@ -3318,63 +3417,58 @@
           mk_bv_sort: Mod._Z3_mk_bv_sort,
           mk_finite_domain_sort: Mod._Z3_mk_finite_domain_sort,
           mk_array_sort: Mod._Z3_mk_array_sort,
-          mk_array_sort_n: function(c, domain, range) {
-            return Mod.ccall("Z3_mk_array_sort_n", "number", ["number", "number", "array", "number"], [
-              c,
-              domain.length,
-              intArrayToByteArr(domain),
-              range
-            ]);
+          mk_array_sort_n: function (c, domain, range) {
+            return Mod.ccall(
+              "Z3_mk_array_sort_n",
+              "number",
+              ["number", "number", "array", "number"],
+              [c, domain.length, intArrayToByteArr(domain), range],
+            );
           },
-          mk_tuple_sort: function(c, mk_tuple_name, field_names, field_sorts) {
+          mk_tuple_sort: function (c, mk_tuple_name, field_names, field_sorts) {
             if (field_names.length !== field_sorts.length) {
               throw new TypeError(`field_names and field_sorts must be the same length (got ${field_names.length} and {field_sorts.length})`);
             }
             let outArray_proj_decl = Mod._malloc(4 * field_names.length);
             try {
-              let ret = Mod.ccall("Z3_mk_tuple_sort", "number", [
+              let ret = Mod.ccall(
+                "Z3_mk_tuple_sort",
                 "number",
-                "number",
-                "number",
-                "array",
-                "array",
-                "number",
-                "number"
-              ], [
-                c,
-                mk_tuple_name,
-                field_names.length,
-                intArrayToByteArr(field_names),
-                intArrayToByteArr(field_sorts),
-                outAddress,
-                outArray_proj_decl
-              ]);
+                ["number", "number", "number", "array", "array", "number", "number"],
+                [
+                  c,
+                  mk_tuple_name,
+                  field_names.length,
+                  intArrayToByteArr(field_names),
+                  intArrayToByteArr(field_sorts),
+                  outAddress,
+                  outArray_proj_decl,
+                ],
+              );
               return {
                 rv: ret,
                 mk_tuple_decl: getOutUint(0),
-                proj_decl: readUintArray(outArray_proj_decl, field_names.length)
+                proj_decl: readUintArray(outArray_proj_decl, field_names.length),
               };
             } finally {
               Mod._free(outArray_proj_decl);
             }
           },
-          mk_enumeration_sort: function(c, name, enum_names) {
+          mk_enumeration_sort: function (c, name, enum_names) {
             let outArray_enum_consts = Mod._malloc(4 * enum_names.length);
             try {
               let outArray_enum_testers = Mod._malloc(4 * enum_names.length);
               try {
-                let ret = Mod.ccall("Z3_mk_enumeration_sort", "number", ["number", "number", "number", "array", "number", "number"], [
-                  c,
-                  name,
-                  enum_names.length,
-                  intArrayToByteArr(enum_names),
-                  outArray_enum_consts,
-                  outArray_enum_testers
-                ]);
+                let ret = Mod.ccall(
+                  "Z3_mk_enumeration_sort",
+                  "number",
+                  ["number", "number", "number", "array", "number", "number"],
+                  [c, name, enum_names.length, intArrayToByteArr(enum_names), outArray_enum_consts, outArray_enum_testers],
+                );
                 return {
                   rv: ret,
                   enum_consts: readUintArray(outArray_enum_consts, enum_names.length),
-                  enum_testers: readUintArray(outArray_enum_testers, enum_names.length)
+                  enum_testers: readUintArray(outArray_enum_testers, enum_names.length),
                 };
               } finally {
                 Mod._free(outArray_enum_testers);
@@ -3383,28 +3477,13 @@
               Mod._free(outArray_enum_consts);
             }
           },
-          mk_list_sort: function(c, name, elem_sort) {
-            let ret = Mod.ccall("Z3_mk_list_sort", "number", [
+          mk_list_sort: function (c, name, elem_sort) {
+            let ret = Mod.ccall(
+              "Z3_mk_list_sort",
               "number",
-              "number",
-              "number",
-              "number",
-              "number",
-              "number",
-              "number",
-              "number",
-              "number"
-            ], [
-              c,
-              name,
-              elem_sort,
-              outAddress,
-              outAddress + 4,
-              outAddress + 8,
-              outAddress + 12,
-              outAddress + 16,
-              outAddress + 20
-            ]);
+              ["number", "number", "number", "number", "number", "number", "number", "number", "number"],
+              [c, name, elem_sort, outAddress, outAddress + 4, outAddress + 8, outAddress + 12, outAddress + 16, outAddress + 20],
+            );
             return {
               rv: ret,
               nil_decl: getOutUint(0),
@@ -3412,134 +3491,127 @@
               cons_decl: getOutUint(2),
               is_cons_decl: getOutUint(3),
               head_decl: getOutUint(4),
-              tail_decl: getOutUint(5)
+              tail_decl: getOutUint(5),
             };
           },
-          mk_constructor: function(c, name, recognizer, field_names, sorts, sort_refs) {
+          mk_constructor: function (c, name, recognizer, field_names, sorts, sort_refs) {
             if (field_names.length !== sorts.length) {
               throw new TypeError(`field_names and sorts must be the same length (got ${field_names.length} and {sorts.length})`);
             }
             if (field_names.length !== sort_refs.length) {
               throw new TypeError(`field_names and sort_refs must be the same length (got ${field_names.length} and {sort_refs.length})`);
             }
-            return Mod.ccall("Z3_mk_constructor", "number", ["number", "number", "number", "number", "array", "array", "array"], [
-              c,
-              name,
-              recognizer,
-              field_names.length,
-              intArrayToByteArr(field_names),
-              intArrayToByteArr(sorts),
-              intArrayToByteArr(sort_refs)
-            ]);
+            return Mod.ccall(
+              "Z3_mk_constructor",
+              "number",
+              ["number", "number", "number", "number", "array", "array", "array"],
+              [c, name, recognizer, field_names.length, intArrayToByteArr(field_names), intArrayToByteArr(sorts), intArrayToByteArr(sort_refs)],
+            );
           },
-          constructor_num_fields: function(c, constr) {
+          constructor_num_fields: function (c, constr) {
             let ret = Mod.ccall("Z3_constructor_num_fields", "number", ["number", "number"], [c, constr]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           del_constructor: Mod._Z3_del_constructor,
-          mk_datatype: function(c, name, constructors) {
-            return Mod.ccall("Z3_mk_datatype", "number", ["number", "number", "number", "array"], [
-              c,
-              name,
-              constructors.length,
-              intArrayToByteArr(constructors)
-            ]);
+          mk_datatype: function (c, name, constructors) {
+            return Mod.ccall(
+              "Z3_mk_datatype",
+              "number",
+              ["number", "number", "number", "array"],
+              [c, name, constructors.length, intArrayToByteArr(constructors)],
+            );
           },
           mk_datatype_sort: Mod._Z3_mk_datatype_sort,
-          mk_constructor_list: function(c, constructors) {
-            return Mod.ccall("Z3_mk_constructor_list", "number", ["number", "number", "array"], [
-              c,
-              constructors.length,
-              intArrayToByteArr(constructors)
-            ]);
+          mk_constructor_list: function (c, constructors) {
+            return Mod.ccall(
+              "Z3_mk_constructor_list",
+              "number",
+              ["number", "number", "array"],
+              [c, constructors.length, intArrayToByteArr(constructors)],
+            );
           },
           del_constructor_list: Mod._Z3_del_constructor_list,
-          mk_datatypes: function(c, sort_names, constructor_lists) {
+          mk_datatypes: function (c, sort_names, constructor_lists) {
             if (sort_names.length !== constructor_lists.length) {
-              throw new TypeError(`sort_names and constructor_lists must be the same length (got ${sort_names.length} and {constructor_lists.length})`);
+              throw new TypeError(
+                `sort_names and constructor_lists must be the same length (got ${sort_names.length} and {constructor_lists.length})`,
+              );
             }
             let outArray_sorts = Mod._malloc(4 * sort_names.length);
             try {
-              let ret = Mod.ccall("Z3_mk_datatypes", "void", ["number", "number", "array", "number", "array"], [
-                c,
-                sort_names.length,
-                intArrayToByteArr(sort_names),
-                outArray_sorts,
-                intArrayToByteArr(constructor_lists)
-              ]);
+              let ret = Mod.ccall(
+                "Z3_mk_datatypes",
+                "void",
+                ["number", "number", "array", "number", "array"],
+                [c, sort_names.length, intArrayToByteArr(sort_names), outArray_sorts, intArrayToByteArr(constructor_lists)],
+              );
               return readUintArray(outArray_sorts, sort_names.length);
             } finally {
               Mod._free(outArray_sorts);
             }
           },
-          query_constructor: function(c, constr, num_fields) {
+          query_constructor: function (c, constr, num_fields) {
             let outArray_accessors = Mod._malloc(4 * num_fields);
             try {
-              let ret = Mod.ccall("Z3_query_constructor", "void", ["number", "number", "number", "number", "number", "number"], [
-                c,
-                constr,
-                num_fields,
-                outAddress,
-                outAddress + 4,
-                outArray_accessors
-              ]);
+              let ret = Mod.ccall(
+                "Z3_query_constructor",
+                "void",
+                ["number", "number", "number", "number", "number", "number"],
+                [c, constr, num_fields, outAddress, outAddress + 4, outArray_accessors],
+              );
               return {
                 constructor: getOutUint(0),
                 tester: getOutUint(1),
-                accessors: readUintArray(outArray_accessors, num_fields)
+                accessors: readUintArray(outArray_accessors, num_fields),
               };
             } finally {
               Mod._free(outArray_accessors);
             }
           },
-          mk_func_decl: function(c, s, domain, range) {
-            return Mod.ccall("Z3_mk_func_decl", "number", ["number", "number", "number", "array", "number"], [
-              c,
-              s,
-              domain.length,
-              intArrayToByteArr(domain),
-              range
-            ]);
+          mk_func_decl: function (c, s, domain, range) {
+            return Mod.ccall(
+              "Z3_mk_func_decl",
+              "number",
+              ["number", "number", "number", "array", "number"],
+              [c, s, domain.length, intArrayToByteArr(domain), range],
+            );
           },
-          mk_app: function(c, d, args) {
+          mk_app: function (c, d, args) {
             return Mod.ccall("Z3_mk_app", "number", ["number", "number", "number", "array"], [c, d, args.length, intArrayToByteArr(args)]);
           },
           mk_const: Mod._Z3_mk_const,
-          mk_fresh_func_decl: function(c, prefix, domain, range) {
-            return Mod.ccall("Z3_mk_fresh_func_decl", "number", ["number", "string", "number", "array", "number"], [
-              c,
-              prefix,
-              domain.length,
-              intArrayToByteArr(domain),
-              range
-            ]);
+          mk_fresh_func_decl: function (c, prefix, domain, range) {
+            return Mod.ccall(
+              "Z3_mk_fresh_func_decl",
+              "number",
+              ["number", "string", "number", "array", "number"],
+              [c, prefix, domain.length, intArrayToByteArr(domain), range],
+            );
           },
-          mk_fresh_const: function(c, prefix, ty) {
+          mk_fresh_const: function (c, prefix, ty) {
             return Mod.ccall("Z3_mk_fresh_const", "number", ["number", "string", "number"], [c, prefix, ty]);
           },
-          mk_rec_func_decl: function(c, s, domain, range) {
-            return Mod.ccall("Z3_mk_rec_func_decl", "number", ["number", "number", "number", "array", "number"], [
-              c,
-              s,
-              domain.length,
-              intArrayToByteArr(domain),
-              range
-            ]);
+          mk_rec_func_decl: function (c, s, domain, range) {
+            return Mod.ccall(
+              "Z3_mk_rec_func_decl",
+              "number",
+              ["number", "number", "number", "array", "number"],
+              [c, s, domain.length, intArrayToByteArr(domain), range],
+            );
           },
-          add_rec_def: function(c, f, args, body) {
-            return Mod.ccall("Z3_add_rec_def", "void", ["number", "number", "number", "array", "number"], [
-              c,
-              f,
-              args.length,
-              intArrayToByteArr(args),
-              body
-            ]);
+          add_rec_def: function (c, f, args, body) {
+            return Mod.ccall(
+              "Z3_add_rec_def",
+              "void",
+              ["number", "number", "number", "array", "number"],
+              [c, f, args.length, intArrayToByteArr(args), body],
+            );
           },
           mk_true: Mod._Z3_mk_true,
           mk_false: Mod._Z3_mk_false,
           mk_eq: Mod._Z3_mk_eq,
-          mk_distinct: function(c, args) {
+          mk_distinct: function (c, args) {
             return Mod.ccall("Z3_mk_distinct", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
           mk_not: Mod._Z3_mk_not,
@@ -3547,19 +3619,19 @@
           mk_iff: Mod._Z3_mk_iff,
           mk_implies: Mod._Z3_mk_implies,
           mk_xor: Mod._Z3_mk_xor,
-          mk_and: function(c, args) {
+          mk_and: function (c, args) {
             return Mod.ccall("Z3_mk_and", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
-          mk_or: function(c, args) {
+          mk_or: function (c, args) {
             return Mod.ccall("Z3_mk_or", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
-          mk_add: function(c, args) {
+          mk_add: function (c, args) {
             return Mod.ccall("Z3_mk_add", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
-          mk_mul: function(c, args) {
+          mk_mul: function (c, args) {
             return Mod.ccall("Z3_mk_mul", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
-          mk_sub: function(c, args) {
+          mk_sub: function (c, args) {
             return Mod.ccall("Z3_mk_sub", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
           mk_unary_minus: Mod._Z3_mk_unary_minus,
@@ -3626,21 +3698,20 @@
           mk_bvmul_no_overflow: Mod._Z3_mk_bvmul_no_overflow,
           mk_bvmul_no_underflow: Mod._Z3_mk_bvmul_no_underflow,
           mk_select: Mod._Z3_mk_select,
-          mk_select_n: function(c, a, idxs) {
+          mk_select_n: function (c, a, idxs) {
             return Mod.ccall("Z3_mk_select_n", "number", ["number", "number", "number", "array"], [c, a, idxs.length, intArrayToByteArr(idxs)]);
           },
           mk_store: Mod._Z3_mk_store,
-          mk_store_n: function(c, a, idxs, v) {
-            return Mod.ccall("Z3_mk_store_n", "number", ["number", "number", "number", "array", "number"], [
-              c,
-              a,
-              idxs.length,
-              intArrayToByteArr(idxs),
-              v
-            ]);
+          mk_store_n: function (c, a, idxs, v) {
+            return Mod.ccall(
+              "Z3_mk_store_n",
+              "number",
+              ["number", "number", "number", "array", "number"],
+              [c, a, idxs.length, intArrayToByteArr(idxs), v],
+            );
           },
           mk_const_array: Mod._Z3_mk_const_array,
-          mk_map: function(c, f, args) {
+          mk_map: function (c, f, args) {
             return Mod.ccall("Z3_mk_map", "number", ["number", "number", "number", "array"], [c, f, args.length, intArrayToByteArr(args)]);
           },
           mk_array_default: Mod._Z3_mk_array_default,
@@ -3651,10 +3722,10 @@
           mk_full_set: Mod._Z3_mk_full_set,
           mk_set_add: Mod._Z3_mk_set_add,
           mk_set_del: Mod._Z3_mk_set_del,
-          mk_set_union: function(c, args) {
+          mk_set_union: function (c, args) {
             return Mod.ccall("Z3_mk_set_union", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
-          mk_set_intersect: function(c, args) {
+          mk_set_intersect: function (c, args) {
             return Mod.ccall("Z3_mk_set_intersect", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
           mk_set_difference: Mod._Z3_mk_set_difference,
@@ -3662,7 +3733,7 @@
           mk_set_member: Mod._Z3_mk_set_member,
           mk_set_subset: Mod._Z3_mk_set_subset,
           mk_array_ext: Mod._Z3_mk_array_ext,
-          mk_numeral: function(c, numeral, ty) {
+          mk_numeral: function (c, numeral, ty) {
             return Mod.ccall("Z3_mk_numeral", "number", ["number", "string", "number"], [c, numeral, ty]);
           },
           mk_real: Mod._Z3_mk_real,
@@ -3671,48 +3742,48 @@
           mk_unsigned_int: Mod._Z3_mk_unsigned_int,
           mk_int64: Mod._Z3_mk_int64,
           mk_unsigned_int64: Mod._Z3_mk_unsigned_int64,
-          mk_bv_numeral: function(c, bits) {
+          mk_bv_numeral: function (c, bits) {
             return Mod.ccall("Z3_mk_bv_numeral", "number", ["number", "number", "array"], [c, bits.length, boolArrayToByteArr(bits)]);
           },
           mk_seq_sort: Mod._Z3_mk_seq_sort,
-          is_seq_sort: function(c, s) {
+          is_seq_sort: function (c, s) {
             return Mod.ccall("Z3_is_seq_sort", "boolean", ["number", "number"], [c, s]);
           },
           get_seq_sort_basis: Mod._Z3_get_seq_sort_basis,
           mk_re_sort: Mod._Z3_mk_re_sort,
-          is_re_sort: function(c, s) {
+          is_re_sort: function (c, s) {
             return Mod.ccall("Z3_is_re_sort", "boolean", ["number", "number"], [c, s]);
           },
           get_re_sort_basis: Mod._Z3_get_re_sort_basis,
           mk_string_sort: Mod._Z3_mk_string_sort,
           mk_char_sort: Mod._Z3_mk_char_sort,
-          is_string_sort: function(c, s) {
+          is_string_sort: function (c, s) {
             return Mod.ccall("Z3_is_string_sort", "boolean", ["number", "number"], [c, s]);
           },
-          is_char_sort: function(c, s) {
+          is_char_sort: function (c, s) {
             return Mod.ccall("Z3_is_char_sort", "boolean", ["number", "number"], [c, s]);
           },
-          mk_string: function(c, s) {
+          mk_string: function (c, s) {
             return Mod.ccall("Z3_mk_string", "number", ["number", "string"], [c, s]);
           },
-          mk_lstring: function(c, len, s) {
+          mk_lstring: function (c, len, s) {
             return Mod.ccall("Z3_mk_lstring", "number", ["number", "number", "string"], [c, len, s]);
           },
-          mk_u32string: function(c, chars) {
+          mk_u32string: function (c, chars) {
             return Mod.ccall("Z3_mk_u32string", "number", ["number", "number", "array"], [c, chars.length, intArrayToByteArr(chars)]);
           },
-          is_string: function(c, s) {
+          is_string: function (c, s) {
             return Mod.ccall("Z3_is_string", "boolean", ["number", "number"], [c, s]);
           },
-          get_string: function(c, s) {
+          get_string: function (c, s) {
             return Mod.ccall("Z3_get_string", "string", ["number", "number"], [c, s]);
           },
-          get_string_length: function(c, s) {
+          get_string_length: function (c, s) {
             let ret = Mod.ccall("Z3_get_string_length", "number", ["number", "number"], [c, s]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          get_string_contents: function(c, s, length) {
+          get_string_contents: function (c, s, length) {
             let outArray_contents = Mod._malloc(4 * length);
             try {
               let ret = Mod.ccall("Z3_get_string_contents", "void", ["number", "number", "number", "number"], [c, s, length, outArray_contents]);
@@ -3723,7 +3794,7 @@
           },
           mk_seq_empty: Mod._Z3_mk_seq_empty,
           mk_seq_unit: Mod._Z3_mk_seq_unit,
-          mk_seq_concat: function(c, args) {
+          mk_seq_concat: function (c, args) {
             return Mod.ccall("Z3_mk_seq_concat", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
           mk_seq_prefix: Mod._Z3_mk_seq_prefix,
@@ -3753,17 +3824,17 @@
           mk_re_plus: Mod._Z3_mk_re_plus,
           mk_re_star: Mod._Z3_mk_re_star,
           mk_re_option: Mod._Z3_mk_re_option,
-          mk_re_union: function(c, args) {
+          mk_re_union: function (c, args) {
             return Mod.ccall("Z3_mk_re_union", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
-          mk_re_concat: function(c, args) {
+          mk_re_concat: function (c, args) {
             return Mod.ccall("Z3_mk_re_concat", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
           mk_re_range: Mod._Z3_mk_re_range,
           mk_re_allchar: Mod._Z3_mk_re_allchar,
           mk_re_loop: Mod._Z3_mk_re_loop,
           mk_re_power: Mod._Z3_mk_re_power,
-          mk_re_intersect: function(c, args) {
+          mk_re_intersect: function (c, args) {
             return Mod.ccall("Z3_mk_re_intersect", "number", ["number", "number", "array"], [c, args.length, intArrayToByteArr(args)]);
           },
           mk_re_complement: Mod._Z3_mk_re_complement,
@@ -3781,239 +3852,171 @@
           mk_piecewise_linear_order: Mod._Z3_mk_piecewise_linear_order,
           mk_tree_order: Mod._Z3_mk_tree_order,
           mk_transitive_closure: Mod._Z3_mk_transitive_closure,
-          mk_pattern: function(c, terms) {
+          mk_pattern: function (c, terms) {
             return Mod.ccall("Z3_mk_pattern", "number", ["number", "number", "array"], [c, terms.length, intArrayToByteArr(terms)]);
           },
           mk_bound: Mod._Z3_mk_bound,
-          mk_forall: function(c, weight, patterns, sorts, decl_names, body) {
+          mk_forall: function (c, weight, patterns, sorts, decl_names, body) {
             if (sorts.length !== decl_names.length) {
               throw new TypeError(`sorts and decl_names must be the same length (got ${sorts.length} and {decl_names.length})`);
             }
-            return Mod.ccall("Z3_mk_forall", "number", [
+            return Mod.ccall(
+              "Z3_mk_forall",
               "number",
-              "number",
-              "number",
-              "array",
-              "number",
-              "array",
-              "array",
-              "number"
-            ], [
-              c,
-              weight,
-              patterns.length,
-              intArrayToByteArr(patterns),
-              sorts.length,
-              intArrayToByteArr(sorts),
-              intArrayToByteArr(decl_names),
-              body
-            ]);
+              ["number", "number", "number", "array", "number", "array", "array", "number"],
+              [c, weight, patterns.length, intArrayToByteArr(patterns), sorts.length, intArrayToByteArr(sorts), intArrayToByteArr(decl_names), body],
+            );
           },
-          mk_exists: function(c, weight, patterns, sorts, decl_names, body) {
+          mk_exists: function (c, weight, patterns, sorts, decl_names, body) {
             if (sorts.length !== decl_names.length) {
               throw new TypeError(`sorts and decl_names must be the same length (got ${sorts.length} and {decl_names.length})`);
             }
-            return Mod.ccall("Z3_mk_exists", "number", [
+            return Mod.ccall(
+              "Z3_mk_exists",
               "number",
-              "number",
-              "number",
-              "array",
-              "number",
-              "array",
-              "array",
-              "number"
-            ], [
-              c,
-              weight,
-              patterns.length,
-              intArrayToByteArr(patterns),
-              sorts.length,
-              intArrayToByteArr(sorts),
-              intArrayToByteArr(decl_names),
-              body
-            ]);
+              ["number", "number", "number", "array", "number", "array", "array", "number"],
+              [c, weight, patterns.length, intArrayToByteArr(patterns), sorts.length, intArrayToByteArr(sorts), intArrayToByteArr(decl_names), body],
+            );
           },
-          mk_quantifier: function(c, is_forall, weight, patterns, sorts, decl_names, body) {
+          mk_quantifier: function (c, is_forall, weight, patterns, sorts, decl_names, body) {
             if (sorts.length !== decl_names.length) {
               throw new TypeError(`sorts and decl_names must be the same length (got ${sorts.length} and {decl_names.length})`);
             }
-            return Mod.ccall("Z3_mk_quantifier", "number", [
+            return Mod.ccall(
+              "Z3_mk_quantifier",
               "number",
-              "boolean",
-              "number",
-              "number",
-              "array",
-              "number",
-              "array",
-              "array",
-              "number"
-            ], [
-              c,
-              is_forall,
-              weight,
-              patterns.length,
-              intArrayToByteArr(patterns),
-              sorts.length,
-              intArrayToByteArr(sorts),
-              intArrayToByteArr(decl_names),
-              body
-            ]);
+              ["number", "boolean", "number", "number", "array", "number", "array", "array", "number"],
+              [
+                c,
+                is_forall,
+                weight,
+                patterns.length,
+                intArrayToByteArr(patterns),
+                sorts.length,
+                intArrayToByteArr(sorts),
+                intArrayToByteArr(decl_names),
+                body,
+              ],
+            );
           },
-          mk_quantifier_ex: function(c, is_forall, weight, quantifier_id, skolem_id, patterns, no_patterns, sorts, decl_names, body) {
+          mk_quantifier_ex: function (c, is_forall, weight, quantifier_id, skolem_id, patterns, no_patterns, sorts, decl_names, body) {
             if (sorts.length !== decl_names.length) {
               throw new TypeError(`sorts and decl_names must be the same length (got ${sorts.length} and {decl_names.length})`);
             }
-            return Mod.ccall("Z3_mk_quantifier_ex", "number", [
+            return Mod.ccall(
+              "Z3_mk_quantifier_ex",
               "number",
-              "boolean",
-              "number",
-              "number",
-              "number",
-              "number",
-              "array",
-              "number",
-              "array",
-              "number",
-              "array",
-              "array",
-              "number"
-            ], [
-              c,
-              is_forall,
-              weight,
-              quantifier_id,
-              skolem_id,
-              patterns.length,
-              intArrayToByteArr(patterns),
-              no_patterns.length,
-              intArrayToByteArr(no_patterns),
-              sorts.length,
-              intArrayToByteArr(sorts),
-              intArrayToByteArr(decl_names),
-              body
-            ]);
+              ["number", "boolean", "number", "number", "number", "number", "array", "number", "array", "number", "array", "array", "number"],
+              [
+                c,
+                is_forall,
+                weight,
+                quantifier_id,
+                skolem_id,
+                patterns.length,
+                intArrayToByteArr(patterns),
+                no_patterns.length,
+                intArrayToByteArr(no_patterns),
+                sorts.length,
+                intArrayToByteArr(sorts),
+                intArrayToByteArr(decl_names),
+                body,
+              ],
+            );
           },
-          mk_forall_const: function(c, weight, bound, patterns, body) {
-            return Mod.ccall("Z3_mk_forall_const", "number", ["number", "number", "number", "array", "number", "array", "number"], [
-              c,
-              weight,
-              bound.length,
-              intArrayToByteArr(bound),
-              patterns.length,
-              intArrayToByteArr(patterns),
-              body
-            ]);
+          mk_forall_const: function (c, weight, bound, patterns, body) {
+            return Mod.ccall(
+              "Z3_mk_forall_const",
+              "number",
+              ["number", "number", "number", "array", "number", "array", "number"],
+              [c, weight, bound.length, intArrayToByteArr(bound), patterns.length, intArrayToByteArr(patterns), body],
+            );
           },
-          mk_exists_const: function(c, weight, bound, patterns, body) {
-            return Mod.ccall("Z3_mk_exists_const", "number", ["number", "number", "number", "array", "number", "array", "number"], [
-              c,
-              weight,
-              bound.length,
-              intArrayToByteArr(bound),
-              patterns.length,
-              intArrayToByteArr(patterns),
-              body
-            ]);
+          mk_exists_const: function (c, weight, bound, patterns, body) {
+            return Mod.ccall(
+              "Z3_mk_exists_const",
+              "number",
+              ["number", "number", "number", "array", "number", "array", "number"],
+              [c, weight, bound.length, intArrayToByteArr(bound), patterns.length, intArrayToByteArr(patterns), body],
+            );
           },
-          mk_quantifier_const: function(c, is_forall, weight, bound, patterns, body) {
-            return Mod.ccall("Z3_mk_quantifier_const", "number", [
+          mk_quantifier_const: function (c, is_forall, weight, bound, patterns, body) {
+            return Mod.ccall(
+              "Z3_mk_quantifier_const",
               "number",
-              "boolean",
-              "number",
-              "number",
-              "array",
-              "number",
-              "array",
-              "number"
-            ], [
-              c,
-              is_forall,
-              weight,
-              bound.length,
-              intArrayToByteArr(bound),
-              patterns.length,
-              intArrayToByteArr(patterns),
-              body
-            ]);
+              ["number", "boolean", "number", "number", "array", "number", "array", "number"],
+              [c, is_forall, weight, bound.length, intArrayToByteArr(bound), patterns.length, intArrayToByteArr(patterns), body],
+            );
           },
-          mk_quantifier_const_ex: function(c, is_forall, weight, quantifier_id, skolem_id, bound, patterns, no_patterns, body) {
-            return Mod.ccall("Z3_mk_quantifier_const_ex", "number", [
+          mk_quantifier_const_ex: function (c, is_forall, weight, quantifier_id, skolem_id, bound, patterns, no_patterns, body) {
+            return Mod.ccall(
+              "Z3_mk_quantifier_const_ex",
               "number",
-              "boolean",
-              "number",
-              "number",
-              "number",
-              "number",
-              "array",
-              "number",
-              "array",
-              "number",
-              "array",
-              "number"
-            ], [
-              c,
-              is_forall,
-              weight,
-              quantifier_id,
-              skolem_id,
-              bound.length,
-              intArrayToByteArr(bound),
-              patterns.length,
-              intArrayToByteArr(patterns),
-              no_patterns.length,
-              intArrayToByteArr(no_patterns),
-              body
-            ]);
+              ["number", "boolean", "number", "number", "number", "number", "array", "number", "array", "number", "array", "number"],
+              [
+                c,
+                is_forall,
+                weight,
+                quantifier_id,
+                skolem_id,
+                bound.length,
+                intArrayToByteArr(bound),
+                patterns.length,
+                intArrayToByteArr(patterns),
+                no_patterns.length,
+                intArrayToByteArr(no_patterns),
+                body,
+              ],
+            );
           },
-          mk_lambda: function(c, sorts, decl_names, body) {
+          mk_lambda: function (c, sorts, decl_names, body) {
             if (sorts.length !== decl_names.length) {
               throw new TypeError(`sorts and decl_names must be the same length (got ${sorts.length} and {decl_names.length})`);
             }
-            return Mod.ccall("Z3_mk_lambda", "number", ["number", "number", "array", "array", "number"], [
-              c,
-              sorts.length,
-              intArrayToByteArr(sorts),
-              intArrayToByteArr(decl_names),
-              body
-            ]);
+            return Mod.ccall(
+              "Z3_mk_lambda",
+              "number",
+              ["number", "number", "array", "array", "number"],
+              [c, sorts.length, intArrayToByteArr(sorts), intArrayToByteArr(decl_names), body],
+            );
           },
-          mk_lambda_const: function(c, bound, body) {
-            return Mod.ccall("Z3_mk_lambda_const", "number", ["number", "number", "array", "number"], [
-              c,
-              bound.length,
-              intArrayToByteArr(bound),
-              body
-            ]);
+          mk_lambda_const: function (c, bound, body) {
+            return Mod.ccall(
+              "Z3_mk_lambda_const",
+              "number",
+              ["number", "number", "array", "number"],
+              [c, bound.length, intArrayToByteArr(bound), body],
+            );
           },
           get_symbol_kind: Mod._Z3_get_symbol_kind,
           get_symbol_int: Mod._Z3_get_symbol_int,
-          get_symbol_string: function(c, s) {
+          get_symbol_string: function (c, s) {
             return Mod.ccall("Z3_get_symbol_string", "string", ["number", "number"], [c, s]);
           },
           get_sort_name: Mod._Z3_get_sort_name,
-          get_sort_id: function(c, s) {
+          get_sort_id: function (c, s) {
             let ret = Mod.ccall("Z3_get_sort_id", "number", ["number", "number"], [c, s]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           sort_to_ast: Mod._Z3_sort_to_ast,
-          is_eq_sort: function(c, s1, s2) {
+          is_eq_sort: function (c, s1, s2) {
             return Mod.ccall("Z3_is_eq_sort", "boolean", ["number", "number", "number"], [c, s1, s2]);
           },
           get_sort_kind: Mod._Z3_get_sort_kind,
-          get_bv_sort_size: function(c, t) {
+          get_bv_sort_size: function (c, t) {
             let ret = Mod.ccall("Z3_get_bv_sort_size", "number", ["number", "number"], [c, t]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          get_finite_domain_sort_size: function(c, s) {
+          get_finite_domain_sort_size: function (c, s) {
             let ret = Mod.ccall("Z3_get_finite_domain_sort_size", "boolean", ["number", "number", "number"], [c, s, outAddress]);
             if (!ret) {
               return null;
             }
             return getOutUint64(0);
           },
-          get_array_arity: function(c, s) {
+          get_array_arity: function (c, s) {
             let ret = Mod.ccall("Z3_get_array_arity", "number", ["number", "number"], [c, s]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -4022,16 +4025,16 @@
           get_array_sort_domain_n: Mod._Z3_get_array_sort_domain_n,
           get_array_sort_range: Mod._Z3_get_array_sort_range,
           get_tuple_sort_mk_decl: Mod._Z3_get_tuple_sort_mk_decl,
-          get_tuple_sort_num_fields: function(c, t) {
+          get_tuple_sort_num_fields: function (c, t) {
             let ret = Mod.ccall("Z3_get_tuple_sort_num_fields", "number", ["number", "number"], [c, t]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           get_tuple_sort_field_decl: Mod._Z3_get_tuple_sort_field_decl,
-          is_recursive_datatype_sort: function(c, s) {
+          is_recursive_datatype_sort: function (c, s) {
             return Mod.ccall("Z3_is_recursive_datatype_sort", "boolean", ["number", "number"], [c, s]);
           },
-          get_datatype_sort_num_constructors: function(c, t) {
+          get_datatype_sort_num_constructors: function (c, t) {
             let ret = Mod.ccall("Z3_get_datatype_sort_num_constructors", "number", ["number", "number"], [c, t]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -4040,78 +4043,75 @@
           get_datatype_sort_recognizer: Mod._Z3_get_datatype_sort_recognizer,
           get_datatype_sort_constructor_accessor: Mod._Z3_get_datatype_sort_constructor_accessor,
           datatype_update_field: Mod._Z3_datatype_update_field,
-          get_relation_arity: function(c, s) {
+          get_relation_arity: function (c, s) {
             let ret = Mod.ccall("Z3_get_relation_arity", "number", ["number", "number"], [c, s]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           get_relation_column: Mod._Z3_get_relation_column,
-          mk_atmost: function(c, args, k) {
+          mk_atmost: function (c, args, k) {
             return Mod.ccall("Z3_mk_atmost", "number", ["number", "number", "array", "number"], [c, args.length, intArrayToByteArr(args), k]);
           },
-          mk_atleast: function(c, args, k) {
+          mk_atleast: function (c, args, k) {
             return Mod.ccall("Z3_mk_atleast", "number", ["number", "number", "array", "number"], [c, args.length, intArrayToByteArr(args), k]);
           },
-          mk_pble: function(c, args, coeffs, k) {
+          mk_pble: function (c, args, coeffs, k) {
             if (args.length !== coeffs.length) {
               throw new TypeError(`args and coeffs must be the same length (got ${args.length} and {coeffs.length})`);
             }
-            return Mod.ccall("Z3_mk_pble", "number", ["number", "number", "array", "array", "number"], [
-              c,
-              args.length,
-              intArrayToByteArr(args),
-              intArrayToByteArr(coeffs),
-              k
-            ]);
+            return Mod.ccall(
+              "Z3_mk_pble",
+              "number",
+              ["number", "number", "array", "array", "number"],
+              [c, args.length, intArrayToByteArr(args), intArrayToByteArr(coeffs), k],
+            );
           },
-          mk_pbge: function(c, args, coeffs, k) {
+          mk_pbge: function (c, args, coeffs, k) {
             if (args.length !== coeffs.length) {
               throw new TypeError(`args and coeffs must be the same length (got ${args.length} and {coeffs.length})`);
             }
-            return Mod.ccall("Z3_mk_pbge", "number", ["number", "number", "array", "array", "number"], [
-              c,
-              args.length,
-              intArrayToByteArr(args),
-              intArrayToByteArr(coeffs),
-              k
-            ]);
+            return Mod.ccall(
+              "Z3_mk_pbge",
+              "number",
+              ["number", "number", "array", "array", "number"],
+              [c, args.length, intArrayToByteArr(args), intArrayToByteArr(coeffs), k],
+            );
           },
-          mk_pbeq: function(c, args, coeffs, k) {
+          mk_pbeq: function (c, args, coeffs, k) {
             if (args.length !== coeffs.length) {
               throw new TypeError(`args and coeffs must be the same length (got ${args.length} and {coeffs.length})`);
             }
-            return Mod.ccall("Z3_mk_pbeq", "number", ["number", "number", "array", "array", "number"], [
-              c,
-              args.length,
-              intArrayToByteArr(args),
-              intArrayToByteArr(coeffs),
-              k
-            ]);
+            return Mod.ccall(
+              "Z3_mk_pbeq",
+              "number",
+              ["number", "number", "array", "array", "number"],
+              [c, args.length, intArrayToByteArr(args), intArrayToByteArr(coeffs), k],
+            );
           },
           func_decl_to_ast: Mod._Z3_func_decl_to_ast,
-          is_eq_func_decl: function(c, f1, f2) {
+          is_eq_func_decl: function (c, f1, f2) {
             return Mod.ccall("Z3_is_eq_func_decl", "boolean", ["number", "number", "number"], [c, f1, f2]);
           },
-          get_func_decl_id: function(c, f) {
+          get_func_decl_id: function (c, f) {
             let ret = Mod.ccall("Z3_get_func_decl_id", "number", ["number", "number"], [c, f]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           get_decl_name: Mod._Z3_get_decl_name,
           get_decl_kind: Mod._Z3_get_decl_kind,
-          get_domain_size: function(c, d) {
+          get_domain_size: function (c, d) {
             let ret = Mod.ccall("Z3_get_domain_size", "number", ["number", "number"], [c, d]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          get_arity: function(c, d) {
+          get_arity: function (c, d) {
             let ret = Mod.ccall("Z3_get_arity", "number", ["number", "number"], [c, d]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           get_domain: Mod._Z3_get_domain,
           get_range: Mod._Z3_get_range,
-          get_decl_num_parameters: function(c, d) {
+          get_decl_num_parameters: function (c, d) {
             let ret = Mod.ccall("Z3_get_decl_num_parameters", "number", ["number", "number"], [c, d]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -4123,104 +4123,109 @@
           get_decl_sort_parameter: Mod._Z3_get_decl_sort_parameter,
           get_decl_ast_parameter: Mod._Z3_get_decl_ast_parameter,
           get_decl_func_decl_parameter: Mod._Z3_get_decl_func_decl_parameter,
-          get_decl_rational_parameter: function(c, d, idx) {
+          get_decl_rational_parameter: function (c, d, idx) {
             return Mod.ccall("Z3_get_decl_rational_parameter", "string", ["number", "number", "number"], [c, d, idx]);
           },
           app_to_ast: Mod._Z3_app_to_ast,
           get_app_decl: Mod._Z3_get_app_decl,
-          get_app_num_args: function(c, a) {
+          get_app_num_args: function (c, a) {
             let ret = Mod.ccall("Z3_get_app_num_args", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           get_app_arg: Mod._Z3_get_app_arg,
-          is_eq_ast: function(c, t1, t2) {
+          is_eq_ast: function (c, t1, t2) {
             return Mod.ccall("Z3_is_eq_ast", "boolean", ["number", "number", "number"], [c, t1, t2]);
           },
-          get_ast_id: function(c, t) {
+          get_ast_id: function (c, t) {
             let ret = Mod.ccall("Z3_get_ast_id", "number", ["number", "number"], [c, t]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          get_ast_hash: function(c, a) {
+          get_ast_hash: function (c, a) {
             let ret = Mod.ccall("Z3_get_ast_hash", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           get_sort: Mod._Z3_get_sort,
-          is_well_sorted: function(c, t) {
+          is_well_sorted: function (c, t) {
             return Mod.ccall("Z3_is_well_sorted", "boolean", ["number", "number"], [c, t]);
           },
           get_bool_value: Mod._Z3_get_bool_value,
           get_ast_kind: Mod._Z3_get_ast_kind,
-          is_app: function(c, a) {
+          is_app: function (c, a) {
             return Mod.ccall("Z3_is_app", "boolean", ["number", "number"], [c, a]);
           },
-          is_ground: function(c, a) {
+          is_ground: function (c, a) {
             return Mod.ccall("Z3_is_ground", "boolean", ["number", "number"], [c, a]);
           },
-          get_depth: function(c, a) {
+          get_depth: function (c, a) {
             let ret = Mod.ccall("Z3_get_depth", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          is_numeral_ast: function(c, a) {
+          is_numeral_ast: function (c, a) {
             return Mod.ccall("Z3_is_numeral_ast", "boolean", ["number", "number"], [c, a]);
           },
-          is_algebraic_number: function(c, a) {
+          is_algebraic_number: function (c, a) {
             return Mod.ccall("Z3_is_algebraic_number", "boolean", ["number", "number"], [c, a]);
           },
           to_app: Mod._Z3_to_app,
           to_func_decl: Mod._Z3_to_func_decl,
-          get_numeral_string: function(c, a) {
+          get_numeral_string: function (c, a) {
             return Mod.ccall("Z3_get_numeral_string", "string", ["number", "number"], [c, a]);
           },
-          get_numeral_binary_string: function(c, a) {
+          get_numeral_binary_string: function (c, a) {
             return Mod.ccall("Z3_get_numeral_binary_string", "string", ["number", "number"], [c, a]);
           },
-          get_numeral_decimal_string: function(c, a, precision) {
+          get_numeral_decimal_string: function (c, a, precision) {
             return Mod.ccall("Z3_get_numeral_decimal_string", "string", ["number", "number", "number"], [c, a, precision]);
           },
           get_numeral_double: Mod._Z3_get_numeral_double,
           get_numerator: Mod._Z3_get_numerator,
           get_denominator: Mod._Z3_get_denominator,
-          get_numeral_small: function(c, a) {
+          get_numeral_small: function (c, a) {
             let ret = Mod.ccall("Z3_get_numeral_small", "boolean", ["number", "number", "number", "number"], [c, a, outAddress, outAddress + 8]);
             if (!ret) {
               return null;
             }
             return { num: getOutInt64(0), den: getOutInt64(1) };
           },
-          get_numeral_int: function(c, v) {
+          get_numeral_int: function (c, v) {
             let ret = Mod.ccall("Z3_get_numeral_int", "boolean", ["number", "number", "number"], [c, v, outAddress]);
             if (!ret) {
               return null;
             }
             return getOutInt(0);
           },
-          get_numeral_uint: function(c, v) {
+          get_numeral_uint: function (c, v) {
             let ret = Mod.ccall("Z3_get_numeral_uint", "boolean", ["number", "number", "number"], [c, v, outAddress]);
             if (!ret) {
               return null;
             }
             return getOutUint(0);
           },
-          get_numeral_uint64: function(c, v) {
+          get_numeral_uint64: function (c, v) {
             let ret = Mod.ccall("Z3_get_numeral_uint64", "boolean", ["number", "number", "number"], [c, v, outAddress]);
             if (!ret) {
               return null;
             }
             return getOutUint64(0);
           },
-          get_numeral_int64: function(c, v) {
+          get_numeral_int64: function (c, v) {
             let ret = Mod.ccall("Z3_get_numeral_int64", "boolean", ["number", "number", "number"], [c, v, outAddress]);
             if (!ret) {
               return null;
             }
             return getOutInt64(0);
           },
-          get_numeral_rational_int64: function(c, v) {
-            let ret = Mod.ccall("Z3_get_numeral_rational_int64", "boolean", ["number", "number", "number", "number"], [c, v, outAddress, outAddress + 8]);
+          get_numeral_rational_int64: function (c, v) {
+            let ret = Mod.ccall(
+              "Z3_get_numeral_rational_int64",
+              "boolean",
+              ["number", "number", "number", "number"],
+              [c, v, outAddress, outAddress + 8],
+            );
             if (!ret) {
               return null;
             }
@@ -4229,46 +4234,46 @@
           get_algebraic_number_lower: Mod._Z3_get_algebraic_number_lower,
           get_algebraic_number_upper: Mod._Z3_get_algebraic_number_upper,
           pattern_to_ast: Mod._Z3_pattern_to_ast,
-          get_pattern_num_terms: function(c, p) {
+          get_pattern_num_terms: function (c, p) {
             let ret = Mod.ccall("Z3_get_pattern_num_terms", "number", ["number", "number"], [c, p]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           get_pattern: Mod._Z3_get_pattern,
-          get_index_value: function(c, a) {
+          get_index_value: function (c, a) {
             let ret = Mod.ccall("Z3_get_index_value", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          is_quantifier_forall: function(c, a) {
+          is_quantifier_forall: function (c, a) {
             return Mod.ccall("Z3_is_quantifier_forall", "boolean", ["number", "number"], [c, a]);
           },
-          is_quantifier_exists: function(c, a) {
+          is_quantifier_exists: function (c, a) {
             return Mod.ccall("Z3_is_quantifier_exists", "boolean", ["number", "number"], [c, a]);
           },
-          is_lambda: function(c, a) {
+          is_lambda: function (c, a) {
             return Mod.ccall("Z3_is_lambda", "boolean", ["number", "number"], [c, a]);
           },
-          get_quantifier_weight: function(c, a) {
+          get_quantifier_weight: function (c, a) {
             let ret = Mod.ccall("Z3_get_quantifier_weight", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           get_quantifier_skolem_id: Mod._Z3_get_quantifier_skolem_id,
           get_quantifier_id: Mod._Z3_get_quantifier_id,
-          get_quantifier_num_patterns: function(c, a) {
+          get_quantifier_num_patterns: function (c, a) {
             let ret = Mod.ccall("Z3_get_quantifier_num_patterns", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           get_quantifier_pattern_ast: Mod._Z3_get_quantifier_pattern_ast,
-          get_quantifier_num_no_patterns: function(c, a) {
+          get_quantifier_num_no_patterns: function (c, a) {
             let ret = Mod.ccall("Z3_get_quantifier_num_no_patterns", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           get_quantifier_no_pattern_ast: Mod._Z3_get_quantifier_no_pattern_ast,
-          get_quantifier_num_bound: function(c, a) {
+          get_quantifier_num_bound: function (c, a) {
             let ret = Mod.ccall("Z3_get_quantifier_num_bound", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -4276,75 +4281,78 @@
           get_quantifier_bound_name: Mod._Z3_get_quantifier_bound_name,
           get_quantifier_bound_sort: Mod._Z3_get_quantifier_bound_sort,
           get_quantifier_body: Mod._Z3_get_quantifier_body,
-          simplify: function(c, a) {
+          simplify: function (c, a) {
             return Mod.async_call(Mod._async_Z3_simplify, c, a);
           },
-          simplify_ex: function(c, a, p) {
+          simplify_ex: function (c, a, p) {
             return Mod.async_call(Mod._async_Z3_simplify_ex, c, a, p);
           },
-          simplify_get_help: function(c) {
+          simplify_get_help: function (c) {
             return Mod.ccall("Z3_simplify_get_help", "string", ["number"], [c]);
           },
           simplify_get_param_descrs: Mod._Z3_simplify_get_param_descrs,
-          update_term: function(c, a, args) {
+          update_term: function (c, a, args) {
             return Mod.ccall("Z3_update_term", "number", ["number", "number", "number", "array"], [c, a, args.length, intArrayToByteArr(args)]);
           },
-          substitute: function(c, a, from, to) {
+          substitute: function (c, a, from, to) {
             if (from.length !== to.length) {
               throw new TypeError(`from and to must be the same length (got ${from.length} and {to.length})`);
             }
-            return Mod.ccall("Z3_substitute", "number", ["number", "number", "number", "array", "array"], [
-              c,
-              a,
-              from.length,
-              intArrayToByteArr(from),
-              intArrayToByteArr(to)
-            ]);
+            return Mod.ccall(
+              "Z3_substitute",
+              "number",
+              ["number", "number", "number", "array", "array"],
+              [c, a, from.length, intArrayToByteArr(from), intArrayToByteArr(to)],
+            );
           },
-          substitute_vars: function(c, a, to) {
+          substitute_vars: function (c, a, to) {
             return Mod.ccall("Z3_substitute_vars", "number", ["number", "number", "number", "array"], [c, a, to.length, intArrayToByteArr(to)]);
           },
-          substitute_funs: function(c, a, from, to) {
+          substitute_funs: function (c, a, from, to) {
             if (from.length !== to.length) {
               throw new TypeError(`from and to must be the same length (got ${from.length} and {to.length})`);
             }
-            return Mod.ccall("Z3_substitute_funs", "number", ["number", "number", "number", "array", "array"], [
-              c,
-              a,
-              from.length,
-              intArrayToByteArr(from),
-              intArrayToByteArr(to)
-            ]);
+            return Mod.ccall(
+              "Z3_substitute_funs",
+              "number",
+              ["number", "number", "number", "array", "array"],
+              [c, a, from.length, intArrayToByteArr(from), intArrayToByteArr(to)],
+            );
           },
           translate: Mod._Z3_translate,
           mk_model: Mod._Z3_mk_model,
           model_inc_ref: Mod._Z3_model_inc_ref,
           model_dec_ref: Mod._Z3_model_dec_ref,
-          model_eval: function(c, m, t, model_completion) {
-            let ret = Mod.ccall("Z3_model_eval", "boolean", ["number", "number", "number", "boolean", "number"], [c, m, t, model_completion, outAddress]);
+          model_eval: function (c, m, t, model_completion) {
+            let ret = Mod.ccall(
+              "Z3_model_eval",
+              "boolean",
+              ["number", "number", "number", "boolean", "number"],
+              [c, m, t, model_completion, outAddress],
+            );
             if (!ret) {
               return null;
             }
             return getOutUint(0);
           },
           model_get_const_interp: Mod._Z3_model_get_const_interp,
-          model_has_interp: function(c, m, a) {
+          model_has_interp: function (c, m, a) {
             return Mod.ccall("Z3_model_has_interp", "boolean", ["number", "number", "number"], [c, m, a]);
           },
           model_get_func_interp: Mod._Z3_model_get_func_interp,
-          model_get_num_consts: function(c, m) {
+          model_get_num_consts: function (c, m) {
             let ret = Mod.ccall("Z3_model_get_num_consts", "number", ["number", "number"], [c, m]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           model_get_const_decl: Mod._Z3_model_get_const_decl,
-          model_get_num_funcs: function(c, m) {
+          model_get_num_funcs: function (c, m) {
             let ret = Mod.ccall("Z3_model_get_num_funcs", "number", ["number", "number"], [c, m]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           model_get_func_decl: Mod._Z3_model_get_func_decl,
-          model_get_num_sorts: function(c, m) {
+          model_get_num_sorts: function (c, m) {
             let ret = Mod.ccall("Z3_model_get_num_sorts", "number", ["number", "number"], [c, m]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -4352,7 +4360,7 @@
           model_get_sort: Mod._Z3_model_get_sort,
           model_get_sort_universe: Mod._Z3_model_get_sort_universe,
           model_translate: Mod._Z3_model_translate,
-          is_as_array: function(c, a) {
+          is_as_array: function (c, a) {
             return Mod.ccall("Z3_is_as_array", "boolean", ["number", "number"], [c, a]);
           },
           get_as_array_func_decl: Mod._Z3_get_as_array_func_decl,
@@ -4360,7 +4368,7 @@
           add_const_interp: Mod._Z3_add_const_interp,
           func_interp_inc_ref: Mod._Z3_func_interp_inc_ref,
           func_interp_dec_ref: Mod._Z3_func_interp_dec_ref,
-          func_interp_get_num_entries: function(c, f) {
+          func_interp_get_num_entries: function (c, f) {
             let ret = Mod.ccall("Z3_func_interp_get_num_entries", "number", ["number", "number"], [c, f]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -4368,7 +4376,7 @@
           func_interp_get_entry: Mod._Z3_func_interp_get_entry,
           func_interp_get_else: Mod._Z3_func_interp_get_else,
           func_interp_set_else: Mod._Z3_func_interp_set_else,
-          func_interp_get_arity: function(c, f) {
+          func_interp_get_arity: function (c, f) {
             let ret = Mod.ccall("Z3_func_interp_get_arity", "number", ["number", "number"], [c, f]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -4377,112 +4385,91 @@
           func_entry_inc_ref: Mod._Z3_func_entry_inc_ref,
           func_entry_dec_ref: Mod._Z3_func_entry_dec_ref,
           func_entry_get_value: Mod._Z3_func_entry_get_value,
-          func_entry_get_num_args: function(c, e) {
+          func_entry_get_num_args: function (c, e) {
             let ret = Mod.ccall("Z3_func_entry_get_num_args", "number", ["number", "number"], [c, e]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           func_entry_get_arg: Mod._Z3_func_entry_get_arg,
-          open_log: function(filename) {
+          open_log: function (filename) {
             return Mod.ccall("Z3_open_log", "boolean", ["string"], [filename]);
           },
-          append_log: function(string) {
+          append_log: function (string) {
             return Mod.ccall("Z3_append_log", "void", ["string"], [string]);
           },
           close_log: Mod._Z3_close_log,
           toggle_warning_messages: Mod._Z3_toggle_warning_messages,
           set_ast_print_mode: Mod._Z3_set_ast_print_mode,
-          ast_to_string: function(c, a) {
+          ast_to_string: function (c, a) {
             return Mod.ccall("Z3_ast_to_string", "string", ["number", "number"], [c, a]);
           },
-          pattern_to_string: function(c, p) {
+          pattern_to_string: function (c, p) {
             return Mod.ccall("Z3_pattern_to_string", "string", ["number", "number"], [c, p]);
           },
-          sort_to_string: function(c, s) {
+          sort_to_string: function (c, s) {
             return Mod.ccall("Z3_sort_to_string", "string", ["number", "number"], [c, s]);
           },
-          func_decl_to_string: function(c, d) {
+          func_decl_to_string: function (c, d) {
             return Mod.ccall("Z3_func_decl_to_string", "string", ["number", "number"], [c, d]);
           },
-          model_to_string: function(c, m) {
+          model_to_string: function (c, m) {
             return Mod.ccall("Z3_model_to_string", "string", ["number", "number"], [c, m]);
           },
-          benchmark_to_smtlib_string: function(c, name, logic, status, attributes, assumptions, formula) {
-            return Mod.ccall("Z3_benchmark_to_smtlib_string", "string", [
-              "number",
+          benchmark_to_smtlib_string: function (c, name, logic, status, attributes, assumptions, formula) {
+            return Mod.ccall(
+              "Z3_benchmark_to_smtlib_string",
               "string",
-              "string",
-              "string",
-              "string",
-              "number",
-              "array",
-              "number"
-            ], [
-              c,
-              name,
-              logic,
-              status,
-              attributes,
-              assumptions.length,
-              intArrayToByteArr(assumptions),
-              formula
-            ]);
+              ["number", "string", "string", "string", "string", "number", "array", "number"],
+              [c, name, logic, status, attributes, assumptions.length, intArrayToByteArr(assumptions), formula],
+            );
           },
-          parse_smtlib2_string: function(c, str, sort_names, sorts, decl_names, decls) {
+          parse_smtlib2_string: function (c, str, sort_names, sorts, decl_names, decls) {
             if (sort_names.length !== sorts.length) {
               throw new TypeError(`sort_names and sorts must be the same length (got ${sort_names.length} and {sorts.length})`);
             }
             if (decl_names.length !== decls.length) {
               throw new TypeError(`decl_names and decls must be the same length (got ${decl_names.length} and {decls.length})`);
             }
-            return Mod.ccall("Z3_parse_smtlib2_string", "number", [
+            return Mod.ccall(
+              "Z3_parse_smtlib2_string",
               "number",
-              "string",
-              "number",
-              "array",
-              "array",
-              "number",
-              "array",
-              "array"
-            ], [
-              c,
-              str,
-              sort_names.length,
-              intArrayToByteArr(sort_names),
-              intArrayToByteArr(sorts),
-              decl_names.length,
-              intArrayToByteArr(decl_names),
-              intArrayToByteArr(decls)
-            ]);
+              ["number", "string", "number", "array", "array", "number", "array", "array"],
+              [
+                c,
+                str,
+                sort_names.length,
+                intArrayToByteArr(sort_names),
+                intArrayToByteArr(sorts),
+                decl_names.length,
+                intArrayToByteArr(decl_names),
+                intArrayToByteArr(decls),
+              ],
+            );
           },
-          parse_smtlib2_file: function(c, file_name, sort_names, sorts, decl_names, decls) {
+          parse_smtlib2_file: function (c, file_name, sort_names, sorts, decl_names, decls) {
             if (sort_names.length !== sorts.length) {
               throw new TypeError(`sort_names and sorts must be the same length (got ${sort_names.length} and {sorts.length})`);
             }
             if (decl_names.length !== decls.length) {
               throw new TypeError(`decl_names and decls must be the same length (got ${decl_names.length} and {decls.length})`);
             }
-            return Mod.ccall("Z3_parse_smtlib2_file", "number", [
+            return Mod.ccall(
+              "Z3_parse_smtlib2_file",
               "number",
-              "string",
-              "number",
-              "array",
-              "array",
-              "number",
-              "array",
-              "array"
-            ], [
-              c,
-              file_name,
-              sort_names.length,
-              intArrayToByteArr(sort_names),
-              intArrayToByteArr(sorts),
-              decl_names.length,
-              intArrayToByteArr(decl_names),
-              intArrayToByteArr(decls)
-            ]);
+              ["number", "string", "number", "array", "array", "number", "array", "array"],
+              [
+                c,
+                file_name,
+                sort_names.length,
+                intArrayToByteArr(sort_names),
+                intArrayToByteArr(sorts),
+                decl_names.length,
+                intArrayToByteArr(decl_names),
+                intArrayToByteArr(decls),
+              ],
+            );
           },
-          eval_smtlib2_string: async function(c, str) {
+          eval_smtlib2_string: async function (c, str) {
             return await Mod.async_call(() => Mod.ccall("async_Z3_eval_smtlib2_string", "void", ["number", "string"], [c, str]));
           },
           mk_parser_context: Mod._Z3_mk_parser_context,
@@ -4490,30 +4477,35 @@
           parser_context_dec_ref: Mod._Z3_parser_context_dec_ref,
           parser_context_add_sort: Mod._Z3_parser_context_add_sort,
           parser_context_add_decl: Mod._Z3_parser_context_add_decl,
-          parser_context_from_string: function(c, pc, s) {
+          parser_context_from_string: function (c, pc, s) {
             return Mod.ccall("Z3_parser_context_from_string", "number", ["number", "number", "string"], [c, pc, s]);
           },
           get_error_code: Mod._Z3_get_error_code,
           set_error: Mod._Z3_set_error,
-          get_error_msg: function(c, err) {
+          get_error_msg: function (c, err) {
             return Mod.ccall("Z3_get_error_msg", "string", ["number", "number"], [c, err]);
           },
-          get_version: function() {
-            Mod.ccall("Z3_get_version", "void", ["number", "number", "number", "number"], [outAddress, outAddress + 4, outAddress + 8, outAddress + 12]);
+          get_version: function () {
+            Mod.ccall(
+              "Z3_get_version",
+              "void",
+              ["number", "number", "number", "number"],
+              [outAddress, outAddress + 4, outAddress + 8, outAddress + 12],
+            );
             return {
               major: getOutUint(0),
               minor: getOutUint(1),
               build_number: getOutUint(2),
-              revision_number: getOutUint(3)
+              revision_number: getOutUint(3),
             };
           },
-          get_full_version: function() {
+          get_full_version: function () {
             return Mod.ccall("Z3_get_full_version", "string", [], []);
           },
-          enable_trace: function(tag) {
+          enable_trace: function (tag) {
             return Mod.ccall("Z3_enable_trace", "void", ["string"], [tag]);
           },
-          disable_trace: function(tag) {
+          disable_trace: function (tag) {
             return Mod.ccall("Z3_disable_trace", "void", ["string"], [tag]);
           },
           reset_memory: Mod._Z3_reset_memory,
@@ -4523,53 +4515,53 @@
           goal_dec_ref: Mod._Z3_goal_dec_ref,
           goal_precision: Mod._Z3_goal_precision,
           goal_assert: Mod._Z3_goal_assert,
-          goal_inconsistent: function(c, g) {
+          goal_inconsistent: function (c, g) {
             return Mod.ccall("Z3_goal_inconsistent", "boolean", ["number", "number"], [c, g]);
           },
-          goal_depth: function(c, g) {
+          goal_depth: function (c, g) {
             let ret = Mod.ccall("Z3_goal_depth", "number", ["number", "number"], [c, g]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           goal_reset: Mod._Z3_goal_reset,
-          goal_size: function(c, g) {
+          goal_size: function (c, g) {
             let ret = Mod.ccall("Z3_goal_size", "number", ["number", "number"], [c, g]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           goal_formula: Mod._Z3_goal_formula,
-          goal_num_exprs: function(c, g) {
+          goal_num_exprs: function (c, g) {
             let ret = Mod.ccall("Z3_goal_num_exprs", "number", ["number", "number"], [c, g]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          goal_is_decided_sat: function(c, g) {
+          goal_is_decided_sat: function (c, g) {
             return Mod.ccall("Z3_goal_is_decided_sat", "boolean", ["number", "number"], [c, g]);
           },
-          goal_is_decided_unsat: function(c, g) {
+          goal_is_decided_unsat: function (c, g) {
             return Mod.ccall("Z3_goal_is_decided_unsat", "boolean", ["number", "number"], [c, g]);
           },
           goal_translate: Mod._Z3_goal_translate,
           goal_convert_model: Mod._Z3_goal_convert_model,
-          goal_to_string: function(c, g) {
+          goal_to_string: function (c, g) {
             return Mod.ccall("Z3_goal_to_string", "string", ["number", "number"], [c, g]);
           },
-          goal_to_dimacs_string: function(c, g, include_names) {
+          goal_to_dimacs_string: function (c, g, include_names) {
             return Mod.ccall("Z3_goal_to_dimacs_string", "string", ["number", "number", "boolean"], [c, g, include_names]);
           },
-          mk_tactic: function(c, name) {
+          mk_tactic: function (c, name) {
             return Mod.ccall("Z3_mk_tactic", "number", ["number", "string"], [c, name]);
           },
           tactic_inc_ref: Mod._Z3_tactic_inc_ref,
           tactic_dec_ref: Mod._Z3_tactic_dec_ref,
-          mk_probe: function(c, name) {
+          mk_probe: function (c, name) {
             return Mod.ccall("Z3_mk_probe", "number", ["number", "string"], [c, name]);
           },
           probe_inc_ref: Mod._Z3_probe_inc_ref,
           probe_dec_ref: Mod._Z3_probe_dec_ref,
           tactic_and_then: Mod._Z3_tactic_and_then,
           tactic_or_else: Mod._Z3_tactic_or_else,
-          tactic_par_or: function(c, ts) {
+          tactic_par_or: function (c, ts) {
             return Mod.ccall("Z3_tactic_par_or", "number", ["number", "number", "array"], [c, ts.length, intArrayToByteArr(ts)]);
           },
           tactic_par_and_then: Mod._Z3_tactic_par_and_then,
@@ -4582,7 +4574,7 @@
           tactic_fail_if: Mod._Z3_tactic_fail_if,
           tactic_fail_if_not_decided: Mod._Z3_tactic_fail_if_not_decided,
           tactic_using_params: Mod._Z3_tactic_using_params,
-          mk_simplifier: function(c, name) {
+          mk_simplifier: function (c, name) {
             return Mod.ccall("Z3_mk_simplifier", "number", ["number", "string"], [c, name]);
           },
           simplifier_inc_ref: Mod._Z3_simplifier_inc_ref,
@@ -4590,19 +4582,19 @@
           solver_add_simplifier: Mod._Z3_solver_add_simplifier,
           simplifier_and_then: Mod._Z3_simplifier_and_then,
           simplifier_using_params: Mod._Z3_simplifier_using_params,
-          get_num_simplifiers: function(c) {
+          get_num_simplifiers: function (c) {
             let ret = Mod.ccall("Z3_get_num_simplifiers", "number", ["number"], [c]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          get_simplifier_name: function(c, i) {
+          get_simplifier_name: function (c, i) {
             return Mod.ccall("Z3_get_simplifier_name", "string", ["number", "number"], [c, i]);
           },
-          simplifier_get_help: function(c, t) {
+          simplifier_get_help: function (c, t) {
             return Mod.ccall("Z3_simplifier_get_help", "string", ["number", "number"], [c, t]);
           },
           simplifier_get_param_descrs: Mod._Z3_simplifier_get_param_descrs,
-          simplifier_get_descr: function(c, name) {
+          simplifier_get_descr: function (c, name) {
             return Mod.ccall("Z3_simplifier_get_descr", "string", ["number", "string"], [c, name]);
           },
           probe_const: Mod._Z3_probe_const,
@@ -4614,45 +4606,45 @@
           probe_and: Mod._Z3_probe_and,
           probe_or: Mod._Z3_probe_or,
           probe_not: Mod._Z3_probe_not,
-          get_num_tactics: function(c) {
+          get_num_tactics: function (c) {
             let ret = Mod.ccall("Z3_get_num_tactics", "number", ["number"], [c]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          get_tactic_name: function(c, i) {
+          get_tactic_name: function (c, i) {
             return Mod.ccall("Z3_get_tactic_name", "string", ["number", "number"], [c, i]);
           },
-          get_num_probes: function(c) {
+          get_num_probes: function (c) {
             let ret = Mod.ccall("Z3_get_num_probes", "number", ["number"], [c]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          get_probe_name: function(c, i) {
+          get_probe_name: function (c, i) {
             return Mod.ccall("Z3_get_probe_name", "string", ["number", "number"], [c, i]);
           },
-          tactic_get_help: function(c, t) {
+          tactic_get_help: function (c, t) {
             return Mod.ccall("Z3_tactic_get_help", "string", ["number", "number"], [c, t]);
           },
           tactic_get_param_descrs: Mod._Z3_tactic_get_param_descrs,
-          tactic_get_descr: function(c, name) {
+          tactic_get_descr: function (c, name) {
             return Mod.ccall("Z3_tactic_get_descr", "string", ["number", "string"], [c, name]);
           },
-          probe_get_descr: function(c, name) {
+          probe_get_descr: function (c, name) {
             return Mod.ccall("Z3_probe_get_descr", "string", ["number", "string"], [c, name]);
           },
           probe_apply: Mod._Z3_probe_apply,
-          tactic_apply: function(c, t, g) {
+          tactic_apply: function (c, t, g) {
             return Mod.async_call(Mod._async_Z3_tactic_apply, c, t, g);
           },
-          tactic_apply_ex: function(c, t, g, p) {
+          tactic_apply_ex: function (c, t, g, p) {
             return Mod.async_call(Mod._async_Z3_tactic_apply_ex, c, t, g, p);
           },
           apply_result_inc_ref: Mod._Z3_apply_result_inc_ref,
           apply_result_dec_ref: Mod._Z3_apply_result_dec_ref,
-          apply_result_to_string: function(c, r) {
+          apply_result_to_string: function (c, r) {
             return Mod.ccall("Z3_apply_result_to_string", "string", ["number", "number"], [c, r]);
           },
-          apply_result_get_num_subgoals: function(c, r) {
+          apply_result_get_num_subgoals: function (c, r) {
             let ret = Mod.ccall("Z3_apply_result_get_num_subgoals", "number", ["number", "number"], [c, r]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -4664,7 +4656,7 @@
           mk_solver_from_tactic: Mod._Z3_mk_solver_from_tactic,
           solver_translate: Mod._Z3_solver_translate,
           solver_import_model_converter: Mod._Z3_solver_import_model_converter,
-          solver_get_help: function(c, s) {
+          solver_get_help: function (c, s) {
             return Mod.ccall("Z3_solver_get_help", "string", ["number", "number"], [c, s]);
           },
           solver_get_param_descrs: Mod._Z3_solver_get_param_descrs,
@@ -4675,159 +4667,145 @@
           solver_push: Mod._Z3_solver_push,
           solver_pop: Mod._Z3_solver_pop,
           solver_reset: Mod._Z3_solver_reset,
-          solver_get_num_scopes: function(c, s) {
+          solver_get_num_scopes: function (c, s) {
             let ret = Mod.ccall("Z3_solver_get_num_scopes", "number", ["number", "number"], [c, s]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           solver_assert: Mod._Z3_solver_assert,
           solver_assert_and_track: Mod._Z3_solver_assert_and_track,
-          solver_from_file: function(c, s, file_name) {
+          solver_from_file: function (c, s, file_name) {
             return Mod.ccall("Z3_solver_from_file", "void", ["number", "number", "string"], [c, s, file_name]);
           },
-          solver_from_string: function(c, s, str) {
+          solver_from_string: function (c, s, str) {
             return Mod.ccall("Z3_solver_from_string", "void", ["number", "number", "string"], [c, s, str]);
           },
           solver_get_assertions: Mod._Z3_solver_get_assertions,
           solver_get_units: Mod._Z3_solver_get_units,
           solver_get_trail: Mod._Z3_solver_get_trail,
           solver_get_non_units: Mod._Z3_solver_get_non_units,
-          solver_get_levels: function(c, s, literals, levels) {
-            return Mod.ccall("Z3_solver_get_levels", "void", ["number", "number", "number", "number", "array"], [
-              c,
-              s,
-              literals,
-              levels.length,
-              intArrayToByteArr(levels)
-            ]);
+          solver_get_levels: function (c, s, literals, levels) {
+            return Mod.ccall(
+              "Z3_solver_get_levels",
+              "void",
+              ["number", "number", "number", "number", "array"],
+              [c, s, literals, levels.length, intArrayToByteArr(levels)],
+            );
           },
           solver_congruence_root: Mod._Z3_solver_congruence_root,
           solver_congruence_next: Mod._Z3_solver_congruence_next,
           solver_congruence_explain: Mod._Z3_solver_congruence_explain,
           solver_solve_for: Mod._Z3_solver_solve_for,
-          solver_next_split: function(c, cb, t, idx, phase) {
+          solver_next_split: function (c, cb, t, idx, phase) {
             return Mod.ccall("Z3_solver_next_split", "boolean", ["number", "number", "number", "number", "number"], [c, cb, t, idx, phase]);
           },
-          solver_propagate_declare: function(c, name, domain, range) {
-            return Mod.ccall("Z3_solver_propagate_declare", "number", ["number", "number", "number", "array", "number"], [
-              c,
-              name,
-              domain.length,
-              intArrayToByteArr(domain),
-              range
-            ]);
+          solver_propagate_declare: function (c, name, domain, range) {
+            return Mod.ccall(
+              "Z3_solver_propagate_declare",
+              "number",
+              ["number", "number", "number", "array", "number"],
+              [c, name, domain.length, intArrayToByteArr(domain), range],
+            );
           },
           solver_propagate_register: Mod._Z3_solver_propagate_register,
           solver_propagate_register_cb: Mod._Z3_solver_propagate_register_cb,
-          solver_propagate_consequence: function(c, cb, fixed, eq_lhs, eq_rhs, conseq) {
+          solver_propagate_consequence: function (c, cb, fixed, eq_lhs, eq_rhs, conseq) {
             if (eq_lhs.length !== eq_rhs.length) {
               throw new TypeError(`eq_lhs and eq_rhs must be the same length (got ${eq_lhs.length} and {eq_rhs.length})`);
             }
-            return Mod.ccall("Z3_solver_propagate_consequence", "boolean", [
-              "number",
-              "number",
-              "number",
-              "array",
-              "number",
-              "array",
-              "array",
-              "number"
-            ], [
-              c,
-              cb,
-              fixed.length,
-              intArrayToByteArr(fixed),
-              eq_lhs.length,
-              intArrayToByteArr(eq_lhs),
-              intArrayToByteArr(eq_rhs),
-              conseq
-            ]);
+            return Mod.ccall(
+              "Z3_solver_propagate_consequence",
+              "boolean",
+              ["number", "number", "number", "array", "number", "array", "array", "number"],
+              [c, cb, fixed.length, intArrayToByteArr(fixed), eq_lhs.length, intArrayToByteArr(eq_lhs), intArrayToByteArr(eq_rhs), conseq],
+            );
           },
           solver_set_initial_value: Mod._Z3_solver_set_initial_value,
-          solver_check: function(c, s) {
+          solver_check: function (c, s) {
             return Mod.async_call(Mod._async_Z3_solver_check, c, s);
           },
-          solver_check_assumptions: async function(c, s, assumptions) {
-            return await Mod.async_call(() => Mod.ccall("async_Z3_solver_check_assumptions", "void", ["number", "number", "number", "array"], [
-              c,
-              s,
-              assumptions.length,
-              intArrayToByteArr(assumptions)
-            ]));
+          solver_check_assumptions: async function (c, s, assumptions) {
+            return await Mod.async_call(() =>
+              Mod.ccall(
+                "async_Z3_solver_check_assumptions",
+                "void",
+                ["number", "number", "number", "array"],
+                [c, s, assumptions.length, intArrayToByteArr(assumptions)],
+              ),
+            );
           },
-          get_implied_equalities: function(c, s, terms) {
+          get_implied_equalities: function (c, s, terms) {
             let outArray_class_ids = Mod._malloc(4 * terms.length);
             try {
-              let ret = Mod.ccall("Z3_get_implied_equalities", "number", ["number", "number", "number", "array", "number"], [
-                c,
-                s,
-                terms.length,
-                intArrayToByteArr(terms),
-                outArray_class_ids
-              ]);
+              let ret = Mod.ccall(
+                "Z3_get_implied_equalities",
+                "number",
+                ["number", "number", "number", "array", "number"],
+                [c, s, terms.length, intArrayToByteArr(terms), outArray_class_ids],
+              );
               return {
                 rv: ret,
-                class_ids: readUintArray(outArray_class_ids, terms.length)
+                class_ids: readUintArray(outArray_class_ids, terms.length),
               };
             } finally {
               Mod._free(outArray_class_ids);
             }
           },
-          solver_get_consequences: function(c, s, assumptions, variables, consequences) {
+          solver_get_consequences: function (c, s, assumptions, variables, consequences) {
             return Mod.async_call(Mod._async_Z3_solver_get_consequences, c, s, assumptions, variables, consequences);
           },
-          solver_cube: function(c, s, vars, backtrack_level) {
+          solver_cube: function (c, s, vars, backtrack_level) {
             return Mod.async_call(Mod._async_Z3_solver_cube, c, s, vars, backtrack_level);
           },
           solver_get_model: Mod._Z3_solver_get_model,
           solver_get_proof: Mod._Z3_solver_get_proof,
           solver_get_unsat_core: Mod._Z3_solver_get_unsat_core,
-          solver_get_reason_unknown: function(c, s) {
+          solver_get_reason_unknown: function (c, s) {
             return Mod.ccall("Z3_solver_get_reason_unknown", "string", ["number", "number"], [c, s]);
           },
           solver_get_statistics: Mod._Z3_solver_get_statistics,
-          solver_to_string: function(c, s) {
+          solver_to_string: function (c, s) {
             return Mod.ccall("Z3_solver_to_string", "string", ["number", "number"], [c, s]);
           },
-          solver_to_dimacs_string: function(c, s, include_names) {
+          solver_to_dimacs_string: function (c, s, include_names) {
             return Mod.ccall("Z3_solver_to_dimacs_string", "string", ["number", "number", "boolean"], [c, s, include_names]);
           },
-          stats_to_string: function(c, s) {
+          stats_to_string: function (c, s) {
             return Mod.ccall("Z3_stats_to_string", "string", ["number", "number"], [c, s]);
           },
           stats_inc_ref: Mod._Z3_stats_inc_ref,
           stats_dec_ref: Mod._Z3_stats_dec_ref,
-          stats_size: function(c, s) {
+          stats_size: function (c, s) {
             let ret = Mod.ccall("Z3_stats_size", "number", ["number", "number"], [c, s]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          stats_get_key: function(c, s, idx) {
+          stats_get_key: function (c, s, idx) {
             return Mod.ccall("Z3_stats_get_key", "string", ["number", "number", "number"], [c, s, idx]);
           },
-          stats_is_uint: function(c, s, idx) {
+          stats_is_uint: function (c, s, idx) {
             return Mod.ccall("Z3_stats_is_uint", "boolean", ["number", "number", "number"], [c, s, idx]);
           },
-          stats_is_double: function(c, s, idx) {
+          stats_is_double: function (c, s, idx) {
             return Mod.ccall("Z3_stats_is_double", "boolean", ["number", "number", "number"], [c, s, idx]);
           },
-          stats_get_uint_value: function(c, s, idx) {
+          stats_get_uint_value: function (c, s, idx) {
             let ret = Mod.ccall("Z3_stats_get_uint_value", "number", ["number", "number", "number"], [c, s, idx]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           stats_get_double_value: Mod._Z3_stats_get_double_value,
           get_estimated_alloc_size: Mod._Z3_get_estimated_alloc_size,
-          algebraic_is_value: function(c, a) {
+          algebraic_is_value: function (c, a) {
             return Mod.ccall("Z3_algebraic_is_value", "boolean", ["number", "number"], [c, a]);
           },
-          algebraic_is_pos: function(c, a) {
+          algebraic_is_pos: function (c, a) {
             return Mod.ccall("Z3_algebraic_is_pos", "boolean", ["number", "number"], [c, a]);
           },
-          algebraic_is_neg: function(c, a) {
+          algebraic_is_neg: function (c, a) {
             return Mod.ccall("Z3_algebraic_is_neg", "boolean", ["number", "number"], [c, a]);
           },
-          algebraic_is_zero: function(c, a) {
+          algebraic_is_zero: function (c, a) {
             return Mod.ccall("Z3_algebraic_is_zero", "boolean", ["number", "number"], [c, a]);
           },
           algebraic_sign: Mod._Z3_algebraic_sign,
@@ -4837,32 +4815,36 @@
           algebraic_div: Mod._Z3_algebraic_div,
           algebraic_root: Mod._Z3_algebraic_root,
           algebraic_power: Mod._Z3_algebraic_power,
-          algebraic_lt: function(c, a, b) {
+          algebraic_lt: function (c, a, b) {
             return Mod.ccall("Z3_algebraic_lt", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          algebraic_gt: function(c, a, b) {
+          algebraic_gt: function (c, a, b) {
             return Mod.ccall("Z3_algebraic_gt", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          algebraic_le: function(c, a, b) {
+          algebraic_le: function (c, a, b) {
             return Mod.ccall("Z3_algebraic_le", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          algebraic_ge: function(c, a, b) {
+          algebraic_ge: function (c, a, b) {
             return Mod.ccall("Z3_algebraic_ge", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          algebraic_eq: function(c, a, b) {
+          algebraic_eq: function (c, a, b) {
             return Mod.ccall("Z3_algebraic_eq", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          algebraic_neq: function(c, a, b) {
+          algebraic_neq: function (c, a, b) {
             return Mod.ccall("Z3_algebraic_neq", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          algebraic_roots: async function(c, p, a) {
-            return await Mod.async_call(() => Mod.ccall("async_Z3_algebraic_roots", "void", ["number", "number", "number", "array"], [c, p, a.length, intArrayToByteArr(a)]));
+          algebraic_roots: async function (c, p, a) {
+            return await Mod.async_call(() =>
+              Mod.ccall("async_Z3_algebraic_roots", "void", ["number", "number", "number", "array"], [c, p, a.length, intArrayToByteArr(a)]),
+            );
           },
-          algebraic_eval: async function(c, p, a) {
-            return await Mod.async_call(() => Mod.ccall("async_Z3_algebraic_eval", "void", ["number", "number", "number", "array"], [c, p, a.length, intArrayToByteArr(a)]));
+          algebraic_eval: async function (c, p, a) {
+            return await Mod.async_call(() =>
+              Mod.ccall("async_Z3_algebraic_eval", "void", ["number", "number", "number", "array"], [c, p, a.length, intArrayToByteArr(a)]),
+            );
           },
           algebraic_get_poly: Mod._Z3_algebraic_get_poly,
-          algebraic_get_i: function(c, a) {
+          algebraic_get_i: function (c, a) {
             let ret = Mod.ccall("Z3_algebraic_get_i", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -4870,7 +4852,7 @@
           mk_ast_vector: Mod._Z3_mk_ast_vector,
           ast_vector_inc_ref: Mod._Z3_ast_vector_inc_ref,
           ast_vector_dec_ref: Mod._Z3_ast_vector_dec_ref,
-          ast_vector_size: function(c, v) {
+          ast_vector_size: function (c, v) {
             let ret = Mod.ccall("Z3_ast_vector_size", "number", ["number", "number"], [c, v]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -4880,59 +4862,60 @@
           ast_vector_resize: Mod._Z3_ast_vector_resize,
           ast_vector_push: Mod._Z3_ast_vector_push,
           ast_vector_translate: Mod._Z3_ast_vector_translate,
-          ast_vector_to_string: function(c, v) {
+          ast_vector_to_string: function (c, v) {
             return Mod.ccall("Z3_ast_vector_to_string", "string", ["number", "number"], [c, v]);
           },
           mk_ast_map: Mod._Z3_mk_ast_map,
           ast_map_inc_ref: Mod._Z3_ast_map_inc_ref,
           ast_map_dec_ref: Mod._Z3_ast_map_dec_ref,
-          ast_map_contains: function(c, m, k) {
+          ast_map_contains: function (c, m, k) {
             return Mod.ccall("Z3_ast_map_contains", "boolean", ["number", "number", "number"], [c, m, k]);
           },
           ast_map_find: Mod._Z3_ast_map_find,
           ast_map_insert: Mod._Z3_ast_map_insert,
           ast_map_erase: Mod._Z3_ast_map_erase,
           ast_map_reset: Mod._Z3_ast_map_reset,
-          ast_map_size: function(c, m) {
+          ast_map_size: function (c, m) {
             let ret = Mod.ccall("Z3_ast_map_size", "number", ["number", "number"], [c, m]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           ast_map_keys: Mod._Z3_ast_map_keys,
-          ast_map_to_string: function(c, m) {
+          ast_map_to_string: function (c, m) {
             return Mod.ccall("Z3_ast_map_to_string", "string", ["number", "number"], [c, m]);
           },
           mk_fixedpoint: Mod._Z3_mk_fixedpoint,
           fixedpoint_inc_ref: Mod._Z3_fixedpoint_inc_ref,
           fixedpoint_dec_ref: Mod._Z3_fixedpoint_dec_ref,
           fixedpoint_add_rule: Mod._Z3_fixedpoint_add_rule,
-          fixedpoint_add_fact: function(c, d, r, args) {
-            return Mod.ccall("Z3_fixedpoint_add_fact", "void", ["number", "number", "number", "number", "array"], [
-              c,
-              d,
-              r,
-              args.length,
-              intArrayToByteArr(args)
-            ]);
+          fixedpoint_add_fact: function (c, d, r, args) {
+            return Mod.ccall(
+              "Z3_fixedpoint_add_fact",
+              "void",
+              ["number", "number", "number", "number", "array"],
+              [c, d, r, args.length, intArrayToByteArr(args)],
+            );
           },
           fixedpoint_assert: Mod._Z3_fixedpoint_assert,
-          fixedpoint_query: function(c, d, query) {
+          fixedpoint_query: function (c, d, query) {
             return Mod.async_call(Mod._async_Z3_fixedpoint_query, c, d, query);
           },
-          fixedpoint_query_relations: async function(c, d, relations) {
-            return await Mod.async_call(() => Mod.ccall("async_Z3_fixedpoint_query_relations", "void", ["number", "number", "number", "array"], [
-              c,
-              d,
-              relations.length,
-              intArrayToByteArr(relations)
-            ]));
+          fixedpoint_query_relations: async function (c, d, relations) {
+            return await Mod.async_call(() =>
+              Mod.ccall(
+                "async_Z3_fixedpoint_query_relations",
+                "void",
+                ["number", "number", "number", "array"],
+                [c, d, relations.length, intArrayToByteArr(relations)],
+              ),
+            );
           },
           fixedpoint_get_answer: Mod._Z3_fixedpoint_get_answer,
-          fixedpoint_get_reason_unknown: function(c, d) {
+          fixedpoint_get_reason_unknown: function (c, d) {
             return Mod.ccall("Z3_fixedpoint_get_reason_unknown", "string", ["number", "number"], [c, d]);
           },
           fixedpoint_update_rule: Mod._Z3_fixedpoint_update_rule,
-          fixedpoint_get_num_levels: function(c, d, pred) {
+          fixedpoint_get_num_levels: function (c, d, pred) {
             let ret = Mod.ccall("Z3_fixedpoint_get_num_levels", "number", ["number", "number", "number"], [c, d, pred]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -4941,34 +4924,33 @@
           fixedpoint_add_cover: Mod._Z3_fixedpoint_add_cover,
           fixedpoint_get_statistics: Mod._Z3_fixedpoint_get_statistics,
           fixedpoint_register_relation: Mod._Z3_fixedpoint_register_relation,
-          fixedpoint_set_predicate_representation: function(c, d, f, relation_kinds) {
-            return Mod.ccall("Z3_fixedpoint_set_predicate_representation", "void", ["number", "number", "number", "number", "array"], [
-              c,
-              d,
-              f,
-              relation_kinds.length,
-              intArrayToByteArr(relation_kinds)
-            ]);
+          fixedpoint_set_predicate_representation: function (c, d, f, relation_kinds) {
+            return Mod.ccall(
+              "Z3_fixedpoint_set_predicate_representation",
+              "void",
+              ["number", "number", "number", "number", "array"],
+              [c, d, f, relation_kinds.length, intArrayToByteArr(relation_kinds)],
+            );
           },
           fixedpoint_get_rules: Mod._Z3_fixedpoint_get_rules,
           fixedpoint_get_assertions: Mod._Z3_fixedpoint_get_assertions,
           fixedpoint_set_params: Mod._Z3_fixedpoint_set_params,
-          fixedpoint_get_help: function(c, f) {
+          fixedpoint_get_help: function (c, f) {
             return Mod.ccall("Z3_fixedpoint_get_help", "string", ["number", "number"], [c, f]);
           },
           fixedpoint_get_param_descrs: Mod._Z3_fixedpoint_get_param_descrs,
-          fixedpoint_to_string: function(c, f, queries) {
-            return Mod.ccall("Z3_fixedpoint_to_string", "string", ["number", "number", "number", "array"], [
-              c,
-              f,
-              queries.length,
-              intArrayToByteArr(queries)
-            ]);
+          fixedpoint_to_string: function (c, f, queries) {
+            return Mod.ccall(
+              "Z3_fixedpoint_to_string",
+              "string",
+              ["number", "number", "number", "array"],
+              [c, f, queries.length, intArrayToByteArr(queries)],
+            );
           },
-          fixedpoint_from_string: function(c, f, s) {
+          fixedpoint_from_string: function (c, f, s) {
             return Mod.ccall("Z3_fixedpoint_from_string", "number", ["number", "number", "string"], [c, f, s]);
           },
-          fixedpoint_from_file: function(c, f, s) {
+          fixedpoint_from_file: function (c, f, s) {
             return Mod.ccall("Z3_fixedpoint_from_file", "number", ["number", "number", "string"], [c, f, s]);
           },
           mk_fpa_rounding_mode_sort: Mod._Z3_mk_fpa_rounding_mode_sort,
@@ -5032,61 +5014,66 @@
           mk_fpa_to_ubv: Mod._Z3_mk_fpa_to_ubv,
           mk_fpa_to_sbv: Mod._Z3_mk_fpa_to_sbv,
           mk_fpa_to_real: Mod._Z3_mk_fpa_to_real,
-          fpa_get_ebits: function(c, s) {
+          fpa_get_ebits: function (c, s) {
             let ret = Mod.ccall("Z3_fpa_get_ebits", "number", ["number", "number"], [c, s]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          fpa_get_sbits: function(c, s) {
+          fpa_get_sbits: function (c, s) {
             let ret = Mod.ccall("Z3_fpa_get_sbits", "number", ["number", "number"], [c, s]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          fpa_is_numeral_nan: function(c, t) {
+          fpa_is_numeral_nan: function (c, t) {
             return Mod.ccall("Z3_fpa_is_numeral_nan", "boolean", ["number", "number"], [c, t]);
           },
-          fpa_is_numeral_inf: function(c, t) {
+          fpa_is_numeral_inf: function (c, t) {
             return Mod.ccall("Z3_fpa_is_numeral_inf", "boolean", ["number", "number"], [c, t]);
           },
-          fpa_is_numeral_zero: function(c, t) {
+          fpa_is_numeral_zero: function (c, t) {
             return Mod.ccall("Z3_fpa_is_numeral_zero", "boolean", ["number", "number"], [c, t]);
           },
-          fpa_is_numeral_normal: function(c, t) {
+          fpa_is_numeral_normal: function (c, t) {
             return Mod.ccall("Z3_fpa_is_numeral_normal", "boolean", ["number", "number"], [c, t]);
           },
-          fpa_is_numeral_subnormal: function(c, t) {
+          fpa_is_numeral_subnormal: function (c, t) {
             return Mod.ccall("Z3_fpa_is_numeral_subnormal", "boolean", ["number", "number"], [c, t]);
           },
-          fpa_is_numeral_positive: function(c, t) {
+          fpa_is_numeral_positive: function (c, t) {
             return Mod.ccall("Z3_fpa_is_numeral_positive", "boolean", ["number", "number"], [c, t]);
           },
-          fpa_is_numeral_negative: function(c, t) {
+          fpa_is_numeral_negative: function (c, t) {
             return Mod.ccall("Z3_fpa_is_numeral_negative", "boolean", ["number", "number"], [c, t]);
           },
           fpa_get_numeral_sign_bv: Mod._Z3_fpa_get_numeral_sign_bv,
           fpa_get_numeral_significand_bv: Mod._Z3_fpa_get_numeral_significand_bv,
-          fpa_get_numeral_sign: function(c, t) {
+          fpa_get_numeral_sign: function (c, t) {
             let ret = Mod.ccall("Z3_fpa_get_numeral_sign", "boolean", ["number", "number", "number"], [c, t, outAddress]);
             if (!ret) {
               return null;
             }
             return getOutInt(0);
           },
-          fpa_get_numeral_significand_string: function(c, t) {
+          fpa_get_numeral_significand_string: function (c, t) {
             return Mod.ccall("Z3_fpa_get_numeral_significand_string", "string", ["number", "number"], [c, t]);
           },
-          fpa_get_numeral_significand_uint64: function(c, t) {
+          fpa_get_numeral_significand_uint64: function (c, t) {
             let ret = Mod.ccall("Z3_fpa_get_numeral_significand_uint64", "boolean", ["number", "number", "number"], [c, t, outAddress]);
             if (!ret) {
               return null;
             }
             return getOutUint64(0);
           },
-          fpa_get_numeral_exponent_string: function(c, t, biased) {
+          fpa_get_numeral_exponent_string: function (c, t, biased) {
             return Mod.ccall("Z3_fpa_get_numeral_exponent_string", "string", ["number", "number", "boolean"], [c, t, biased]);
           },
-          fpa_get_numeral_exponent_int64: function(c, t, biased) {
-            let ret = Mod.ccall("Z3_fpa_get_numeral_exponent_int64", "boolean", ["number", "number", "number", "boolean"], [c, t, outAddress, biased]);
+          fpa_get_numeral_exponent_int64: function (c, t, biased) {
+            let ret = Mod.ccall(
+              "Z3_fpa_get_numeral_exponent_int64",
+              "boolean",
+              ["number", "number", "number", "boolean"],
+              [c, t, outAddress, biased],
+            );
             if (!ret) {
               return null;
             }
@@ -5100,17 +5087,17 @@
           optimize_dec_ref: Mod._Z3_optimize_dec_ref,
           optimize_assert: Mod._Z3_optimize_assert,
           optimize_assert_and_track: Mod._Z3_optimize_assert_and_track,
-          optimize_assert_soft: function(c, o, a, weight, id) {
+          optimize_assert_soft: function (c, o, a, weight, id) {
             let ret = Mod.ccall("Z3_optimize_assert_soft", "number", ["number", "number", "number", "string", "number"], [c, o, a, weight, id]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          optimize_maximize: function(c, o, t) {
+          optimize_maximize: function (c, o, t) {
             let ret = Mod.ccall("Z3_optimize_maximize", "number", ["number", "number", "number"], [c, o, t]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
-          optimize_minimize: function(c, o, t) {
+          optimize_minimize: function (c, o, t) {
             let ret = Mod.ccall("Z3_optimize_minimize", "number", ["number", "number", "number"], [c, o, t]);
             ret = new Uint32Array([ret])[0];
             return ret;
@@ -5118,15 +5105,17 @@
           optimize_push: Mod._Z3_optimize_push,
           optimize_pop: Mod._Z3_optimize_pop,
           optimize_set_initial_value: Mod._Z3_optimize_set_initial_value,
-          optimize_check: async function(c, o, assumptions) {
-            return await Mod.async_call(() => Mod.ccall("async_Z3_optimize_check", "void", ["number", "number", "number", "array"], [
-              c,
-              o,
-              assumptions.length,
-              intArrayToByteArr(assumptions)
-            ]));
+          optimize_check: async function (c, o, assumptions) {
+            return await Mod.async_call(() =>
+              Mod.ccall(
+                "async_Z3_optimize_check",
+                "void",
+                ["number", "number", "number", "array"],
+                [c, o, assumptions.length, intArrayToByteArr(assumptions)],
+              ),
+            );
           },
-          optimize_get_reason_unknown: function(c, d) {
+          optimize_get_reason_unknown: function (c, d) {
             return Mod.ccall("Z3_optimize_get_reason_unknown", "string", ["number", "number"], [c, d]);
           },
           optimize_get_model: Mod._Z3_optimize_get_model,
@@ -5137,45 +5126,45 @@
           optimize_get_upper: Mod._Z3_optimize_get_upper,
           optimize_get_lower_as_vector: Mod._Z3_optimize_get_lower_as_vector,
           optimize_get_upper_as_vector: Mod._Z3_optimize_get_upper_as_vector,
-          optimize_to_string: function(c, o) {
+          optimize_to_string: function (c, o) {
             return Mod.ccall("Z3_optimize_to_string", "string", ["number", "number"], [c, o]);
           },
-          optimize_from_string: function(c, o, s) {
+          optimize_from_string: function (c, o, s) {
             return Mod.ccall("Z3_optimize_from_string", "void", ["number", "number", "string"], [c, o, s]);
           },
-          optimize_from_file: function(c, o, s) {
+          optimize_from_file: function (c, o, s) {
             return Mod.ccall("Z3_optimize_from_file", "void", ["number", "number", "string"], [c, o, s]);
           },
-          optimize_get_help: function(c, t) {
+          optimize_get_help: function (c, t) {
             return Mod.ccall("Z3_optimize_get_help", "string", ["number", "number"], [c, t]);
           },
           optimize_get_statistics: Mod._Z3_optimize_get_statistics,
           optimize_get_assertions: Mod._Z3_optimize_get_assertions,
           optimize_get_objectives: Mod._Z3_optimize_get_objectives,
-          polynomial_subresultants: function(c, p, q, x) {
+          polynomial_subresultants: function (c, p, q, x) {
             return Mod.async_call(Mod._async_Z3_polynomial_subresultants, c, p, q, x);
           },
           rcf_del: Mod._Z3_rcf_del,
-          rcf_mk_rational: function(c, val) {
+          rcf_mk_rational: function (c, val) {
             return Mod.ccall("Z3_rcf_mk_rational", "number", ["number", "string"], [c, val]);
           },
           rcf_mk_small_int: Mod._Z3_rcf_mk_small_int,
           rcf_mk_pi: Mod._Z3_rcf_mk_pi,
           rcf_mk_e: Mod._Z3_rcf_mk_e,
           rcf_mk_infinitesimal: Mod._Z3_rcf_mk_infinitesimal,
-          rcf_mk_roots: function(c, a) {
+          rcf_mk_roots: function (c, a) {
             let outArray_roots = Mod._malloc(4 * a.length);
             try {
-              let ret = Mod.ccall("Z3_rcf_mk_roots", "number", ["number", "number", "array", "number"], [
-                c,
-                a.length,
-                intArrayToByteArr(a),
-                outArray_roots
-              ]);
+              let ret = Mod.ccall(
+                "Z3_rcf_mk_roots",
+                "number",
+                ["number", "number", "array", "number"],
+                [c, a.length, intArrayToByteArr(a), outArray_roots],
+              );
               ret = new Uint32Array([ret])[0];
               return {
                 rv: ret,
-                roots: readUintArray(outArray_roots, a.length)
+                roots: readUintArray(outArray_roots, a.length),
               };
             } finally {
               Mod._free(outArray_roots);
@@ -5188,75 +5177,75 @@
           rcf_neg: Mod._Z3_rcf_neg,
           rcf_inv: Mod._Z3_rcf_inv,
           rcf_power: Mod._Z3_rcf_power,
-          rcf_lt: function(c, a, b) {
+          rcf_lt: function (c, a, b) {
             return Mod.ccall("Z3_rcf_lt", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          rcf_gt: function(c, a, b) {
+          rcf_gt: function (c, a, b) {
             return Mod.ccall("Z3_rcf_gt", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          rcf_le: function(c, a, b) {
+          rcf_le: function (c, a, b) {
             return Mod.ccall("Z3_rcf_le", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          rcf_ge: function(c, a, b) {
+          rcf_ge: function (c, a, b) {
             return Mod.ccall("Z3_rcf_ge", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          rcf_eq: function(c, a, b) {
+          rcf_eq: function (c, a, b) {
             return Mod.ccall("Z3_rcf_eq", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          rcf_neq: function(c, a, b) {
+          rcf_neq: function (c, a, b) {
             return Mod.ccall("Z3_rcf_neq", "boolean", ["number", "number", "number"], [c, a, b]);
           },
-          rcf_num_to_string: function(c, a, compact, html) {
+          rcf_num_to_string: function (c, a, compact, html) {
             return Mod.ccall("Z3_rcf_num_to_string", "string", ["number", "number", "boolean", "boolean"], [c, a, compact, html]);
           },
-          rcf_num_to_decimal_string: function(c, a, prec) {
+          rcf_num_to_decimal_string: function (c, a, prec) {
             return Mod.ccall("Z3_rcf_num_to_decimal_string", "string", ["number", "number", "number"], [c, a, prec]);
           },
-          rcf_get_numerator_denominator: function(c, a) {
+          rcf_get_numerator_denominator: function (c, a) {
             Mod.ccall("Z3_rcf_get_numerator_denominator", "void", ["number", "number", "number", "number"], [c, a, outAddress, outAddress + 4]);
             return {
               n: getOutUint(0),
-              d: getOutUint(1)
+              d: getOutUint(1),
             };
           },
-          rcf_is_rational: function(c, a) {
+          rcf_is_rational: function (c, a) {
             return Mod.ccall("Z3_rcf_is_rational", "boolean", ["number", "number"], [c, a]);
           },
-          rcf_is_algebraic: function(c, a) {
+          rcf_is_algebraic: function (c, a) {
             return Mod.ccall("Z3_rcf_is_algebraic", "boolean", ["number", "number"], [c, a]);
           },
-          rcf_is_infinitesimal: function(c, a) {
+          rcf_is_infinitesimal: function (c, a) {
             return Mod.ccall("Z3_rcf_is_infinitesimal", "boolean", ["number", "number"], [c, a]);
           },
-          rcf_is_transcendental: function(c, a) {
+          rcf_is_transcendental: function (c, a) {
             return Mod.ccall("Z3_rcf_is_transcendental", "boolean", ["number", "number"], [c, a]);
           },
-          rcf_extension_index: function(c, a) {
+          rcf_extension_index: function (c, a) {
             let ret = Mod.ccall("Z3_rcf_extension_index", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           rcf_transcendental_name: Mod._Z3_rcf_transcendental_name,
           rcf_infinitesimal_name: Mod._Z3_rcf_infinitesimal_name,
-          rcf_num_coefficients: function(c, a) {
+          rcf_num_coefficients: function (c, a) {
             let ret = Mod.ccall("Z3_rcf_num_coefficients", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           rcf_coefficient: Mod._Z3_rcf_coefficient,
-          rcf_num_sign_conditions: function(c, a) {
+          rcf_num_sign_conditions: function (c, a) {
             let ret = Mod.ccall("Z3_rcf_num_sign_conditions", "number", ["number", "number"], [c, a]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           rcf_sign_condition_sign: Mod._Z3_rcf_sign_condition_sign,
-          rcf_num_sign_condition_coefficients: function(c, a, i) {
+          rcf_num_sign_condition_coefficients: function (c, a, i) {
             let ret = Mod.ccall("Z3_rcf_num_sign_condition_coefficients", "number", ["number", "number", "number"], [c, a, i]);
             ret = new Uint32Array([ret])[0];
             return ret;
           },
           rcf_sign_condition_coefficient: Mod._Z3_rcf_sign_condition_coefficient,
-          fixedpoint_query_from_lvl: function(c, d, query, lvl) {
+          fixedpoint_query_from_lvl: function (c, d, query, lvl) {
             return Mod.async_call(Mod._async_Z3_fixedpoint_query_from_lvl, c, d, query, lvl);
           },
           fixedpoint_get_ground_sat_answer: Mod._Z3_fixedpoint_get_ground_sat_answer,
@@ -5264,38 +5253,33 @@
           fixedpoint_get_rule_names_along_trace: Mod._Z3_fixedpoint_get_rule_names_along_trace,
           fixedpoint_add_invariant: Mod._Z3_fixedpoint_add_invariant,
           fixedpoint_get_reachable: Mod._Z3_fixedpoint_get_reachable,
-          qe_model_project: function(c, m, bound, body) {
-            return Mod.ccall("Z3_qe_model_project", "number", ["number", "number", "number", "array", "number"], [
-              c,
-              m,
-              bound.length,
-              intArrayToByteArr(bound),
-              body
-            ]);
+          qe_model_project: function (c, m, bound, body) {
+            return Mod.ccall(
+              "Z3_qe_model_project",
+              "number",
+              ["number", "number", "number", "array", "number"],
+              [c, m, bound.length, intArrayToByteArr(bound), body],
+            );
           },
-          qe_model_project_skolem: function(c, m, bound, body, map) {
-            return Mod.ccall("Z3_qe_model_project_skolem", "number", ["number", "number", "number", "array", "number", "number"], [
-              c,
-              m,
-              bound.length,
-              intArrayToByteArr(bound),
-              body,
-              map
-            ]);
+          qe_model_project_skolem: function (c, m, bound, body, map) {
+            return Mod.ccall(
+              "Z3_qe_model_project_skolem",
+              "number",
+              ["number", "number", "number", "array", "number", "number"],
+              [c, m, bound.length, intArrayToByteArr(bound), body, map],
+            );
           },
-          qe_model_project_with_witness: function(c, m, bound, body, map) {
-            return Mod.ccall("Z3_qe_model_project_with_witness", "number", ["number", "number", "number", "array", "number", "number"], [
-              c,
-              m,
-              bound.length,
-              intArrayToByteArr(bound),
-              body,
-              map
-            ]);
+          qe_model_project_with_witness: function (c, m, bound, body, map) {
+            return Mod.ccall(
+              "Z3_qe_model_project_with_witness",
+              "number",
+              ["number", "number", "number", "array", "number", "number"],
+              [c, m, bound.length, intArrayToByteArr(bound), body, map],
+            );
           },
           model_extrapolate: Mod._Z3_model_extrapolate,
-          qe_lite: Mod._Z3_qe_lite
-        }
+          qe_lite: Mod._Z3_qe_lite,
+        },
       };
     }
     return wrapper___GENERATED__;
@@ -5304,23 +5288,32 @@
   function requireLowLevel() {
     if (hasRequiredLowLevel) return lowLevel;
     hasRequiredLowLevel = 1;
-    (function(exports2) {
-      var __createBinding2 = lowLevel && lowLevel.__createBinding || (Object.create ? (function(o, m, k, k2) {
-        if (k2 === void 0) k2 = k;
-        var desc = Object.getOwnPropertyDescriptor(m, k);
-        if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-          desc = { enumerable: true, get: function() {
-            return m[k];
-          } };
-        }
-        Object.defineProperty(o, k2, desc);
-      }) : (function(o, m, k, k2) {
-        if (k2 === void 0) k2 = k;
-        o[k2] = m[k];
-      }));
-      var __exportStar2 = lowLevel && lowLevel.__exportStar || function(m, exports3) {
-        for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding2(exports3, m, p);
-      };
+    (function (exports2) {
+      var __createBinding2 =
+        (lowLevel && lowLevel.__createBinding) ||
+        (Object.create
+          ? function (o, m, k, k2) {
+              if (k2 === void 0) k2 = k;
+              var desc = Object.getOwnPropertyDescriptor(m, k);
+              if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+                desc = {
+                  enumerable: true,
+                  get: function () {
+                    return m[k];
+                  },
+                };
+              }
+              Object.defineProperty(o, k2, desc);
+            }
+          : function (o, m, k, k2) {
+              if (k2 === void 0) k2 = k;
+              o[k2] = m[k];
+            });
+      var __exportStar2 =
+        (lowLevel && lowLevel.__exportStar) ||
+        function (m, exports3) {
+          for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding2(exports3, m, p);
+        };
       Object.defineProperty(exports2, "__esModule", { value: true });
       __exportStar2(requireTypes___GENERATED__(), exports2);
       __exportStar2(requireWrapper___GENERATED__(), exports2);
@@ -5334,11 +5327,9 @@
     hasRequiredTypes = 1;
     Object.defineProperty(types, "__esModule", { value: true });
     types.Z3AssertionError = types.Z3Error = void 0;
-    class Z3Error extends Error {
-    }
+    class Z3Error extends Error {}
     types.Z3Error = Z3Error;
-    class Z3AssertionError extends Z3Error {
-    }
+    class Z3AssertionError extends Z3Error {}
     types.Z3AssertionError = Z3AssertionError;
     return types;
   }
@@ -5385,8 +5376,19 @@
     const FALLBACK_PRECISION = 17;
     const asyncMutex = new async_mutex_1.Mutex();
     function isCoercibleRational(obj) {
-      const r = obj !== null && (typeof obj === "object" || typeof obj === "function") && (obj.numerator !== null && (typeof obj.numerator === "number" || typeof obj.numerator === "bigint")) && (obj.denominator !== null && (typeof obj.denominator === "number" || typeof obj.denominator === "bigint"));
-      r && (0, utils_1.assert)((typeof obj.numerator !== "number" || Number.isSafeInteger(obj.numerator)) && (typeof obj.denominator !== "number" || Number.isSafeInteger(obj.denominator)), "Fraction numerator and denominator must be integers");
+      const r =
+        obj !== null &&
+        (typeof obj === "object" || typeof obj === "function") &&
+        obj.numerator !== null &&
+        (typeof obj.numerator === "number" || typeof obj.numerator === "bigint") &&
+        obj.denominator !== null &&
+        (typeof obj.denominator === "number" || typeof obj.denominator === "bigint");
+      r &&
+        (0, utils_1.assert)(
+          (typeof obj.numerator !== "number" || Number.isSafeInteger(obj.numerator)) &&
+            (typeof obj.denominator !== "number" || Number.isSafeInteger(obj.denominator)),
+          "Fraction numerator and denominator must be integers",
+        );
       return r;
     }
     function createApi(Z3) {
@@ -5439,8 +5441,7 @@
           ctxs.forEach((other) => (0, utils_1.assert)("ctx" in other ? ctx === other.ctx : ctx === other, "Context mismatch"));
         }
         function _assertPtr(ptr) {
-          if (ptr == null)
-            throw new TypeError("Expected non-null pointer");
+          if (ptr == null) throw new TypeError("Expected non-null pointer");
         }
         function throwIfError() {
           if (Z3.get_error_code(contextPtr) !== low_level_1.Z3_error_code.Z3_OK) {
@@ -5767,7 +5768,7 @@
           return _toExpr(check(result));
         }
         const Sort = {
-          declare: (name2) => new SortImpl(Z3.mk_uninterpreted_sort(contextPtr, _toSymbol(name2)))
+          declare: (name2) => new SortImpl(Z3.mk_uninterpreted_sort(contextPtr, _toSymbol(name2))),
         };
         const Function = {
           declare: (name2, ...signature) => {
@@ -5791,7 +5792,7 @@
               dom.push(signature[i].ptr);
             }
             return new FuncDeclImpl(Z3.mk_fresh_func_decl(contextPtr, "f", dom, rng.ptr));
-          }
+          },
         };
         const RecFunc = {
           declare: (name2, ...signature) => {
@@ -5807,8 +5808,15 @@
           },
           addDefinition: (f, args, body) => {
             _assertContext(f, ...args, body);
-            check(Z3.add_rec_def(contextPtr, f.ptr, args.map((arg) => arg.ast), body.ast));
-          }
+            check(
+              Z3.add_rec_def(
+                contextPtr,
+                f.ptr,
+                args.map((arg) => arg.ast),
+                body.ast,
+              ),
+            );
+          },
         };
         const Bool = {
           sort: () => new BoolSortImpl(Z3.mk_bool_sort(contextPtr)),
@@ -5832,7 +5840,7 @@
               return new BoolImpl(Z3.mk_true(contextPtr));
             }
             return new BoolImpl(Z3.mk_false(contextPtr));
-          }
+          },
         };
         const Int = {
           sort: () => new ArithSortImpl(Z3.mk_int_sort(contextPtr)),
@@ -5854,7 +5862,7 @@
           val: (value) => {
             (0, utils_1.assert)(typeof value === "bigint" || typeof value === "string" || Number.isSafeInteger(value));
             return new IntNumImpl(check(Z3.mk_numeral(contextPtr, value.toString(), Int.sort().ptr)));
-          }
+          },
         };
         const Real = {
           sort: () => new ArithSortImpl(Z3.mk_real_sort(contextPtr)),
@@ -5878,7 +5886,7 @@
               value = `${value.numerator}/${value.denominator}`;
             }
             return new RatNumImpl(Z3.mk_numeral(contextPtr, value.toString(), Real.sort().ptr));
-          }
+          },
         };
         const BitVec = {
           sort(bits) {
@@ -5901,7 +5909,7 @@
               return BitVec.val(0, bits);
             }
             return new BitVecNumImpl(check(Z3.mk_numeral(contextPtr, value.toString(), isBitVecSort(bits) ? bits.ptr : BitVec.sort(bits).ptr)));
-          }
+          },
         };
         const Array2 = {
           sort(...sig) {
@@ -5912,7 +5920,13 @@
               return new ArraySortImpl(Z3.mk_array_sort(contextPtr, d.ptr, r.ptr));
             }
             const dom = sig.slice(0, arity);
-            return new ArraySortImpl(Z3.mk_array_sort_n(contextPtr, dom.map((s) => s.ptr), r.ptr));
+            return new ArraySortImpl(
+              Z3.mk_array_sort_n(
+                contextPtr,
+                dom.map((s) => s.ptr),
+                r.ptr,
+              ),
+            );
           },
           const(name2, ...sig) {
             return new ArrayImpl(check(Z3.mk_const(contextPtr, _toSymbol(name2), Array2.sort(...sig).ptr)));
@@ -5925,7 +5939,7 @@
           },
           K(domain, value) {
             return new ArrayImpl(check(Z3.mk_const_array(contextPtr, domain.ptr, value.ptr)));
-          }
+          },
         };
         const Set = {
           // reference: https://z3prover.github.io/api/html/namespacez3py.html#a545f894afeb24caa1b88b7f2a324ee7e
@@ -5950,15 +5964,18 @@
               result = SetAdd(result, value);
             }
             return result;
-          }
+          },
         };
-        const Datatype = Object.assign((name2) => {
-          return new DatatypeImpl(ctx, name2);
-        }, {
-          createDatatypes(...datatypes) {
-            return createDatatypes(...datatypes);
-          }
-        });
+        const Datatype = Object.assign(
+          (name2) => {
+            return new DatatypeImpl(ctx, name2);
+          },
+          {
+            createDatatypes(...datatypes) {
+              return createDatatypes(...datatypes);
+            },
+          },
+        );
         function If(condition, onTrue, onFalse) {
           if (isProbe(condition) && isTactic(onTrue) && isTactic(onFalse)) {
             return Cond(condition, onTrue, onFalse);
@@ -5973,11 +5990,18 @@
         }
         function Distinct(...exprs) {
           (0, utils_1.assert)(exprs.length > 0, "Can't make Distinct ouf of nothing");
-          return new BoolImpl(check(Z3.mk_distinct(contextPtr, exprs.map((expr) => {
-            expr = from(expr);
-            _assertContext(expr);
-            return expr.ast;
-          }))));
+          return new BoolImpl(
+            check(
+              Z3.mk_distinct(
+                contextPtr,
+                exprs.map((expr) => {
+                  expr = from(expr);
+                  _assertContext(expr);
+                  return expr.ast;
+                }),
+              ),
+            ),
+          );
         }
         function Const(name2, sort) {
           _assertContext(sort);
@@ -6043,7 +6067,14 @@
           } else {
             const castArgs = args.map(from);
             _assertContext(...castArgs);
-            return new BoolImpl(check(Z3.mk_and(contextPtr, castArgs.map((arg) => arg.ptr))));
+            return new BoolImpl(
+              check(
+                Z3.mk_and(
+                  contextPtr,
+                  castArgs.map((arg) => arg.ptr),
+                ),
+              ),
+            );
           }
         }
         function Or(...args) {
@@ -6057,7 +6088,14 @@
           } else {
             const castArgs = args.map(from);
             _assertContext(...castArgs);
-            return new BoolImpl(check(Z3.mk_or(contextPtr, castArgs.map((arg) => arg.ptr))));
+            return new BoolImpl(
+              check(
+                Z3.mk_or(
+                  contextPtr,
+                  castArgs.map((arg) => arg.ptr),
+                ),
+              ),
+            );
           }
         }
         function PbEq(args, coeffs, k) {
@@ -6065,61 +6103,104 @@
           if (args.length !== coeffs.length) {
             throw new Error("Number of arguments and coefficients must match");
           }
-          return new BoolImpl(check(Z3.mk_pbeq(contextPtr, args.map((arg) => arg.ast), coeffs, k)));
+          return new BoolImpl(
+            check(
+              Z3.mk_pbeq(
+                contextPtr,
+                args.map((arg) => arg.ast),
+                coeffs,
+                k,
+              ),
+            ),
+          );
         }
         function PbGe(args, coeffs, k) {
           _assertContext(...args);
           if (args.length !== coeffs.length) {
             throw new Error("Number of arguments and coefficients must match");
           }
-          return new BoolImpl(check(Z3.mk_pbge(contextPtr, args.map((arg) => arg.ast), coeffs, k)));
+          return new BoolImpl(
+            check(
+              Z3.mk_pbge(
+                contextPtr,
+                args.map((arg) => arg.ast),
+                coeffs,
+                k,
+              ),
+            ),
+          );
         }
         function PbLe(args, coeffs, k) {
           _assertContext(...args);
           if (args.length !== coeffs.length) {
             throw new Error("Number of arguments and coefficients must match");
           }
-          return new BoolImpl(check(Z3.mk_pble(contextPtr, args.map((arg) => arg.ast), coeffs, k)));
+          return new BoolImpl(
+            check(
+              Z3.mk_pble(
+                contextPtr,
+                args.map((arg) => arg.ast),
+                coeffs,
+                k,
+              ),
+            ),
+          );
         }
         function ForAll(quantifiers, body, weight = 1) {
           if (!(0, utils_1.allSatisfy)(quantifiers, isConst)) {
             throw new Error("Quantifier variables must be constants");
           }
-          return new NonLambdaQuantifierImpl(check(Z3.mk_quantifier_const_ex(
-            contextPtr,
-            true,
-            weight,
-            _toSymbol(""),
-            _toSymbol(""),
-            quantifiers.map((q) => q.ptr),
-            // The earlier check verifies these are all apps
-            [],
-            [],
-            body.ptr
-          )));
+          return new NonLambdaQuantifierImpl(
+            check(
+              Z3.mk_quantifier_const_ex(
+                contextPtr,
+                true,
+                weight,
+                _toSymbol(""),
+                _toSymbol(""),
+                quantifiers.map((q) => q.ptr),
+                // The earlier check verifies these are all apps
+                [],
+                [],
+                body.ptr,
+              ),
+            ),
+          );
         }
         function Exists(quantifiers, body, weight = 1) {
           if (!(0, utils_1.allSatisfy)(quantifiers, isConst)) {
             throw new Error("Quantifier variables must be constants");
           }
-          return new NonLambdaQuantifierImpl(check(Z3.mk_quantifier_const_ex(
-            contextPtr,
-            false,
-            weight,
-            _toSymbol(""),
-            _toSymbol(""),
-            quantifiers.map((q) => q.ptr),
-            // The earlier check verifies these are all apps
-            [],
-            [],
-            body.ptr
-          )));
+          return new NonLambdaQuantifierImpl(
+            check(
+              Z3.mk_quantifier_const_ex(
+                contextPtr,
+                false,
+                weight,
+                _toSymbol(""),
+                _toSymbol(""),
+                quantifiers.map((q) => q.ptr),
+                // The earlier check verifies these are all apps
+                [],
+                [],
+                body.ptr,
+              ),
+            ),
+          );
         }
         function Lambda(quantifiers, expr) {
           if (!(0, utils_1.allSatisfy)(quantifiers, isConst)) {
             throw new Error("Quantifier variables must be constants");
           }
-          return new LambdaImpl(check(Z3.mk_lambda_const(contextPtr, quantifiers.map((q) => q.ptr), expr.ptr)));
+          return new LambdaImpl(
+            check(
+              Z3.mk_lambda_const(
+                contextPtr,
+                quantifiers.map((q) => q.ptr),
+                expr.ptr,
+              ),
+            ),
+          );
         }
         function ToReal(expr) {
           expr = from(expr);
@@ -6240,10 +6321,24 @@
           return _toExpr(check(Z3.mk_store_n(contextPtr, array.ast, _idxs, args[args.length - 1].ast)));
         }
         function SetUnion(...args) {
-          return new SetImpl(check(Z3.mk_set_union(contextPtr, args.map((arg) => arg.ast))));
+          return new SetImpl(
+            check(
+              Z3.mk_set_union(
+                contextPtr,
+                args.map((arg) => arg.ast),
+              ),
+            ),
+          );
         }
         function SetIntersect(...args) {
-          return new SetImpl(check(Z3.mk_set_intersect(contextPtr, args.map((arg) => arg.ast))));
+          return new SetImpl(
+            check(
+              Z3.mk_set_intersect(
+                contextPtr,
+                args.map((arg) => arg.ast),
+              ),
+            ),
+          );
         }
         function SetDifference(a, b) {
           return new SetImpl(check(Z3.mk_set_difference(contextPtr, a.ast, b.ast)));
@@ -6548,7 +6643,7 @@
                 result.push(this.get(j));
               }
               return result;
-            } else if (isFuncDecl(i) || isExpr(i) && isConst(i)) {
+            } else if (isFuncDecl(i) || (isExpr(i) && isConst(i))) {
               const result = this.getInterp(i);
               (0, utils_1.assert)(result !== null);
               return result;
@@ -6749,9 +6844,17 @@
           }
           call(...args) {
             (0, utils_1.assert)(args.length === this.arity(), `Incorrect number of arguments to ${this}`);
-            return _toExpr(check(Z3.mk_app(contextPtr, this.ptr, args.map((arg, i) => {
-              return this.domain(i).cast(arg).ast;
-            }))));
+            return _toExpr(
+              check(
+                Z3.mk_app(
+                  contextPtr,
+                  this.ptr,
+                  args.map((arg, i) => {
+                    return this.domain(i).cast(arg).ast;
+                  }),
+                ),
+              ),
+            );
           }
         }
         class ExprImpl extends AstImpl {
@@ -6762,7 +6865,14 @@
             return new BoolImpl(check(Z3.mk_eq(contextPtr, this.ast, from(other).ast)));
           }
           neq(other) {
-            return new BoolImpl(check(Z3.mk_distinct(contextPtr, [this, other].map((expr) => from(expr).ast))));
+            return new BoolImpl(
+              check(
+                Z3.mk_distinct(
+                  contextPtr,
+                  [this, other].map((expr) => from(expr).ast),
+                ),
+              ),
+            );
           }
           name() {
             return this.decl().name();
@@ -7321,7 +7431,14 @@
                     fieldRefs.push(0);
                   }
                 }
-                const constructor = Z3.mk_constructor(contextPtr, Z3.mk_string_symbol(contextPtr, constructorName), Z3.mk_string_symbol(contextPtr, `is_${constructorName}`), fieldNames.map((name2) => Z3.mk_string_symbol(contextPtr, name2)), fieldSorts, fieldRefs);
+                const constructor = Z3.mk_constructor(
+                  contextPtr,
+                  Z3.mk_string_symbol(contextPtr, constructorName),
+                  Z3.mk_string_symbol(contextPtr, `is_${constructorName}`),
+                  fieldNames.map((name2) => Z3.mk_string_symbol(contextPtr, name2)),
+                  fieldSorts,
+                  fieldRefs,
+                );
                 constructors.push(constructor);
                 scopedConstructors.push(constructor);
               }
@@ -7727,7 +7844,7 @@
           EmptySet,
           FullSet,
           isMember,
-          isSubset
+          isSubset,
         };
         cleanup.register(ctx, () => Z3.del_context(contextPtr));
         return ctx;
@@ -7743,7 +7860,7 @@
         getParam,
         setParam,
         resetParams,
-        Context: createContext
+        Context: createContext,
       };
     }
     return highLevel;
@@ -7752,23 +7869,32 @@
   function requireHighLevel() {
     if (hasRequiredHighLevel) return highLevel$1;
     hasRequiredHighLevel = 1;
-    (function(exports2) {
-      var __createBinding2 = highLevel$1 && highLevel$1.__createBinding || (Object.create ? (function(o, m, k, k2) {
-        if (k2 === void 0) k2 = k;
-        var desc = Object.getOwnPropertyDescriptor(m, k);
-        if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-          desc = { enumerable: true, get: function() {
-            return m[k];
-          } };
-        }
-        Object.defineProperty(o, k2, desc);
-      }) : (function(o, m, k, k2) {
-        if (k2 === void 0) k2 = k;
-        o[k2] = m[k];
-      }));
-      var __exportStar2 = highLevel$1 && highLevel$1.__exportStar || function(m, exports3) {
-        for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding2(exports3, m, p);
-      };
+    (function (exports2) {
+      var __createBinding2 =
+        (highLevel$1 && highLevel$1.__createBinding) ||
+        (Object.create
+          ? function (o, m, k, k2) {
+              if (k2 === void 0) k2 = k;
+              var desc = Object.getOwnPropertyDescriptor(m, k);
+              if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+                desc = {
+                  enumerable: true,
+                  get: function () {
+                    return m[k];
+                  },
+                };
+              }
+              Object.defineProperty(o, k2, desc);
+            }
+          : function (o, m, k, k2) {
+              if (k2 === void 0) k2 = k;
+              o[k2] = m[k];
+            });
+      var __exportStar2 =
+        (highLevel$1 && highLevel$1.__exportStar) ||
+        function (m, exports3) {
+          for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding2(exports3, m, p);
+        };
       Object.defineProperty(exports2, "__esModule", { value: true });
       __exportStar2(requireHighLevel$1(), exports2);
       __exportStar2(requireTypes(), exports2);
@@ -7779,24 +7905,33 @@
   function requireBrowser() {
     if (hasRequiredBrowser) return browser$1;
     hasRequiredBrowser = 1;
-    (function(exports2) {
+    (function (exports2) {
       console.log("momomomomomomomomo");
-      var __createBinding2 = browser$1 && browser$1.__createBinding || (Object.create ? (function(o, m, k, k2) {
-        if (k2 === void 0) k2 = k;
-        var desc = Object.getOwnPropertyDescriptor(m, k);
-        if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-          desc = { enumerable: true, get: function() {
-            return m[k];
-          } };
-        }
-        Object.defineProperty(o, k2, desc);
-      }) : (function(o, m, k, k2) {
-        if (k2 === void 0) k2 = k;
-        o[k2] = m[k];
-      }));
-      var __exportStar2 = browser$1 && browser$1.__exportStar || function(m, exports3) {
-        for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding2(exports3, m, p);
-      };
+      var __createBinding2 =
+        (browser$1 && browser$1.__createBinding) ||
+        (Object.create
+          ? function (o, m, k, k2) {
+              if (k2 === void 0) k2 = k;
+              var desc = Object.getOwnPropertyDescriptor(m, k);
+              if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+                desc = {
+                  enumerable: true,
+                  get: function () {
+                    return m[k];
+                  },
+                };
+              }
+              Object.defineProperty(o, k2, desc);
+            }
+          : function (o, m, k, k2) {
+              if (k2 === void 0) k2 = k;
+              o[k2] = m[k];
+            });
+      var __exportStar2 =
+        (browser$1 && browser$1.__exportStar) ||
+        function (m, exports3) {
+          for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding2(exports3, m, p);
+        };
       Object.defineProperty(exports2, "__esModule", { value: true });
       exports2.init = init;
       const high_level_1 = requireHighLevel();
@@ -7817,10 +7952,13 @@
   }
   var browserExports = requireBrowser();
   const browser = /* @__PURE__ */ getDefaultExportFromCjs(browserExports);
-  const z3 = /* @__PURE__ */ _mergeNamespaces({
-    __proto__: null,
-    default: browser
-  }, [browserExports]);
+  const z3 = /* @__PURE__ */ _mergeNamespaces(
+    {
+      __proto__: null,
+      default: browser,
+    },
+    [browserExports],
+  );
   class UnsatError extends Error {
     constructor(message) {
       message = message === void 0 ? "Cannot solve state. Unable to make accurate predictions." : message;
@@ -7841,8 +7979,7 @@
   }
   class XorShift128Plus {
     // Mimic static class
-    constructor() {
-    }
+    constructor() {}
     // Modifies symbolicState! Performs XORShift128+ on symbolic state (z3).
     static symbolic(symbolicState) {
       let temp = symbolicState[0];
@@ -7864,9 +8001,9 @@
     }
     // Modifies `concreteState`! Performs XORShift128+ backwards on concrete state, due to how V8 provides random numbers.
     static concreteBackwards(concreteState) {
-      let temp = concreteState[1] ^ concreteState[0] >> 26n ^ concreteState[0];
-      temp = uint64(temp ^ temp >> 17n ^ temp >> 34n ^ temp >> 51n);
-      temp = uint64(temp ^ temp << 23n ^ temp << 46n);
+      let temp = concreteState[1] ^ (concreteState[0] >> 26n) ^ concreteState[0];
+      temp = uint64(temp ^ (temp >> 17n) ^ (temp >> 34n) ^ (temp >> 51n));
+      temp = uint64(temp ^ (temp << 23n) ^ (temp << 46n));
       concreteState[1] = concreteState[0];
       concreteState[0] = temp;
     }
@@ -7892,11 +8029,11 @@
     // Arithmetically shift 'x' to the right 'n' amount.
     static #arithmeticShiftRight(x, n) {
       const shifted = uint64(x >> n);
-      const signBit = x & 1n << 63n;
+      const signBit = x & (1n << 63n);
       if (signBit === 0n) {
         return shifted;
       }
-      const fillMask = (1n << n) - 1n << 64n - n;
+      const fillMask = ((1n << n) - 1n) << (64n - n);
       return shifted | fillMask;
     }
   }
@@ -7931,14 +8068,14 @@
           const mantissa = this.#recoverMantissa(n);
           solver.add(symbolicStatePair[0].lshr(11).eq(context.BitVec.val(mantissa, 64)));
         }
-        if (await solver.check() !== "sat") {
+        if ((await solver.check()) !== "sat") {
           throw new UnsatError();
         }
         const model = solver.model();
         this.#concreteState = [
           // Order matters here!
           model.get(symbolicState0).value(),
-          model.get(symbolicState1).value()
+          model.get(symbolicState1).value(),
         ];
       } catch (e) {
         return Promise.reject(e);
@@ -7982,7 +8119,7 @@
                 return "https://z3-tawny.vercel.app/z3-built.wasm";
               }
               return prefix + path;
-            }
+            },
           };
           if (typeof Module2 !== "undefined") {
             m = Module2;
@@ -8002,14 +8139,14 @@
           const sum = symbolicStatePair[0].add(symbolicStatePair[1]).and(context.BitVec.val(this.#IEEE754_MANTISSA_BITS_MASK, 64));
           solver.add(sum.eq(context.BitVec.val(mantissa, 64)));
         }
-        if (await solver.check() !== "sat") {
+        if ((await solver.check()) !== "sat") {
           throw new UnsatError();
         }
         const model = solver.model();
         const concreteStatePair = [
           // Order matters here!
           model.get(symbolicState0).value(),
-          model.get(symbolicState1).value()
+          model.get(symbolicState1).value(),
         ];
         for (const _ of this.sequence) {
           XorShift128Plus.concrete(concreteStatePair);
@@ -8051,7 +8188,7 @@
             this.#symbolicXor = (s) => XorShift128Plus.symbolic(s);
             this.#concreteXor = (s) => XorShift128Plus.concrete(s);
             return this.#solveSymbolicState();
-          }
+          },
         );
       }
       this.#concreteXor(this.#concreteState);
@@ -8078,14 +8215,14 @@
           const sum = symbolicState[0].add(symbolicState[1]).and(context.BitVec.val(this.#IEEE754_MANTISSA_BITS_MASK, 64));
           solver.add(sum.eq(context.BitVec.val(mantissa, 64)));
         }
-        if (await solver.check() !== "sat") {
+        if ((await solver.check()) !== "sat") {
           throw new UnsatError();
         }
         const model = solver.model();
         const concreteStatePair = [
           // Order matters here!
           model.get(symbolicState0).value(),
-          model.get(symbolicState1).value()
+          model.get(symbolicState1).value(),
         ];
         for (const _ of this.sequence) {
           this.#concreteXor(concreteStatePair);
@@ -8105,7 +8242,7 @@
   const JSRandomnessPredictor = {
     firefox: (sequence) => new FirefoxRandomnessPredictor(sequence),
     chrome: (sequence) => new ChromeRandomnessPredictor(sequence),
-    safari: (sequence) => new SafariRandomnessPredictor(sequence)
+    safari: (sequence) => new SafariRandomnessPredictor(sequence),
   };
   const { firefox, safari, chrome } = JSRandomnessPredictor;
   console.log({ from: "js-randomness-predictor.js", Module: typeof Module === "undefined" ? "undefined" : Module });
@@ -8116,7 +8253,7 @@
         return "https://z3-tawny.vercel.app/z3-built.wasm";
       }
       return prefix + path;
-    }
+    },
   };
   console.log({ from: "js-randomness-predictor.js", Module: typeof Module === "undefined" ? "undefined" : Module });
   const index = {
@@ -8125,7 +8262,7 @@
     chrome,
     init: async () => {
       window.Buffer = bufferExports.Buffer;
-    }
+    },
   };
   return index;
-}));
+});

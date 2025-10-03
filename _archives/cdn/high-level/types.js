@@ -19,9 +19,7 @@ exports.Z3AssertionError = exports.Z3Error = void 0;
  * @see {@link Context.from}
  * @category Global
  */
-class Z3Error extends Error {
-}
+class Z3Error extends Error {}
 exports.Z3Error = Z3Error;
-class Z3AssertionError extends Z3Error {
-}
+class Z3AssertionError extends Z3Error {}
 exports.Z3AssertionError = Z3AssertionError;

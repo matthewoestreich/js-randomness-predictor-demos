@@ -7,7 +7,7 @@
     ]);
 
     if (!jsResponse.ok || !wasmResponse.ok) {
-     console.error("js-randomness-predictor Failed to fetch z3 files", { jsResponse: jsResponse.ok, wasmResponse: wasmResponse.ok });
+      console.error("js-randomness-predictor Failed to fetch z3 files", { jsResponse: jsResponse.ok, wasmResponse: wasmResponse.ok });
     }
 
     const jsText = await jsResponse.text();
@@ -46,7 +46,7 @@
             console.log("from jsrp-loader : window.initZ3 now exists", window.initZ3);
             console.log("from jsrp-loader : window.initZ3 now exists, but resetting to initZ3", initZ3);
             window.initZ3 = initZ3;
-            
+
             //window.initZ3(Module);
             return;
           }
@@ -60,7 +60,6 @@
       }
     }
     initialize();
-
   } catch (error) {
     console.error("js-randomness-predictor an error occurred during loading:", error);
   }
