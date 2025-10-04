@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "copy-webpack-plugin": "^13.0.1",
-    "js-randomness-predictor": "^3.2.11",
+    "js-randomness-predictor": "^3.2.14",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
