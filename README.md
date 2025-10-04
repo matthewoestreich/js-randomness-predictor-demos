@@ -1,6 +1,6 @@
 # js-randomness-predictor-demos
 
-Demos and examples for js-randomness-predictor
+Demos and examples for [js-randomness-predictor](https://github.com/matthewoestreich/js-randomness-predictor)
 
 # Commands
 

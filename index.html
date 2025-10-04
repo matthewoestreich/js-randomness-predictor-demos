@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>js-randomness-predictor Demos</title>
     <style>
-      /* Base Reset */
       * {
         box-sizing: border-box;
         margin: 0;
@@ -51,11 +50,17 @@
       ul {
         list-style-type: none;
         display: flex;
-        flex-direction: column;
+        flex-wrap: wrap;
         gap: 1rem;
         padding: 0;
         width: 100%;
-        max-width: 500px;
+        max-width: 1200px;
+        justify-content: center;
+      }
+
+      li {
+        flex: 1 1 calc(20% - 1rem);
+        min-width: 150px;
       }
 
       li a {
@@ -67,6 +72,7 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         font-weight: 500;
         transition: all 0.2s;
+        text-align: center;
       }
 
       li a:hover {
@@ -83,29 +89,41 @@
         font-size: 0.95em;
       }
 
-      @media (min-width: 600px) {
-        ul {
-          flex-direction: row;
-          justify-content: center;
+      .heading-link {
+        margin: 0px 0px 3px 0px;
+      }
+
+      .demos-list {
+        margin-top: 10px;
+      }
+
+      @media (max-width: 800px) {
+        li {
+          flex: 1 1 calc(50% - 1rem);
         }
-        li a {
-          flex: 1;
-          max-width: 200px;
+      }
+
+      @media (max-width: 500px) {
+        li {
+          flex: 1 1 100%;
         }
       }
     </style>
   </head>
   <body>
     <h1>js-randomness-predictor Demos</h1>
-    <p>
+    <p class="heading-link">
+      <a href="https://github.com/matthewoestreich/js-randomness-predictor"> Source Code for <code>js-randomness-predictor</code> </a>
+    </p>
+    <p class="heading-link">
       <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos"> Source Code for Demos </a>
     </p>
-    <ul>
+    <ul class="demos-list">
+      <li><a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/bun">Bun (source code)</a></li>
+      <li><a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/deno">Deno (source code)</a></li>
       <li><a href="react-vite/index.html">React + Vite</a></li>
       <li><a href="react-webpack/index.html">React + Webpack</a></li>
-      <li>
-        <a href="vanilla-js/index.html"> Vanilla JS (via &lt;script&gt; tag)</a>
-      </li>
+      <li><a href="vanilla-js/index.html">Vanilla JS (via &lt;script&gt; tag)</a></li>
     </ul>
   </body>
 </html>
