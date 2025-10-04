@@ -18,7 +18,8 @@
     "build:react:webpack": "npm --prefix react/webpack run build",
     "build:vanillajs": "cd vanillajs && node build.js && cd ../",
     "build": "rimraf docs && npm run build:root && npm run build:react:vite && npm run build:react:webpack && npm run build:vanillajs",
-    "build:dev": "rimraf docs && npm run build:root && DEV=1 npm run build:react:vite && npm run build:react:webpack && npm run build:vanillajs"
+    "build:dev": "rimraf docs && npm run build:root && DEV=1 npm run build:react:vite && npm run build:react:webpack && npm run build:vanillajs",
+    "dev": "node server.js"
   },
   "keywords": [],
   "author": "",

@@ -4,6 +4,6 @@
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
-    "js-randomness-predictor": "npm:js-randomness-predictor@^3.2.14"
+    "js-randomness-predictor": "npm:js-randomness-predictor@^3.2.20"
   }
 }

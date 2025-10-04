@@ -1,4 +1,4 @@
-import JSRandomnessPredictor from "npm:js-randomness-predictor";
+import JSRandomnessPredictor, { node } from "npm:js-randomness-predictor";
 
 /**
  *

@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import JSRandomnessPredictor from "js-randomness-predictor/umd";
+import React, { useState, useRef, useEffect } from "react";
+import JSRandomnessPredictor, { node } from "js-randomness-predictor/browser";
 import { getCurrentBrowser, isCurrentBrowserSupported } from "../../helperFunctions";
 
 // Store original Math.random as a global variable.
@@ -93,7 +93,9 @@ export default function App() {
       <p style={{ marginTop: 0 }}>
         <small>Sequence: {JSON.stringify(sequence)}</small>
       </p>
-      <h3><a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/react/webpack">Source Code</a></h3>
+      <h3>
+        <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/react/webpack">Source Code</a>
+      </h3>
       {predictor === null ? (
         <h1>Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
       ) : (

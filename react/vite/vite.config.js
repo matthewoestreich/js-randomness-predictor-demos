@@ -9,14 +9,14 @@ export default defineConfig({
   build: {
     outDir: nodepath.resolve(__dirname, "../../docs/react-vite"),
   },
-	server: {
-		headers: {
-			"Cross-Origin-Opener-Policy": "same-origin",
-			"Cross-Origin-Embedder-Policy": "require-corp",
-		},
-	},
-	plugins: [react()],
-	define: {
-		gobal: "globalThis",
-	}
+  server: {
+    headers: {
+      "Cross-Origin-Opener-Policy": "same-origin",
+      "Cross-Origin-Embedder-Policy": "require-corp",
+    },
+  },
+  plugins: [react()],
+  define: {
+    gobal: "globalThis",
+  },
 });

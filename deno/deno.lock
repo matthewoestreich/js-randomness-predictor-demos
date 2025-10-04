@@ -3,7 +3,8 @@
   "specifiers": {
     "jsr:@std/assert@1": "1.0.14",
     "jsr:@std/internal@^1.0.10": "1.0.10",
-    "npm:js-randomness-predictor@^3.2.14": "3.2.14"
+    "npm:js-randomness-predictor@*": "3.2.20",
+    "npm:js-randomness-predictor@^3.2.20": "3.2.20"
   },
   "jsr": {
     "@std/assert@1.0.14": {
@@ -49,8 +50,8 @@
     "get-east-asian-width@1.4.0": {
       "integrity": "sha512-QZjmEOC+IT1uk6Rx0sX22V6uHWVwbdbxf1faPqJ1QhLdGgsRGCZoyaQBm/piRdJy/D2um6hM1UP7ZEeQ4EkP+Q=="
     },
-    "js-randomness-predictor@3.2.14": {
-      "integrity": "sha512-XJg8l0i8CYkYeLKcvynAhOmgqcG6xFs3EXB2PrQERNpNpG7wTG4Tv/wbcenxfGOS+nJQOoAuXsTT53RDtycwIw==",
+    "js-randomness-predictor@3.2.20": {
+      "integrity": "sha512-CH8L8jawI6M6j5EtPhDmHtRpTCTpRnVkErkEbfp7PmyGpml3KswGVdHDmpnLxwe+3oRgNOEXLPHhMR+ztXI18A==",
       "dependencies": [
         "yargs",
         "z3-solver-jsrp"
@@ -109,7 +110,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@1",
-      "npm:js-randomness-predictor@^3.2.14"
+      "npm:js-randomness-predictor@^3.2.20"
     ]
   }
 }
