@@ -37,8 +37,9 @@ for (let i = 0; i < commands.length; i++) {
   }
 
   const currentCommand = current.join(" ");
-  logFoundBuildCommand(currentCommand, c.description, c.env, c.devEnv);
+  logFoundBuildCommand(currentCommand, c.description);
   command += currentCommand;
+
   if (i < commands.length - 1) {
     command += " && ";
   }
@@ -58,19 +59,9 @@ try {
 
 /************************** Random functions ****************************/
 
-function logFoundBuildCommand(currentCommand, description, env = [], devEnv = []) {
+function logFoundBuildCommand(command, description) {
   console.log(green("Found build command:"));
-  console.log(
-    "\tCommand\t\t",
-    lightBlue(currentCommand),
-    "\n\tDescription\t",
-    cyan(description ?? "-"),
-    "\n\tENV\t\t",
-    cyan(env.length > 0 ? env.join(" ") : "-"),
-    "\n\tDEV_ENV\t\t",
-    cyan(devEnv.length > 0 ? devEnv.join(" ") : "-"),
-    "\n",
-  );
+  console.log("\tCommand\t\t", lightBlue(command), "\n\tDescription\t", cyan(description ?? "-"), "\n");
 }
 
 function hashtags(n = 10) {
