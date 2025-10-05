@@ -22,6 +22,8 @@
 import { execSync } from "node:child_process";
 import commands from "./build_commands.json" with { type: "json" };
 
+console.log(yellow("\nBUILDING FOR :", process.env.DEV === undefined ? "prod" : "dev", "\n"));
+
 let command = "";
 
 for (let i = 0; i < commands.length; i++) {
