@@ -22,8 +22,6 @@
 import { execSync } from "node:child_process";
 import commands from "./build_commands.json" with { type: "json" };
 
-console.log(yellow("\nBUILDING FOR :", process.env.DEV === undefined ? "prod" : "dev", "\n"));
-
 let command = "";
 
 for (let i = 0; i < commands.length; i++) {
@@ -50,10 +48,7 @@ for (let i = 0; i < commands.length; i++) {
 try {
   logFullCommand(command);
   execSync(command, { stdio: "inherit" });
-  const n_hashtags = 75;
-  console.log(
-    `\n\n${lightBlue(hashtags(n_hashtags))}` + green("\n\tSuccess! All builds ran without error!\n") + `${lightBlue(hashtags(n_hashtags))}\n\n`,
-  );
+  logSuccess();
   process.exit(0);
 } catch (e) {
   console.log(red(`Something went wrong!`, e.message));
@@ -64,10 +59,12 @@ try {
 
 function logFoundBuildCommand(command, description) {
   console.log(green("Found build command:"));
-  console.log("\tCommand\t\t", lightBlue(command), "\n\tDescription\t", cyan(description ?? "-"), "\n");
+  console.log("\tCommand\t\t", blue(command), "\n\tDescription\t", cyan(description ?? "-"), "\n");
 }
 
 function logFullCommand(fullCommand) {
+  console.log(hashtags(75));
+  console.log(yellow("BUILDING FOR :", process.env.DEV === undefined ? "prod" : "dev"));
   console.log(hashtags(75));
   console.log(cyan("Full build command:"));
   console.log(
@@ -80,6 +77,10 @@ function logFullCommand(fullCommand) {
     ),
   );
   console.log(hashtags(75));
+}
+
+function logSuccess() {
+  console.log(`\n\n${blue(hashtags(75))}` + green("\n\tSuccess! All builds ran without error!\n") + `${blue(hashtags(75))}\n\n`);
 }
 
 function hashtags(n = 10) {
@@ -98,7 +99,7 @@ function yellow(...text) {
   return `\x1b[33m${text.join(" ")}\x1b[0m`;
 }
 
-function lightBlue(...text) {
+function blue(...text) {
   return `\x1b[94m${text.join(" ")}\x1b[0m`;
 }
 
