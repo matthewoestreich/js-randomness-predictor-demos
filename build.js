@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const indexhtmlSrc = path.resolve(__dirname, "./index.html");
-const destDir = path.resolve(__dirname, "./docs");
+const indexhtmlSrc = path.resolve(import.meta.dirname, "./index.html");
+const destDir = path.resolve(import.meta.dirname, "./docs");
 const indexhtmlDest = path.resolve(destDir, "index.html");
 
 try {

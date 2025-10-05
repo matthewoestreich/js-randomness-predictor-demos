@@ -1,11 +1,11 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import path from "node:path";
 
-const destDir = path.resolve(__dirname, "../docs/vanilla-js/");
+const destDir = path.resolve(import.meta.dirname, "../docs/vanilla-js/");
 // srcs
-const vanillajshtmlsrc = path.resolve(__dirname, "./index.html");
-const vanillajssrc = path.resolve(__dirname, "./vanilla-js.js");
-const coiSrc = path.resolve(__dirname, "./coi.serviceworker.js");
+const vanillajshtmlsrc = path.resolve(import.meta.dirname, "./index.html");
+const vanillajssrc = path.resolve(import.meta.dirname, "./vanilla-js.js");
+const coiSrc = path.resolve(import.meta.dirname, "./coi.serviceworker.js");
 // dests
 const vanillajshtmldest = path.resolve(destDir, "index.html");
 const vanillajsdest = path.resolve(destDir, "vanilla-js.js");

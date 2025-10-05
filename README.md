@@ -28,9 +28,8 @@ will start `server.js` at project root
   - If you're making an advanced svelte demo, create the folder strucutre `./svelte/advanced/`
 - Make your demo
 - BUILDING
-  - Create `build:some:unique:name` script in the `package.json` file located at the root of this project
-  - Add your `build:some:unique:name` script to the main `build` script in the `package.json` file located at the root of this project
-  - If you have any dev-specific options/scenarios then add those to the `package.json` file (at the root of this project) under the `"build:dev"` script.
+  - Add your build command to the `build_commands.json` file at the root of this project.
+  - Follow existing convention for providing environmental variables (those under `env` will be applied to non-dev builds)
 - OUTPUT
   - **DO NOT** have your build remove anything in `docs` - just add to it
   - Keep alll of your built files in a folder named after the path to your demo folder.

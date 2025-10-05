@@ -1,11 +1,12 @@
-const path = require("path");
-const express = require("express");
+import path from "node:path";
+import express from "express";
+
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
-  express.static(path.join(__dirname, "docs"), {
+  express.static(path.join(import.meta.dirname, "docs"), {
     setHeaders: (res) => {
       const headers = new Headers({
         "Cross-Origin-Opener-Policy": "same-origin",

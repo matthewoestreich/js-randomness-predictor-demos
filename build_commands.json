@@ -1,0 +1,50 @@
+[
+  {
+    "command": "./node_modules/.bin/rimraf docs",
+    "env": [],
+    "devEnv": [],
+    "description": "clean existing docs dir"
+  },
+  {
+    "command": "node build.js",
+    "env": [],
+    "devEnv": [],
+    "description": "Build \"root\" project."
+  },
+  {
+    "command": "npm --prefix react/vite run build",
+    "env": [],
+    "devEnv": ["DEV=1"],
+    "description": "Build \"./react/vite\" project."
+  },
+  {
+    "command": "npm --prefix react/webpack run build",
+    "env": [],
+    "devEnv": [],
+    "description": "Build \"./react/webpack\" project."
+  },
+  {
+    "command": "npm --prefix svelte/rollup run build",
+    "env": [],
+    "devEnv": [],
+    "description": "Build \"./svelte/rollup\" project."
+  },
+  {
+    "command": "npm --prefix vue/vite run build",
+    "env": [],
+    "devEnv": ["DEV=1"],
+    "description": "Build \"./vue/vite\" project."
+  },
+  {
+    "command": "node vanillajs/build.js",
+    "env": [],
+    "devEnv": [],
+    "description": "Build \"./vanillajs\" project."
+  },
+  {
+    "command": "npm --prefix solidjs/vite run build",
+    "env": [],
+    "devEnv": ["DEV=1"],
+    "description": "Build \"./solidjs/vite\" project."
+  }
+]
