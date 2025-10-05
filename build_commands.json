@@ -6,7 +6,7 @@
     "description": "clean existing docs dir"
   },
   {
-    "command": "node build.js",
+    "command": "node webroot/build.js",
     "env": [],
     "devEnv": [],
     "description": "Build \"root\" project."

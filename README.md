@@ -36,5 +36,5 @@ will start `server.js` at project root
     - eg. if you made a `/svelte/advanced` folder, try to keep all of your output files in a directory named `svelt-advanced/` or whatever
     - Your output folder should go in `/docs`.
     - So your full output/build path would be `/docs/svelte-advanced/<your built files>`
-- Add your demos HTML file to the list in `./index.html` (the `index.html` file located at the root of this project)
+- Add your demos HTML file to the list in `./index.html` (the `index.html` file located at the "./webroot" folder)
 - run `npm run build` from project root, push to GH
