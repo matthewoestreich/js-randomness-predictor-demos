@@ -1,13 +1,11 @@
 import nodepath from "node:path";
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-
-console.log(process.env.DEV);
+import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
-  base: process.env.DEV !== undefined ? "/react-vite/" : "/js-randomness-predictor-demos/react-vite/",
+  base: process.env.DEV !== undefined ? "/vue-vite/" : "/js-randomness-predictor-demos/vue-vite/",
   build: {
-    outDir: nodepath.resolve(__dirname, "../../docs/react-vite"),
+    outDir: nodepath.resolve(__dirname, "../../docs/vue-vite"),
   },
   server: {
     headers: {
@@ -18,5 +16,5 @@ export default defineConfig({
   define: {
     gobal: "globalThis",
   },
-  plugins: [react()],
+  plugins: [vue()],
 });
