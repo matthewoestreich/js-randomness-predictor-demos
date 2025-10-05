@@ -10,7 +10,6 @@ app.use(
       const headers = new Headers({
         "Cross-Origin-Opener-Policy": "same-origin",
         "Cross-Origin-Embedder-Policy": "require-corp",
-        "Access-Control-Allow-Origin": "*",
       });
       res.setHeaders(headers);
     },

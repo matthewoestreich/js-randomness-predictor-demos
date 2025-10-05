@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>js-randomness-predictor Demos</title>
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     <style>
       * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
-
       body {
         font-family: "Helvetica Neue", Arial, sans-serif;
         line-height: 1.6;
@@ -24,29 +24,24 @@
         padding: 2rem 1rem;
         text-align: center;
       }
-
       a {
         color: #1d4ed8;
         text-decoration: none;
         transition: color 0.2s;
       }
-
       a:hover {
         color: #2563eb;
         text-decoration: underline;
       }
-
       h1 {
         margin: 1.5rem 0;
         font-size: 2rem;
       }
-
       p {
         margin-bottom: 2rem;
         font-size: 1rem;
         max-width: 600px;
       }
-
       ul {
         list-style-type: none;
         display: flex;
@@ -57,12 +52,10 @@
         max-width: 1200px;
         justify-content: center;
       }
-
       li {
         flex: 1 1 calc(20% - 1rem);
         min-width: 150px;
       }
-
       li a {
         display: flex;
         flex-direction: column;
@@ -77,13 +70,11 @@
         transition: all 0.2s;
         text-align: center;
       }
-
       li a:hover {
         background: #f3f4f6;
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
-
       .icon-row {
         display: flex;
         align-items: center;
@@ -91,7 +82,6 @@
         gap: 0.5rem;
         margin-bottom: 0.5rem;
       }
-
       code {
         background: #f3f4f6;
         padding: 0.2rem 0.4rem;
@@ -99,11 +89,9 @@
         font-family: monospace;
         font-size: 0.95em;
       }
-
       .heading-link {
         margin: 0px 0px 6px 0px;
       }
-
       .demos-list {
         margin-top: 3rem;
       }
@@ -113,7 +101,6 @@
           flex: 1 1 calc(50% - 1rem);
         }
       }
-
       @media (max-width: 500px) {
         li {
           flex: 1 1 100%;
@@ -133,7 +120,7 @@
       <li>
         <a href="vanilla-js/index.html">
           <div class="icon-row">
-            <img height="32" width="32" src="https://cdn.simpleicons.org/javascript" alt="JavaScript" />
+            <iconify-icon icon="logos:javascript" width="32"></iconify-icon>
           </div>
           Vanilla JS (via &lt;script&gt; tag)
         </a>
@@ -141,8 +128,8 @@
       <li>
         <a href="react-vite/index.html">
           <div class="icon-row">
-            <img height="32" width="32" src="https://cdn.simpleicons.org/react" alt="React" />
-            <img height="32" width="32" src="https://cdn.simpleicons.org/vite" alt="Vite" />
+            <iconify-icon icon="logos:react" width="32"></iconify-icon>
+            <iconify-icon icon="logos:vitejs" width="32"></iconify-icon>
           </div>
           React + Vite
         </a>
@@ -150,8 +137,8 @@
       <li>
         <a href="react-webpack/index.html">
           <div class="icon-row">
-            <img height="32" width="32" src="https://cdn.simpleicons.org/react" alt="React" />
-            <img height="32" width="32" src="https://cdn.simpleicons.org/webpack" alt="Webpack" />
+            <iconify-icon icon="logos:react" width="32"></iconify-icon>
+            <iconify-icon icon="logos:webpack" width="32"></iconify-icon>
           </div>
           React + Webpack
         </a>
@@ -159,8 +146,8 @@
       <li>
         <a href="vue-vite/index.html">
           <div class="icon-row">
-            <img height="32" width="32" src="https://cdn.simpleicons.org/vuedotjs/4FC08D" alt="Vue" />
-            <img height="32" width="32" src="https://cdn.simpleicons.org/vite" alt="Vite" />
+            <iconify-icon icon="logos:vue" width="32"></iconify-icon>
+            <iconify-icon icon="logos:vitejs" width="32"></iconify-icon>
           </div>
           Vue + Vite
         </a>
@@ -168,8 +155,8 @@
       <li>
         <a href="solidjs-vite/index.html">
           <div class="icon-row">
-            <img height="32" width="32" src="https://cdn.simpleicons.org/solid" alt="SolidJS" />
-            <img height="32" width="32" src="https://cdn.simpleicons.org/vite" alt="Vite" />
+            <iconify-icon icon="logos:solid" width="32"></iconify-icon>
+            <iconify-icon icon="logos:vitejs" width="32"></iconify-icon>
           </div>
           SolidJS + Vite
         </a>
@@ -177,7 +164,7 @@
       <li>
         <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/bun">
           <div class="icon-row">
-            <img height="32" width="32" src="https://cdn.simpleicons.org/bun" alt="Bun" />
+            <iconify-icon icon="logos:bun" width="32"></iconify-icon>
           </div>
           Bun (source code)
         </a>
@@ -185,7 +172,7 @@
       <li>
         <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/deno">
           <div class="icon-row">
-            <img height="32" width="32" src="https://cdn.simpleicons.org/deno" alt="Deno" />
+            <iconify-icon icon="logos:deno" width="32"></iconify-icon>
           </div>
           Deno (source code)
         </a>

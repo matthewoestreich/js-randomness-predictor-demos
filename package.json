@@ -12,7 +12,7 @@
     "printWidth": 150
   },
   "scripts": {
-    "format": "prettier . --write",
+    "format": "prettier --write . '!./docs' '!./_archives'",
     "build:root": "node build.js",
     "build:vue:vite": "npm --prefix vue/vite run build",
     "build:solidjs:vite": "npm --prefix solidjs/vite run build",
