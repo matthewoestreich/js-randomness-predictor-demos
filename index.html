@@ -64,7 +64,10 @@
       }
 
       li a {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         padding: 1rem 1.5rem;
         background: #fff;
         border-radius: 0.5rem;
@@ -79,6 +82,14 @@
         background: #f3f4f6;
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .icon-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
       }
 
       code {
@@ -119,13 +130,66 @@
       <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos"> Source Code for Demos </a>
     </p>
     <ul class="demos-list">
-      <li><a href="vanilla-js/index.html">Vanilla JS (via &lt;script&gt; tag)</a></li>
-      <li><a href="react-vite/index.html">React + Vite</a></li>
-      <li><a href="react-webpack/index.html">React + Webpack</a></li>
-      <li><a href="vue-vite/index.html">Vue + Vite</a></li>
-      <li><a href="solidjs-vite/index.html">SolidJS + Vite</a></li>
-      <li><a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/bun">Bun (source code)</a></li>
-      <li><a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/deno">Deno (source code)</a></li>
+      <li>
+        <a href="vanilla-js/index.html">
+          <div class="icon-row">
+            <img src="https://cdn.simpleicons.org/javascript" alt="JavaScript" />
+          </div>
+          Vanilla JS (via &lt;script&gt; tag)
+        </a>
+      </li>
+      <li>
+        <a href="react-vite/index.html">
+          <div class="icon-row">
+            <img src="https://cdn.simpleicons.org/react" alt="React" />
+            <img src="https://cdn.simpleicons.org/vite" alt="Vite" />
+          </div>
+          React + Vite
+        </a>
+      </li>
+      <li>
+        <a href="react-webpack/index.html">
+          <div class="icon-row">
+            <img src="https://cdn.simpleicons.org/react" alt="React" />
+            <img src="https://cdn.simpleicons.org/webpack" alt="Webpack" />
+          </div>
+          React + Webpack
+        </a>
+      </li>
+      <li>
+        <a href="vue-vite/index.html">
+          <div class="icon-row">
+            <img src="https://cdn.simpleicons.org/vuedotjs/4FC08D" alt="Vue" />
+            <img src="https://cdn.simpleicons.org/vite" alt="Vite" />
+          </div>
+          Vue + Vite
+        </a>
+      </li>
+      <li>
+        <a href="solidjs-vite/index.html">
+          <div class="icon-row">
+            <img src="https://cdn.simpleicons.org/solid" alt="SolidJS" />
+            <img src="https://cdn.simpleicons.org/vite" alt="Vite" />
+          </div>
+          SolidJS + Vite
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/bun">
+          <div class="icon-row">
+            <img src="https://cdn.simpleicons.org/bun" alt="Bun" />
+          </div>
+          Bun (source code)
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/deno">
+          <div class="icon-row">
+            <img src="https://cdn.simpleicons.org/deno" alt="Deno" />
+          </div>
+          Deno (source code)
+        </a>
+      </li>
     </ul>
   </body>
 </html>
