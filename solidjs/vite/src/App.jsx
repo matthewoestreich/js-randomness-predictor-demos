@@ -8,21 +8,22 @@ const MATH_RANDOM = Math.random;
 
 function callMathRandomNTimes(n) {
   const output = [];
-  for (let i = 0; i < n; i++) output.push(MATH_RANDOM());
+  for (let i = 0; i < n; i++) {
+    output.push(MATH_RANDOM());
+  }
   return output;
 }
 
 export default function App() {
   const browser = getCurrentBrowser();
-  const [sequence] = createSignal(callMathRandomNTimes(browser === "safari" ? 6 : 4));
+  const sequence = callMathRandomNTimes(browser === "safari" ? 6 : 4);
   // A 'prediction' has the following shape { prediction: number, random: number, correct: boolean }
   const [predictions, setPredictions] = createSignal([]);
   const [predictionIndex, setPredictionIndex] = createSignal(0);
   const [randomIndex, setRandomIndex] = createSignal(0);
-  const [scrollToIndex, setScrollToIndex] = createSignal(null);
   const [status, setStatus] = createSignal("");
 
-  const predictor = isCurrentBrowserSupported(browser) ? JSRandomnessPredictor[browser](sequence()) : null;
+  const predictor = isCurrentBrowserSupported(browser) ? JSRandomnessPredictor[browser](sequence) : null;
 
   let tableRowRefs = [];
   let tableContainerRef;
@@ -34,14 +35,13 @@ export default function App() {
     return r;
   };
 
-  createEffect(() => {
-    const index = scrollToIndex();
-    if (index === null) return;
+  function scrollToRow(rowIndex) {
     const container = tableContainerRef;
-    const row = tableRowRefs[index];
-    if (container && row) container.scrollTop = row.offsetTop;
-    setScrollToIndex(() => null);
-  });
+    const row = tableRowRefs[rowIndex];
+    if (container && row) {
+      container.scrollTop = row.offsetTop;
+    }
+  }
 
   async function handlePrediction() {
     setStatus(browser === "firefox" ? "Working... (firefox may take a bit longer)" : "Working...");
@@ -57,9 +57,11 @@ export default function App() {
       }
       return [...prev];
     });
-    setPredictionIndex((prevIdx) => prevIdx + 1);
+    setPredictionIndex((prevIdx) => {
+      scrollToRow(prevIdx);
+      return prevIdx + 1;
+    });
     setStatus("");
-    setScrollToIndex(() => index);
   }
 
   function handleMathRandom(randomNumber = null) {
@@ -75,8 +77,10 @@ export default function App() {
       }
       return [...prev];
     });
-    setRandomIndex((prevRand) => prevRand + 1);
-    setScrollToIndex(() => index);
+    setRandomIndex((prevRand) => {
+      scrollToRow(prevRand);
+      return prevRand + 1;
+    });
   }
 
   return (
@@ -86,7 +90,7 @@ export default function App() {
         <small>Browser: {browser || "UNRECOGNIZED"}</small>
       </p>
       <p style="margin-top:0">
-        <small>Sequence: {JSON.stringify(sequence())}</small>
+        <small>Sequence: {JSON.stringify(sequence)}</small>
       </p>
       <h3>
         <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/solidjs/vite">Source Code</a>
@@ -105,7 +109,7 @@ export default function App() {
         Call Math.random()
       </button>
       <p>{status() ? "STATUS: " + status() : ""}</p>
-      <div ref={tableContainerRef} class="table-container" style={{ display: predictor && predictions().length > 0 ? "flex" : "none" }}>
+      <div ref={tableContainerRef} class="table-container" style={{ display: predictor && predictions().length > 0 ? "block" : "none" }}>
         <table style={{ "border-collapse": "separate", "border-spacing": 0 }}>
           <thead>
             <tr>

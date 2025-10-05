@@ -47,6 +47,10 @@ module.exports = {
         ignored: /node_modules\/js-randomness-predictor/,
       },
     },
+    headers: {
+      "Cross-Origin-Opener-Policy": "same-origin",
+      "Cross-Origin-Embedder-Policy": "require-corp",
+    },
   },
   mode: "development",
 };

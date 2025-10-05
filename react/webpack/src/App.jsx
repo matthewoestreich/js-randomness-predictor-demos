@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import JSRandomnessPredictor, { node } from "js-randomness-predictor/browser";
+import { useState, useRef } from "react";
+import JSRandomnessPredictor from "js-randomness-predictor/browser";
 import { getCurrentBrowser, isCurrentBrowserSupported } from "../../helperFunctions";
 
 // Store original Math.random as a global variable.
@@ -23,7 +23,6 @@ export default function App() {
   const [predictions, setPredictions] = useState([]);
   const [predictionIndex, setPredictionIndex] = useState(0);
   const [randomIndex, setRandomIndex] = useState(0);
-  const [scrollToIndex, setScrollToIndex] = useState(null);
   const [status, setStatus] = useState("");
   const [predictor] = useState(() => {
     if (isCurrentBrowserSupported(browser)) {
@@ -39,15 +38,15 @@ export default function App() {
     return random;
   };
 
-  useEffect(() => {
-    if (scrollToIndex === null) return;
-    const container = tableContainerRef.current;
-    const row = tableRowRefs.current[scrollToIndex];
-    if (container && row) {
-      container.scrollTop = row.offsetTop;
-    }
-    setScrollToIndex(null);
-  }, [predictions, scrollToIndex]);
+  function queueScrollToRow(rowIndex) {
+    queueMicrotask(() => {
+      const container = tableContainerRef.current;
+      const row = tableRowRefs.current[rowIndex];
+      if (container && row) {
+        container.scrollTop = row.offsetTop;
+      }
+    });
+  }
 
   async function handlePrediction() {
     const status = browser === "firefox" ? "Working... (firefox may take a bit longer)" : "Working..";
@@ -63,8 +62,10 @@ export default function App() {
       }
       return [...prev];
     });
-    setPredictionIndex((prev) => prev + 1);
-    setScrollToIndex(() => predictionIndex);
+    setPredictionIndex((prev) => {
+      queueScrollToRow(prev);
+      return prev + 1;
+    });
     setStatus("");
   }
 
@@ -80,8 +81,10 @@ export default function App() {
       }
       return [...prev];
     });
-    setRandomIndex((prev) => prev + 1);
-    setScrollToIndex(() => randomIndex);
+    setRandomIndex((prev) => {
+      queueScrollToRow(prev);
+      return prev + 1;
+    });
   }
 
   return (
@@ -117,7 +120,7 @@ export default function App() {
         ref={tableContainerRef}
         className="table-container"
         style={{
-          display: predictor !== null && predictions.length > 0 ? "flex" : "none",
+          display: predictor !== null && predictions.length > 0 ? "block" : "none",
         }}
       >
         <table style={{ borderCollapse: "separate", borderSpacing: 0 }}>

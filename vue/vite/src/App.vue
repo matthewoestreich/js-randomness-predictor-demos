@@ -139,10 +139,16 @@ button {
 }
 
 .table-container {
-  display: flex;
+  display: block;
   justify-content: center;
   max-height: 500px;
   overflow-y: auto;
+  overflow-x: auto;
+  width: 100%;
+}
+
+table {
+  width: 100%;
 }
 
 .table-header-cell {

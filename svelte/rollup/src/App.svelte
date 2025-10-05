@@ -9,7 +9,7 @@
     const r = MATH_RANDOM();
     handleMathRandom(r);
     return r;
-  }
+  };
 
   const browser = getCurrentBrowser();
   const isSupported = isCurrentBrowserSupported(browser);
@@ -28,7 +28,6 @@
   if (isSupported) {
     sequence = callMathRandomNTimes(browser === "safari" ? 6 : 4);
     predictor = JSRandomnessPredictor[browser](sequence);
-    console.log(predictor);
   }
 
   async function scrollToRow(index) {
@@ -144,10 +143,16 @@
   }
 
   .table-container {
-    display: flex;
+    display: block;
     justify-content: center;
     max-height: 500px;
     overflow-y: auto;
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
   }
 
   .table-header-cell {
