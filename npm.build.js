@@ -48,7 +48,7 @@ for (let i = 0; i < commands.length; i++) {
 }
 
 try {
-  console.log(cyan("Full build command:\n") + magenta(command));
+  logFullCommand(command);
   execSync(command, { stdio: "inherit" });
   const n_hashtags = 75;
   console.log(
@@ -65,6 +65,21 @@ try {
 function logFoundBuildCommand(command, description) {
   console.log(green("Found build command:"));
   console.log("\tCommand\t\t", lightBlue(command), "\n\tDescription\t", cyan(description ?? "-"), "\n");
+}
+
+function logFullCommand(fullCommand) {
+  console.log(hashtags(75));
+  console.log(cyan("Full build command:"));
+  console.log(
+    magenta(
+      fullCommand
+        .split("&&")
+        .map((e) => `\t${e}`)
+        .join("&& \\\n")
+        .trimEnd("&& \\n"),
+    ),
+  );
+  console.log(hashtags(75));
 }
 
 function hashtags(n = 10) {
