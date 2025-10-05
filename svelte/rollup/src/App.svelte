@@ -88,7 +88,7 @@
     <small>Sequence: {sequence}</small>
   </p>
   <h3>
-    <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/vue/vite">Source Code</a>
+    <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/svelte/rollup">Source Code</a>
   </h3>
   {#if !isSupported}
     <h1>Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
