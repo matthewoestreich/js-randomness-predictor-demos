@@ -48,6 +48,7 @@ for (let i = 0; i < commands.length; i++) {
 }
 
 try {
+  console.log(cyan("Full build command:\n") + magenta(command));
   execSync(command, { stdio: "inherit" });
   const n_hashtags = 75;
   console.log(
