@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref, watch, nextTick } from "vue";
 import JSRandomnessPredictor from "js-randomness-predictor/browser";
-import { getCurrentBrowser, isCurrentBrowserSupported } from "../../helperFunctions";
+import { getCurrentBrowser, isCurrentBrowserSupported } from "../../../utils";
 
 // Hook Math.random so we can update our UI if someone calls it from console.
 const MATH_RANDOM = Math.random;

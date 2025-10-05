@@ -1,6 +1,6 @@
 import { createSignal, createEffect } from "solid-js";
 import JSRandomnessPredictor from "js-randomness-predictor/browser";
-import { getCurrentBrowser, isCurrentBrowserSupported } from "../../helperFunctions";
+import { getCurrentBrowser, isCurrentBrowserSupported } from "../../../utils";
 
 // store original Math.random
 // We hook Math.random so we can keep the UI updated for every Math.random call.

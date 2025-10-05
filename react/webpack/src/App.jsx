@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import JSRandomnessPredictor from "js-randomness-predictor/browser";
-import { getCurrentBrowser, isCurrentBrowserSupported } from "../../helperFunctions";
+import { getCurrentBrowser, isCurrentBrowserSupported } from "../../../utils";
 
 // Store original Math.random as a global variable.
 // We hook Math.random so we can keep the UI updated for every Math.random call.
