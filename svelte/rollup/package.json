@@ -1,0 +1,28 @@
+{
+  "name": "rollup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.2",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.52.4",
+    "rollup-plugin-css-only": "^4.5.5",
+    "rollup-plugin-dev": "^2.1.0",
+    "rollup-plugin-svelte": "^7.2.3",
+    "svelte": "^5.39.8"
+  },
+  "dependencies": {
+    "js-randomness-predictor": "^3.2.20",
+    "rollup-plugin-copy": "^3.5.0"
+  }
+}

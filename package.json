@@ -14,13 +14,14 @@
   "scripts": {
     "format": "prettier --write . '!./docs' '!./_archives'",
     "build:root": "node build.js",
+    "build:svelte:rollup": "npm --prefix svelte/rollup run build",
     "build:vue:vite": "npm --prefix vue/vite run build",
     "build:solidjs:vite": "npm --prefix solidjs/vite run build",
-    "build:react:vite": "cd react/vite && npm run build && cd ../..",
+    "build:react:vite": "npm --prefix react/vite run build",
     "build:react:webpack": "npm --prefix react/webpack run build",
-    "build:vanillajs": "cd vanillajs && node build.js && cd ../",
-    "build": "rimraf docs && npm run build:root && npm run build:react:vite && npm run build:react:webpack && npm run build:vue:vite && npm run build:vanillajs && npm run build:solidjs:vite",
-    "build:dev": "rimraf docs && npm run build:root && DEV=1 npm run build:react:vite && DEV=1 npm run build:vue:vite && DEV=1 npm run build:solidjs:vite && npm run build:react:webpack && npm run build:vanillajs",
+    "build:vanillajs": "node vanillajs/build.js",
+    "build": "rimraf docs && npm run build:root && npm run build:react:vite && npm run build:react:webpack && npm run build:svelte:rollup && npm run build:vue:vite && npm run build:vanillajs && npm run build:solidjs:vite",
+    "build:dev": "rimraf docs && npm run build:root && DEV=1 npm run build:react:vite && npm run build:svelte:rollup && DEV=1 npm run build:vue:vite && DEV=1 npm run build:solidjs:vite && npm run build:react:webpack && npm run build:vanillajs",
     "gh:push": "npm run format && npm run build && git add . && git commit -m \"update\" && git push origin main",
     "dev": "node server.js"
   },

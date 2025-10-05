@@ -1,0 +1,28 @@
+p.svelte-1n46o8q,
+small.svelte-1n46o8q {
+  word-break: break-all;
+}
+
+button.svelte-1n46o8q {
+  height: 5rem;
+  width: 10rem;
+  cursor: pointer;
+}
+
+.table-container.svelte-1n46o8q {
+  display: flex;
+  justify-content: center;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.table-header-cell.svelte-1n46o8q {
+  border: 1px solid black;
+  padding: 6px;
+  background-color: white;
+}
+
+.table-data-cell.svelte-1n46o8q {
+  border: 1px solid black;
+  padding: 6px;
+}
