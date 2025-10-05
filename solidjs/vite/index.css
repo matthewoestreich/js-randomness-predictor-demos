@@ -14,15 +14,15 @@ body {
   box-sizing: border-box;
 }
 
+p,
+small {
+  word-break: break-all;
+}
+
 button {
   height: 5rem;
   width: 10rem;
   cursor: pointer;
-}
-
-p,
-small {
-  word-break: break-all;
 }
 
 .table-container {

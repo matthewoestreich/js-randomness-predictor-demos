@@ -1,0 +1,22 @@
+{
+  "name": "vite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "js-randomness-predictor": "^3.2.20",
+    "solid-js": "^1.9.9"
+  },
+  "devDependencies": {
+    "vite": "^7.1.9",
+    "vite-plugin-solid": "^2.11.9"
+  }
+}
