@@ -94,7 +94,7 @@ watch(scrollToIndex, () => {
     <h1 v-if="!isSupported">Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
     <div v-else>
       <h3>
-        You can either call <code>Math.random()</code> by clicking "Call Math.random()" or by opening your browser console and manually calling{" "}
+        You can either call <code>Math.random()</code> by clicking "Call Math.random()" or by opening your browser console and manually calling
         <code>Math.random()</code>
       </h3>
       <button @click="() => handlePrediction()" :disabled="predictor === null || status !== ''" style="margin-right: 5px">Make Prediction</button>
