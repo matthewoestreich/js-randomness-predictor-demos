@@ -99,7 +99,8 @@ export default function App() {
         <h1>Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
       ) : (
         <h3>
-          You can either call <code>Math.random()</code> by clicking "Call Math.random()" or by opening your browser console
+          You can either call <code>Math.random()</code> by clicking "Call Math.random()" or by opening your browser console and manually calling{" "}
+          <code>Math.random()</code>
         </h3>
       )}
       <button onClick={() => handlePrediction()} disabled={!predictor || status() !== ""} style={{ "margin-right": "5px" }}>
