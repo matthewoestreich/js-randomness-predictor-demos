@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, watch, nextTick } from "vue";
+import { reactive, ref, nextTick } from "vue";
 import JSRandomnessPredictor from "js-randomness-predictor/browser";
 import { getCurrentBrowser, isCurrentBrowserSupported } from "../../../utils";
 
@@ -16,18 +16,12 @@ const tableRowRefs = reactive([]);
 const predictions = reactive([]);
 const randomIndex = ref(0);
 const predictionIndex = ref(0);
-const scrollToIndex = ref(0);
-const sequence = ref(null);
 const status = ref("");
+
 const browser = getCurrentBrowser();
-const isSupported = ref(isCurrentBrowserSupported(browser));
+const sequence = callMathRandom(browser === "safari" ? 6 : 4);
 
-let predictor = null;
-
-if (isSupported.value) {
-  sequence.value = callMathRandom(browser === "safari" ? 6 : 4);
-  predictor = JSRandomnessPredictor[browser](sequence.value);
-}
+const predictor = isCurrentBrowserSupported(browser) ? JSRandomnessPredictor[browser](sequence) : null;
 
 function callMathRandom(ntimes = 1) {
   const output = [];
@@ -48,7 +42,7 @@ async function handlePrediction() {
       predictions[predictionIndex.value].correct = predictions[predictionIndex.value].random === prediction;
     }
   }
-  scrollToIndex.value = predictionIndex.value;
+  scrollToRowIndex(predictionIndex.value);
   predictionIndex.value++;
   status.value = "";
 }
@@ -63,20 +57,19 @@ function handleMathRandom(n = null) {
       predictions[randomIndex.value].correct = predictions[randomIndex.value].prediction === random;
     }
   }
-  scrollToIndex.value = randomIndex.value;
+  scrollToRowIndex(randomIndex.value);
   randomIndex.value++;
 }
 
-watch(scrollToIndex, () => {
+function scrollToRowIndex(rowIndex) {
   nextTick(() => {
-    const index = scrollToIndex.value;
-    if (index === null || index < 0) return;
     const container = tableContainerRef.value;
-    const row = tableRowRefs[index];
-    if (container && row) container.scrollTop = row.offsetTop;
-    scrollToIndex.value = null;
+    const row = tableRowRefs[rowIndex];
+    if (container && row) {
+      container.scrollTop = row.offsetTop;
+    }
   });
-});
+}
 </script>
 
 <template>
@@ -91,7 +84,7 @@ watch(scrollToIndex, () => {
     <h3>
       <a href="https://github.com/matthewoestreich/js-randomness-predictor-demos/tree/main/vue/vite">Source Code</a>
     </h3>
-    <h1 v-if="!isSupported">Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
+    <h1 v-if="predictor === null">Unsupported Browser! Please use Firefox, Chrome, or Safari</h1>
     <div v-else>
       <h3>
         You can either call <code>Math.random()</code> by clicking "Call Math.random()" or by opening your browser console and manually calling
