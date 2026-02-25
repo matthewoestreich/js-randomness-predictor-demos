@@ -5,59 +5,61 @@ import { execSync } from "node:child_process";
 /**
  * This script is meant to update js-randomness-predictor in each demo.
  * It looks for directories that contain a package.json file and runs `npm install js-randomness-predictor@latest`
+ *
+ * @argv --dry-run
+ * You can use `node upgrade-jsrp.js --dry-run` to just print the paths we found where we would have
+ * attempted to upgrade js-randomness-predictor.
  */
 
-// Any directory with a name that equals any of these values will be ignored.
+const argv = process.argv.slice(2);
+const isDryRun = argv.includes("--dry-run");
+
+// Ignore any directory (in any path) that ends with one of..
 const dirsToExclude = [".git", ".vscode", "_archives", "node_modules", "docs", "public"];
 
 for (const path of walkDir(".", dirsToExclude)) {
-  upgradeJsRandomnessPredictor(path);
+  isDryRun ? console.log(green(path)) : npmInstallJsRandomnessPredictor(path, "latest");
 }
 
-function dirContainsFile(dirPath, fileName) {
+// ======================== Helper functions ==========================================================
+
+function npmInstallJsRandomnessPredictor(workingDir, version) {
   try {
-    return nodefs.readdirSync(dirPath).includes(fileName);
-  } catch (e) {
-    logErrorAndExit("dirContainsFile", { path, error: e });
-  }
-}
-
-function isExcludedDirectory(path, excludeDirs = []) {
-  return excludeDirs.some((ed) => path.endsWith(ed));
-}
-
-function isDirectory(path) {
-  try {
-    return nodefs.statSync(path).isDirectory();
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return false;
-    }
-    logErrorAndExit("isDirectory", { path, error: e });
-  }
-}
-
-function upgradeJsRandomnessPredictor(path) {
-  try {
-    console.log(`Atttempting to upgrade js-randomness-predictor in demo '${path}'`);
-    execSync("npm install js-randomness-predictor@latest", {
-      cwd: path,
+    console.log(green(`Atttempting to upgrade js-randomness-predictor in demo '${workingDir}'`));
+    execSync(`npm install js-randomness-predictor@${version}`, {
+      cwd: workingDir,
       stdio: "inherit",
     });
-    console.log(`\n\t[SUCCESS] Upgrade was successful for demo '${path}'!\n`);
+    console.log(green(`\n[SUCCESS] Upgrade was successful for demo '${workingDir}'!\n\n`));
   } catch (e) {
-    logErrorAndExit("upgradeJsRandomnessPredictor", { path, error: e });
+    logErrorAndExit("upgradeJsRandomnessPredictor", { cwd: workingDir, error: e });
   }
 }
 
+// Doesn't throw if file doesn't exist, just returns false. All other errors are thrown, though!
+function isFile(path) {
+  try {
+    return nodefs.statSync(path).isFile();
+  } catch (e) {
+    if (e.code === "ENOENT") {
+      return false;
+    }
+    throw e;
+  }
+}
+
+// Recursively walks all dirs starting from `path`.
+// Ignores any directory included in `excludedDirs`.
 function* walkDir(path, excludeDirs = []) {
   try {
     for (const x of nodefs.readdirSync(path)) {
       const xpath = nodepath.resolve(path, x);
-      if (!isDirectory(xpath) || isExcludedDirectory(xpath, excludeDirs)) {
+      // Ignore files and excluded dirs.
+      if (isFile(xpath) || excludeDirs.some((ed) => xpath.endsWith(ed))) {
         continue;
       }
-      if (dirContainsFile(xpath, "package.json")) {
+      // If directory has a package.json file, we have found a target.
+      if (isFile(nodepath.resolve(xpath, "package.json"))) {
         yield xpath;
       }
       yield* walkDir(xpath, excludeDirs);
@@ -68,6 +70,15 @@ function* walkDir(path, excludeDirs = []) {
 }
 
 function logErrorAndExit(functionName, otherData = {}) {
+  console.log(red("ERROR : SOMETHING WENT WRONG!"));
   console.error({ from: functionName, ...otherData });
   process.exit(1);
+}
+
+function green(text) {
+  return `\x1b[32m${text}\x1b[0m`;
+}
+
+function red(text) {
+  return `\x1b[31m${text}\x1b[0m`;
 }
