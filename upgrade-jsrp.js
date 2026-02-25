@@ -16,8 +16,7 @@ for (const path of walkDir(".", dirsToExclude)) {
 
 function dirContainsFile(dirPath, fileName) {
   try {
-    const dirContents = nodefs.readdirSync(dirPath);
-    return dirContents.includes(fileName);
+    return nodefs.readdirSync(dirPath).includes(fileName);
   } catch (e) {
     console.error({ from: "dirContainsFile", path, error: e });
   }
@@ -34,7 +33,7 @@ function isDirectory(path) {
     if (error.code === "ENOENT") {
       return false;
     }
-    throw error;
+    console.error({ from: "isExcludedDirectory", path, error: e });
   }
 }
 
@@ -45,7 +44,7 @@ function upgradeJsRandomnessPredictor(path) {
       cwd: path,
       stdio: "inherit",
     });
-    console.log(`\tUpgrade was successful!`);
+    console.log(`\n\t[SUCCESS] Upgrade was successful!\n`);
   } catch (e) {
     console.error({ from: "upgradeJsRandomnessPredictor", path, error: e });
   }
