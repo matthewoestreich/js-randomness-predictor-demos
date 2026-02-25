@@ -44,7 +44,7 @@ function upgradeJsRandomnessPredictor(path) {
       cwd: path,
       stdio: "inherit",
     });
-    console.log(`\n\t[SUCCESS] Upgrade was successful!\n`);
+    console.log(`\n\t[SUCCESS] Upgrade was successful for demo '${path}'!\n`);
   } catch (e) {
     logErrorAndExit("upgradeJsRandomnessPredictor", { path, error: e });
   }
