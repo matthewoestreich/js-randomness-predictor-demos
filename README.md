@@ -38,3 +38,13 @@ will start `server.js` at project root
     - So your full output/build path would be `/docs/svelte-advanced/<your built files>`
 - Add your demos HTML file to the list in `./index.html` (the `index.html` file located at the "./webroot" folder)
 - run `npm run build` from project root, push to GH
+
+# To update `js-randomness-predictor` version in all demos:
+
+We look for a `package.json` file in a directory. If one exists, we updgrade the `js-randomness-predictor` version
+
+From root of project run:
+
+```
+node upgrade-jsrp.js
+```
