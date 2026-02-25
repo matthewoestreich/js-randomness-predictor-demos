@@ -2,6 +2,11 @@ import * as nodepath from "node:path";
 import * as nodefs from "node:fs";
 import { execSync } from "node:child_process";
 
+/**
+ * This script is meant to update js-randomness-predictor in each demo.
+ * It looks for directories that contain a package.json file and runs `npm install js-randomness-predictor@latest`
+ */
+
 // Any directory with a name that equals any of these values will be ignored.
 const dirsToExclude = [".git", ".vscode", "_archives", "node_modules", "docs", "public"];
 
