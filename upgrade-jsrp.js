@@ -18,7 +18,7 @@ function dirContainsFile(dirPath, fileName) {
   try {
     return nodefs.readdirSync(dirPath).includes(fileName);
   } catch (e) {
-    console.error({ from: "dirContainsFile", path, error: e });
+    logErrorAndExit("dirContainsFile", { path, error: e });
   }
 }
 
@@ -33,7 +33,7 @@ function isDirectory(path) {
     if (error.code === "ENOENT") {
       return false;
     }
-    console.error({ from: "isExcludedDirectory", path, error: e });
+    logErrorAndExit("isDirectory", { path, error: e });
   }
 }
 
@@ -46,7 +46,7 @@ function upgradeJsRandomnessPredictor(path) {
     });
     console.log(`\n\t[SUCCESS] Upgrade was successful!\n`);
   } catch (e) {
-    console.error({ from: "upgradeJsRandomnessPredictor", path, error: e });
+    logErrorAndExit("upgradeJsRandomnessPredictor", { path, error: e });
   }
 }
 
@@ -63,6 +63,11 @@ function* walkDir(path, excludeDirs = []) {
       yield* walkDir(xpath, excludeDirs);
     }
   } catch (e) {
-    console.error({ from: "walkDir", path, error: e });
+    logErrorAndExit("walkDir", { path, excludeDirs, error: e });
   }
+}
+
+function logErrorAndExit(functionName, otherData = {}) {
+  console.error({ from: functionName, ...otherData });
+  process.exit(1);
 }
