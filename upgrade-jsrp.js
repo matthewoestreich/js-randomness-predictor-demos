@@ -17,7 +17,7 @@ const isDryRun = argv.includes("--dry-run");
 // Ignore any directory (in any path) that ends with one of..
 const dirsToExclude = [".git", ".vscode", "_archives", "node_modules", "docs", "public"];
 
-for (const path of walkDir(".", dirsToExclude)) {
+for (const path of findDemoDirs(".", dirsToExclude)) {
   isDryRun ? console.log(green(path)) : npmInstallJsRandomnessPredictor(path, "latest");
 }
 
@@ -50,7 +50,7 @@ function isFile(path) {
 
 // Recursively walks all dirs starting from `path`.
 // Ignores any directory included in `excludedDirs`.
-function* walkDir(path, excludeDirs = []) {
+function* findDemoDirs(path, excludeDirs = []) {
   try {
     for (const x of nodefs.readdirSync(path)) {
       const xpath = nodepath.resolve(path, x);
@@ -62,10 +62,10 @@ function* walkDir(path, excludeDirs = []) {
       if (isFile(nodepath.resolve(xpath, "package.json"))) {
         yield xpath;
       }
-      yield* walkDir(xpath, excludeDirs);
+      yield* findDemoDirs(xpath, excludeDirs);
     }
   } catch (e) {
-    logErrorAndExit("walkDir", { path, excludeDirs, error: e });
+    logErrorAndExit("findDemoDirs", { path, excludeDirs, error: e });
   }
 }
 
