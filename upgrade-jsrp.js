@@ -15,24 +15,28 @@ const argv = process.argv.slice(2);
 const isDryRun = argv.includes("--dry-run");
 
 // Ignore any directory (in any path) that ends with one of..
-const dirsToExclude = [".git", ".vscode", "_archives", "node_modules", "docs", "public"];
+const dirsToExclude = [".git", ".vscode", "_archives", "node_modules", "docs", "public", "bun", "deno"];
 
 for (const path of findDemoDirs(".", dirsToExclude)) {
-  isDryRun ? console.log(green(path)) : npmInstallJsRandomnessPredictor(path, "latest");
+  isDryRun ? console.log(green(path)) : runCommand("npm install js-randomness-predictor@latest", path);
 }
+
+// Need to upgrade bun and deno separetly
+runCommand("bun add js-randomness-predictor@latest", nodepath.resolve("./bun"));
+runCommand("deno add npm:js-randomness-predictor@latest", nodepath.resolve("./deno"));
 
 // ======================== Helper functions ==========================================================
 
-function npmInstallJsRandomnessPredictor(workingDir, version) {
+function runCommand(command, workingDir) {
   try {
-    console.log(green(`Atttempting to upgrade js-randomness-predictor in demo '${workingDir}'`));
-    execSync(`npm install js-randomness-predictor@${version}`, {
+    console.log(green(`Running command : '${command}' in directory : '${workingDir}'`));
+    execSync(command, {
       cwd: workingDir,
       stdio: "inherit",
     });
-    console.log(green(`\n[SUCCESS] Upgrade was successful for demo '${workingDir}'!\n\n`));
+    console.log(green(`Successfully ran command : '${command}' in directory : '${workingDir}'`));
   } catch (e) {
-    logErrorAndExit("upgradeJsRandomnessPredictor", { cwd: workingDir, error: e });
+    logErrorAndExit(command, { cwd: workingDir, error: e });
   }
 }
 

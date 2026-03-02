@@ -5,7 +5,7 @@
     "": {
       "name": "bun",
       "dependencies": {
-        "js-randomness-predictor": "^3.3.1",
+        "js-randomness-predictor": "^3.3.2",
       },
       "devDependencies": {
         "@types/bun": "latest",
@@ -42,7 +42,7 @@
 
     "get-east-asian-width": ["get-east-asian-width@1.4.0", "", {}, "sha512-QZjmEOC+IT1uk6Rx0sX22V6uHWVwbdbxf1faPqJ1QhLdGgsRGCZoyaQBm/piRdJy/D2um6hM1UP7ZEeQ4EkP+Q=="],
 
-    "js-randomness-predictor": ["js-randomness-predictor@3.3.1", "", { "dependencies": { "yargs": "^18.0.0", "z3-solver-jsrp": "^4.15.3-republish.1" }, "bin": { "js-randomness-predictor": "dist/cli/cli.js" } }, "sha512-dfvniUvF4bI3EqyyQS/YyrZv8o7zc+Sm3RmE9edEFE+zcHa8NCl+I7XFIE+p7HbVDxaxZiH6hTK3foy0FHEnGA=="],
+    "js-randomness-predictor": ["js-randomness-predictor@3.3.2", "", { "dependencies": { "yargs": "^18.0.0", "z3-solver-jsrp": "^4.15.3-republish.1" }, "bin": { "js-randomness-predictor": "dist/cli/cli.js" } }, "sha512-JTZ6WIvHOc7Du0tS/AtplraB27KuNMcwmEKZkH24/gZe9G5qqDvvxAwaTzCe6QihJVYYfZFgonlIrD4IpYpCog=="],
 
     "string-width": ["string-width@7.2.0", "", { "dependencies": { "emoji-regex": "^10.3.0", "get-east-asian-width": "^1.0.0", "strip-ansi": "^7.1.0" } }, "sha512-tsaTIkKW9b4N+AEj+SVA+WhJzV7/zMhcSu78mLKWSk7cXMOSHsBKFWUs0fWwq8QyK3MgJBQRX6Gbi4kYbdvGkQ=="],
 
