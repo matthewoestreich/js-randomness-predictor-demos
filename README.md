@@ -41,10 +41,18 @@ will start `server.js` at project root
 
 # To update `js-randomness-predictor` version in all demos:
 
-We look for a `package.json` file in a directory. If one exists, we updgrade the `js-randomness-predictor` version
+We look for a `package.json` file in a directory. If one exists, we updgrade `js-randomness-predictor` to the latest version.
 
 From root of project run:
 
 ```
 node upgrade-jsrp.js
+```
+
+## Dry Run
+
+**Does not actually upgrade `js-randomness-predictor`! If you just want to see the paths where we found, where we would upgrade js-randomness-predictor, run:**
+
+```
+node upgrade-jsrp.js --dry-run
 ```

@@ -22,19 +22,18 @@ for (const path of findDemoDirs(".", dirsToExclude)) {
 }
 
 // Need to upgrade bun and deno separetly
-runCommand("bun add js-randomness-predictor@latest", nodepath.resolve("./bun"));
-runCommand("deno add npm:js-randomness-predictor@latest", nodepath.resolve("./deno"));
+upgradeBunAndDenoDemos(isDryRun);
 
 // ======================== Helper functions ==========================================================
 
 function runCommand(command, workingDir) {
   try {
-    console.log(green(`Running command : '${command}' in directory : '${workingDir}'`));
+    console.log(green(`${hashTags(200)}\nRunning command : '${command}' in directory : '${workingDir}'`));
     execSync(command, {
       cwd: workingDir,
       stdio: "inherit",
     });
-    console.log(green(`Successfully ran command : '${command}' in directory : '${workingDir}'`));
+    console.log(green(`Successfully ran command : '${command}' in directory : '${workingDir}'\n${hashTags(200)}\n`));
   } catch (e) {
     logErrorAndExit(command, { cwd: workingDir, error: e });
   }
@@ -71,6 +70,22 @@ function* findDemoDirs(path, excludeDirs = []) {
   } catch (e) {
     logErrorAndExit("findDemoDirs", { path, excludeDirs, error: e });
   }
+}
+
+function upgradeBunAndDenoDemos(isDryRun = true) {
+  const bunPath = nodepath.resolve("./bun");
+  const denoPath = nodepath.resolve("./deno");
+  if (isDryRun) {
+    console.log(green(bunPath));
+    console.log(green(denoPath));
+  } else {
+    runCommand("bun add js-randomness-predictor@latest", bunPath);
+    runCommand("deno add npm:js-randomness-predictor@latest", denoPath);
+  }
+}
+
+function hashTags(numberOfHashTags = 10) {
+  return "#".repeat(numberOfHashTags);
 }
 
 function logErrorAndExit(functionName, otherData = {}) {
