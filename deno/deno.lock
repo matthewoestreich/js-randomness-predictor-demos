@@ -3,8 +3,7 @@
   "specifiers": {
     "jsr:@std/assert@1": "1.0.14",
     "jsr:@std/internal@^1.0.10": "1.0.10",
-    "npm:js-randomness-predictor@^3.3.2": "3.3.2",
-    "npm:js-randomness-predictor@latest": "3.3.2"
+    "npm:js-randomness-predictor@^4.0.2": "4.0.2"
   },
   "jsr": {
     "@std/assert@1.0.14": {
@@ -18,8 +17,8 @@
     }
   },
   "npm": {
-    "ansi-regex@6.2.2": {
-      "integrity": "sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg=="
+    "ansi-regex@6.4.0": {
+      "integrity": "sha512-KzTVk2tCWAHtYrvvvaP8bJKJq2pVinhLcGEQdtLIYPbmNGNyYe8QwNaTUYQp2J7/vIsUKt5QCqAfUkYyG9DkOw=="
     },
     "ansi-styles@6.2.3": {
       "integrity": "sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg=="
@@ -47,11 +46,11 @@
     "get-caller-file@2.0.5": {
       "integrity": "sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg=="
     },
-    "get-east-asian-width@1.5.0": {
-      "integrity": "sha512-CQ+bEO+Tva/qlmw24dCejulK5pMzVnUOFOijVogd3KQs07HnRIgp8TGipvCCRT06xeYEbpbgwaCxglFyiuIcmA=="
+    "get-east-asian-width@1.7.0": {
+      "integrity": "sha512-XjH1AECxf0giL2V1aU8vKyRR2ppRUb5c0EvT7zuJTokQ74bNo52zOtghqdWIqrhUD79fo3x0WfKZdOqxF6LG1Q=="
     },
-    "js-randomness-predictor@3.3.2": {
-      "integrity": "sha512-JTZ6WIvHOc7Du0tS/AtplraB27KuNMcwmEKZkH24/gZe9G5qqDvvxAwaTzCe6QihJVYYfZFgonlIrD4IpYpCog==",
+    "js-randomness-predictor@4.0.2": {
+      "integrity": "sha512-UkpSm42HhUs41NgArtgDfuEAATd0c4PrHZyJIO/1scTJM8FhXisZG+PtZAi3RqXcMXj1sa1Dzmp5YrV/IL+SyA==",
       "dependencies": [
         "yargs",
         "z3-solver-jsrp"
@@ -110,7 +109,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@1",
-      "npm:js-randomness-predictor@^3.3.2"
+      "npm:js-randomness-predictor@^4.0.2"
     ]
   }
 }
