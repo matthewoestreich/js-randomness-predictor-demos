@@ -10,6 +10,6 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "js-randomness-predictor": "^4.0.4"
+    "js-randomness-predictor": "^4.1.0"
   }
 }

@@ -22,7 +22,7 @@
     "svelte": "^5.39.8"
   },
   "dependencies": {
-    "js-randomness-predictor": "^4.0.4",
+    "js-randomness-predictor": "^4.1.0",
     "rollup-plugin-copy": "^3.5.0"
   }
 }

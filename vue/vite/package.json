@@ -17,6 +17,6 @@
     "vue": "^3.5.22"
   },
   "dependencies": {
-    "js-randomness-predictor": "^4.0.4"
+    "js-randomness-predictor": "^4.1.0"
   }
 }
