@@ -38,6 +38,9 @@
   }
 
   // "MAIN"
+  elCallMathRandom.disabled = false;
+  elMakePrediction.disabled = false;
+  elPredictorSection.style.display = "block";
 
   const predictor = JSRandomnessPredictor[CURRENT_BROWSER](callMathRandom(CURRENT_BROWSER === "safari" ? 6 : 4));
 
