@@ -6,6 +6,7 @@
   const elPredictions = document.getElementById("predictions");
   const elActualRandoms = document.getElementById("actual-randoms");
 
+  /* UNCOMMENT THIS AFTER PUBLISHING JSRP VERSION THAT REQUIRES ready()!
   try {
     await JSRandomnessPredictor.ready();
     elCallMathRandom.disabled = false;
@@ -15,6 +16,7 @@
     console.error("error while waiting for JSRP to become ready!", e);
     return;
   }
+  */
 
   // Hook Math.random so we keep our UI in sync if Math.random is called from console
   const MATH_RANDOM = Math.random;
