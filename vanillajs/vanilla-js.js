@@ -1,6 +1,9 @@
 (async () => {
   try {
     await JSRandomnessPredictor.ready();
+    elCallMathRandom.disabled = false;
+    elMakePrediction.disabled = false;
+    elPredictorSection.style.display = "block";
   } catch (e) {
     console.error("error while waiting for JSRP to become ready!", e);
     return;
@@ -35,10 +38,6 @@
   // "MAIN"
 
   const predictor = JSRandomnessPredictor[CURRENT_BROWSER](callMathRandom(CURRENT_BROWSER === "safari" ? 6 : 4));
-
-  elCallMathRandom.disabled = false;
-  elMakePrediction.disabled = false;
-  elPredictorSection.style.display = "block";
 
   elMakePrediction.addEventListener("click", async (e) => {
     elMakePrediction.disabled = true;
