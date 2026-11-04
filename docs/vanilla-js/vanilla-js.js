@@ -1,4 +1,11 @@
 (async () => {
+  const elStatus = document.getElementById("status");
+  const elPredictorSection = document.getElementById("predictor-section");
+  const elMakePrediction = document.getElementById("make-prediction");
+  const elCallMathRandom = document.getElementById("call-math-random");
+  const elPredictions = document.getElementById("predictions");
+  const elActualRandoms = document.getElementById("actual-randoms");
+
   try {
     await JSRandomnessPredictor.ready();
     elCallMathRandom.disabled = false;
@@ -8,13 +15,6 @@
     console.error("error while waiting for JSRP to become ready!", e);
     return;
   }
-
-  const elStatus = document.getElementById("status");
-  const elPredictorSection = document.getElementById("predictor-section");
-  const elMakePrediction = document.getElementById("make-prediction");
-  const elCallMathRandom = document.getElementById("call-math-random");
-  const elPredictions = document.getElementById("predictions");
-  const elActualRandoms = document.getElementById("actual-randoms");
 
   // Hook Math.random so we keep our UI in sync if Math.random is called from console
   const MATH_RANDOM = Math.random;
