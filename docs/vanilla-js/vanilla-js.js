@@ -1,4 +1,11 @@
 (async () => {
+  try {
+    await JSRandomnessPredictor.ready();
+  } catch (e) {
+    console.error("error while waiting for JSRP to become ready!", e);
+    return;
+  }
+
   const elStatus = document.getElementById("status");
   const elPredictorSection = document.getElementById("predictor-section");
   const elMakePrediction = document.getElementById("make-prediction");
